@@ -74,28 +74,37 @@ export function ExperienceSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
           <Heading level={2} className="mb-6">
             My <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">Experiences</span>
           </Heading>
-          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
-            Here's my professional journey and the experiences that have shaped
-            my career in software development.
+          <p className="text-lg sm:text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
+            Here's my professional journey and the experiences that have shaped my career in software development.
           </p>
         </motion.div>
 
         <div className="relative">
-          {/* Premium Timeline line */}
+          {/* Timeline vertical line, responsive and centered */}
           <motion.div
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-[var(--accent)] via-[#5856d6] to-[var(--accent)] opacity-60 origin-top"
+            className="hidden md:block absolute left-1/2 -translate-x-1/2 h-full w-1 bg-gradient-to-b from-[var(--accent)] via-[#5856d6] to-[var(--accent)] opacity-60 origin-top"
+            aria-hidden="true"
+          ></motion.div>
+          {/* Mobile timeline line */}
+          <motion.div
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="md:hidden absolute left-8 h-full w-0.5 bg-gradient-to-b from-[var(--accent)] via-[#5856d6] to-[var(--accent)] opacity-60 origin-top"
+            aria-hidden="true"
           ></motion.div>
 
-          <div className="space-y-12">
+          <div className="space-y-16">
             {experienceData.map((experience, index) => {
               // Animation variants for cards and dots
               const cardVariants = {
@@ -113,18 +122,18 @@ export function ExperienceSection() {
               return (
                 <div
                   key={experience.id}
-                  className={`relative flex items-center ${
+                  className={`relative flex flex-col md:flex-row items-start md:items-center ${
                     index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                  }`}
+                  } group`}
                   ref={ref}
                 >
-                  {/* Timeline dot */}
+                  {/* Timeline dot, responsive position */}
                   <motion.div
                     variants={dotVariants}
                     initial="hidden"
                     animate={inView ? "visible" : "hidden"}
                     transition={{ duration: 0.5, delay: 0.1 * index, type: "spring", stiffness: 300 }}
-                    className="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-lg z-10"
+                    className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-4 md:top-1/2 md:-translate-y-1/2 w-4 h-4 bg-[var(--accent)] border-4 border-white shadow-lg rounded-full z-10"
                   ></motion.div>
 
                   {/* Content */}
@@ -133,28 +142,28 @@ export function ExperienceSection() {
                     initial="hidden"
                     animate={inView ? "visible" : "hidden"}
                     transition={{ duration: 0.7, delay: 0.1 * index, ease: "easeOut" }}
-                    className={`w-full md:w-5/12 ml-16 md:ml-0 ${
+                    className={`w-full md:w-5/12 mt-8 md:mt-0 ml-16 md:ml-0 ${
                       index % 2 === 0
                         ? "md:mr-auto md:pr-8"
                         : "md:ml-auto md:pl-8"
                     }`}
                   >
-                    <Card hover className="h-full">
+                    <Card hover className="h-full bg-white/90 dark:bg-gray-900/90 shadow-lg border border-gray-200 dark:border-gray-700">
                       <CardContent className="p-6">
-                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
                           <div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-1">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-1">
                               {experience.position}
                             </h3>
-                            <p className="text-lg text-blue-600 font-semibold mb-2">
+                            <p className="text-base sm:text-lg text-[var(--accent)] font-semibold mb-2">
                               {experience.company}
                             </p>
-                            <p className="text-sm text-gray-500 mb-2">
-                              📍 {experience.location}
+                            <p className="text-xs sm:text-sm text-gray-500 mb-2">
+                              <span role="img" aria-label="Location">📍</span> {experience.location}
                             </p>
                           </div>
-                          <div className="text-right">
-                            <span className="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                          <div className="text-left sm:text-right">
+                            <span className="inline-block bg-[var(--accent)]/10 text-[var(--accent)] text-xs sm:text-sm font-medium px-3 py-1 rounded-full">
                               {formatDate(experience.startDate)} -{" "}
                               {experience.endDate
                                 ? formatDate(experience.endDate)
@@ -163,7 +172,7 @@ export function ExperienceSection() {
                           </div>
                         </div>
 
-                        <p className="text-gray-700 leading-relaxed mb-4">
+                        <p className="text-gray-700 dark:text-gray-200 leading-relaxed mb-4">
                           {experience.description}
                         </p>
 
@@ -171,7 +180,7 @@ export function ExperienceSection() {
                           {experience.technologies.map((tech) => (
                             <span
                               key={tech}
-                              className="inline-block bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-1 rounded-full"
+                              className="inline-block bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700"
                             >
                               {tech}
                             </span>
