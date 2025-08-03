@@ -1,6 +1,8 @@
+
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Heading } from "@/components/ui/Heading";
 import { Skill } from "@/lib/types";
@@ -49,62 +51,93 @@ const levelColors = {
 
 export function SkillsSection() {
   return (
-    <section id="skills" className="py-20 bg-white">
+    <motion.section
+      id="skills"
+      className="py-20 bg-white"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
           <Heading level={2} className="mb-4">
             Technical <span className="text-blue-600">Skills</span>
           </Heading>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Here are the technologies and tools I work with to bring ideas to
-            life.
+            Here are the technologies and tools I work with to bring ideas to life.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {skillCategories.map((category) => {
+          {skillCategories.map((category, i) => {
             const categorySkills = skillsData.filter(
               (skill) => skill.category === category.name
             );
 
             return (
-              <Card key={category.name} hover className="h-full">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <div className="text-4xl mb-3">{category.icon}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {category.name}
-                    </h3>
-                    <div className="w-12 h-1 bg-blue-600 mx-auto rounded-full"></div>
-                  </div>
+              <motion.div
+                key={category.name}
+                whileHover={{ scale: 1.04, boxShadow: "0 8px 32px rgba(0,0,0,0.10)" }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: 0.1 + i * 0.15, type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <Card hover className="h-full">
+                  <CardContent className="p-6">
+                    <div className="text-center mb-6">
+                      <div className="text-4xl mb-3">{category.icon}</div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {category.name}
+                      </h3>
+                      <div className="w-12 h-1 bg-blue-600 mx-auto rounded-full"></div>
+                    </div>
 
-                  <div className="space-y-3">
-                    {categorySkills.map((skill) => (
-                      <div
-                        key={skill.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                      >
-                        <span className="font-medium text-gray-900">
-                          {skill.name}
-                        </span>
-                        <span
-                          className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                            levelColors[skill.level]
-                          }`}
+                    <div className="space-y-3">
+                      {categorySkills.map((skill, j) => (
+                        <motion.div
+                          key={skill.id}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true, amount: 0.2 }}
+                          transition={{ duration: 0.4, delay: 0.2 + j * 0.07 }}
                         >
-                          {skill.level}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                          <span className="font-medium text-gray-900">
+                            {skill.name}
+                          </span>
+                          <span
+                            className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                              levelColors[skill.level]
+                            }`}
+                          >
+                            {skill.level}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Additional Skills Grid */}
-        <div className="mt-16">
+        <motion.div
+          className="mt-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
             Other Technologies I Work With
           </h3>
@@ -124,17 +157,21 @@ export function SkillsSection() {
               "GitHub Actions",
               "Linux",
               "Nginx",
-            ].map((tech) => (
-              <span
+            ].map((tech, idx) => (
+              <motion.span
                 key={tech}
                 className="inline-block bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-200 transition-colors"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.3, delay: 0.1 + idx * 0.04 }}
               >
                 {tech}
-              </span>
+              </motion.span>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

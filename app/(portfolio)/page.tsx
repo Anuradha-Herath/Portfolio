@@ -4,8 +4,7 @@ import { ExperienceSection } from '@/components/(portfolio)/sections/ExperienceS
 import { ProjectsSection } from '@/components/(portfolio)/sections/ProjectsSection';
 import { SkillsSection } from '@/components/(portfolio)/sections/SkillsSection';
 import { CertificationSection } from '@/components/(portfolio)/sections/CertificationSection';
-import { TestimonialSection } from '@/components/(portfolio)/sections/TestimonialSection';
-import { BlogSection } from '@/components/(portfolio)/sections/BlogSection';
+// import { BlogSection } from '@/components/(portfolio)/sections/BlogSection';
 import { ContactSection } from '@/components/(portfolio)/sections/ContactSection';
 
 export default function PortfolioPage() {
@@ -17,8 +16,7 @@ export default function PortfolioPage() {
       <ProjectsSection />
       <SkillsSection />
       <CertificationSection />
-      <TestimonialSection />
-      <BlogSection />
+      {/* <BlogSection /> */}
       <ContactSection />
     </div>
   );
