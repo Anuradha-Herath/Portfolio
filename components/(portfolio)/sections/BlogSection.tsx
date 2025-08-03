@@ -1,48 +1,53 @@
-import React from 'react';
-import { Card, CardContent, CardFooter } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Heading } from '@/components/ui/Heading';
-import { BlogPost } from '@/lib/types';
+"use client";
+
+import React from "react";
+import { Card, CardContent, CardFooter } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Heading } from "@/components/ui/Heading";
+import { BlogPost } from "@/lib/types";
 
 const blogPosts: BlogPost[] = [
   {
-    id: '1',
-    title: 'Building Scalable React Applications with TypeScript',
-    excerpt: 'Learn how to structure large React applications using TypeScript for better maintainability and developer experience.',
-    content: 'Full content here...',
-    imageUrl: '/images/blog1.jpg',
-    publishedAt: '2024-01-15',
-    tags: ['React', 'TypeScript', 'Frontend'],
-    readTime: 8
+    id: "1",
+    title: "Building Scalable React Applications with TypeScript",
+    excerpt:
+      "Learn how to structure large React applications using TypeScript for better maintainability and developer experience.",
+    content: "Full content here...",
+    imageUrl: "/images/blog1.jpg",
+    publishedAt: "2024-01-15",
+    tags: ["React", "TypeScript", "Frontend"],
+    readTime: 8,
   },
   {
-    id: '2',
-    title: 'Modern Backend Development with Node.js and Express',
-    excerpt: 'Explore best practices for building robust and performant backend APIs using Node.js and Express framework.',
-    content: 'Full content here...',
-    imageUrl: '/images/blog2.jpg',
-    publishedAt: '2024-01-08',
-    tags: ['Node.js', 'Express', 'Backend'],
-    readTime: 12
+    id: "2",
+    title: "Modern Backend Development with Node.js and Express",
+    excerpt:
+      "Explore best practices for building robust and performant backend APIs using Node.js and Express framework.",
+    content: "Full content here...",
+    imageUrl: "/images/blog2.jpg",
+    publishedAt: "2024-01-08",
+    tags: ["Node.js", "Express", "Backend"],
+    readTime: 12,
   },
   {
-    id: '3',
-    title: 'Database Design Principles for Web Applications',
-    excerpt: 'Understanding the fundamentals of database design and how to optimize your data models for performance.',
-    content: 'Full content here...',
-    imageUrl: '/images/blog3.jpg',
-    publishedAt: '2024-01-01',
-    tags: ['Database', 'PostgreSQL', 'Design'],
-    readTime: 10
-  }
+    id: "3",
+    title: "Database Design Principles for Web Applications",
+    excerpt:
+      "Understanding the fundamentals of database design and how to optimize your data models for performance.",
+    content: "Full content here...",
+    imageUrl: "/images/blog3.jpg",
+    publishedAt: "2024-01-01",
+    tags: ["Database", "PostgreSQL", "Design"],
+    readTime: 10,
+  },
 ];
 
 export function BlogSection() {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -54,8 +59,8 @@ export function BlogSection() {
             Latest Blog <span className="text-blue-600">Posts</span>
           </Heading>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            I write about web development, programming best practices, and technology trends. 
-            Here are some of my recent articles.
+            I write about web development, programming best practices, and
+            technology trends. Here are some of my recent articles.
           </p>
         </div>
 
@@ -65,8 +70,12 @@ export function BlogSection() {
               {/* Blog Image */}
               <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 rounded-t-lg flex items-center justify-center">
                 <div className="text-gray-400 text-center">
-                  <svg className="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M5 19V5H19V19H5M17 17H7V15H17V17M17 13H7V11H17V13M17 9H7V7H17V9Z"/>
+                  <svg
+                    className="w-16 h-16 mx-auto mb-2"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M5 19V5H19V19H5M17 17H7V15H17V17M17 13H7V11H17V13M17 9H7V7H17V9Z" />
                   </svg>
                   <p className="text-sm font-medium">Blog Article</p>
                 </div>
@@ -81,15 +90,15 @@ export function BlogSection() {
                     {post.readTime} min read
                   </span>
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                   {post.title}
                 </h3>
-                
+
                 <p className="text-gray-700 leading-relaxed mb-4 line-clamp-3">
                   {post.excerpt}
                 </p>
-                
+
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag) => (
                     <span
