@@ -4,7 +4,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
 import { Project } from "@/lib/types";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 const projectsData: Project[] = [
   {
@@ -76,173 +77,356 @@ const projectsData: Project[] = [
 ];
 
 export function ProjectsSection() {
-  // Animation variants with proper easing
-  const ease: [number, number, number, number] = [0.4, 0, 0.2, 1];
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
-  };
-  const gridVariants = {
-    hidden: {},
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  // Enhanced animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
     visible: {
+      opacity: 1,
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
       },
     },
   };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+
+  const gridVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+    hidden: { 
+      opacity: 0, 
+      y: 40,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring" as const,
+        stiffness: 100,
+        damping: 20,
+        mass: 1,
+      },
+    },
+  };
+
+  const ProjectIcon = ({ type = "default" }: { type?: string }) => {
+    const icons = {
+      ecommerce: (
+        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>
+      ),
+      task: (
+        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+      ),
+      weather: (
+        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12.74 5.47c.45 0 .84-.3.96-.73.23-.86-.5-1.74-1.46-1.74s-1.69.88-1.46 1.74c.12.43.51.73.96.73zm4.16 6.3c-.12-.86-.98-1.52-1.87-1.52s-1.75.66-1.87 1.52c-.12.86.5 1.48 1.37 1.48s1.49-.62 1.37-1.48z"/>
+        </svg>
+      ),
+      default: (
+        <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+        </svg>
+      )
+    };
+    return icons[type as keyof typeof icons] || icons.default;
+  };
+
+  const getProjectIcon = (title: string) => {
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes('ecommerce') || lowerTitle.includes('e-commerce')) return 'ecommerce';
+    if (lowerTitle.includes('task') || lowerTitle.includes('management')) return 'task';
+    if (lowerTitle.includes('weather')) return 'weather';
+    return 'default';
+  };
+
+  const getGradientColors = (index: number) => {
+    const gradients = [
+      'from-blue-400 via-purple-500 to-indigo-600',
+      'from-emerald-400 via-teal-500 to-cyan-600',
+      'from-orange-400 via-pink-500 to-red-600',
+      'from-violet-400 via-purple-500 to-indigo-600',
+      'from-cyan-400 via-blue-500 to-indigo-600',
+      'from-pink-400 via-rose-500 to-red-600',
+    ];
+    return gradients[index % gradients.length];
   };
 
   return (
-    <motion.section
+    <section
+      ref={sectionRef}
       id="projects"
-      className="py-24 bg-[var(--background-secondary)] relative overflow-hidden"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={sectionVariants}
+      className="relative py-24 lg:py-32 bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/40 dark:from-slate-900 dark:via-indigo-950/50 dark:to-purple-950/20 overflow-hidden"
     >
-      {/* Premium Background Effects */}
-      <div className="absolute inset-0">
+      {/* Enhanced Background Effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Animated gradient orbs */}
         <motion.div
-          className="absolute top-1/3 left-1/4 w-80 h-80 bg-[var(--accent)]/5 rounded-full blur-3xl"
+          className="absolute top-20 -right-20 w-96 h-96 bg-gradient-to-br from-blue-400/20 via-indigo-500/20 to-purple-600/20 rounded-full blur-3xl"
           animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.3, 0.4, 0.3],
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
-            duration: 12,
+            duration: 20,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
+        <motion.div
+          className="absolute -bottom-20 -left-20 w-96 h-96 bg-gradient-to-tr from-violet-400/20 via-purple-500/20 to-pink-600/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            rotate: [360, 180, 0],
+            opacity: [0.4, 0.2, 0.4],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Floating particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-indigo-400/30 rounded-full"
+            style={{
+              left: `${20 + i * 15}%`,
+              top: `${30 + i * 10}%`,
+            }}
+            animate={{
+              y: [-20, 20, -20],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: 4 + i,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.5,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-20">
-          <Heading level={2} className="mb-6">
-            Featured <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">Projects</span>
-          </Heading>
-          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
-            Here are some of my recent projects that showcase my skills and
-            experience in web development.
-          </p>
-        </div>
-
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Enhanced Header */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={headerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center mb-16 lg:mb-20"
+        >
+          <Heading level={2} className="mb-6 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
+            Featured{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Projects
+            </span>
+          </Heading>
+          <motion.p 
+            className="text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            A collection of projects that demonstrate my expertise in modern web development technologies and best practices
+          </motion.p>
+        </motion.div>
+
+        {/* Enhanced Projects Grid */}
+        <motion.div
           variants={gridVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          animate={isInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
         >
-          {projectsData.map((project, idx) => (
+          {projectsData.map((project, index) => (
             <motion.div
               key={project.id}
               variants={cardVariants}
-              whileHover={{ scale: 1.03, boxShadow: "0 8px 32px rgba(80,80,200,0.10)" }}
-              transition={{ type: "spring", stiffness: 200, damping: 18 }}
-              className="h-full flex flex-col"
+              className="group h-full"
+              whileHover={{ 
+                y: -8,
+                transition: { type: "spring", stiffness: 300, damping: 20 }
+              }}
             >
-              <Card hover className="h-full flex flex-col">
-                {/* Project Image */}
-                <motion.div
-                  className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 rounded-t-lg flex items-center justify-center"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.1 * idx }}
-                >
-                  <div className="text-gray-400 text-center">
-                    <svg
-                      className="w-16 h-16 mx-auto mb-2"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
+              <Card className="h-full flex flex-col bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/60 dark:border-slate-700/60 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden group-hover:border-indigo-300/60 dark:group-hover:border-indigo-600/60">
+                {/* Enhanced Project Image/Icon Section */}
+                <div className={`relative h-48 bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center overflow-hidden`}>
+                  {/* Animated background pattern */}
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 20 0 L 0 0 0 20' fill='none' stroke='white' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)' /%3E%3C/svg%3E")`
+                    }}></div>
+                  </div>
+                  
+                  {/* Floating animation container */}
+                  <motion.div
+                    className="relative z-10 text-white/90"
+                    animate={{
+                      y: [-5, 5, -5],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <ProjectIcon type={getProjectIcon(project.title)} />
+                  </motion.div>
+
+                  {/* Featured badge */}
+                  {project.featured && (
+                    <motion.div
+                      className="absolute top-4 right-4"
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 200, 
+                        damping: 15,
+                        delay: 0.5 + index * 0.1 
+                      }}
                     >
-                      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-                    </svg>
-                    <p className="text-sm font-medium">{project.title}</p>
-                  </div>
-                </motion.div>
-
-                <CardContent className="flex-1 p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-bold text-gray-900">
-                      {project.title}
-                    </h3>
-                    {project.featured && (
-                      <span className="inline-block bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full">
+                      <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
                         Featured
-                      </span>
-                    )}
-                  </div>
+                      </div>
+                    </motion.div>
+                  )}
 
-                  <p className="text-gray-700 leading-relaxed mb-4">
+                  {/* Hover overlay effect */}
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+
+                <CardContent className="flex-1 p-6 lg:p-8">
+                  {/* Project Title */}
+                  <motion.h3 
+                    className="text-xl lg:text-2xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + index * 0.05, duration: 0.5 }}
+                  >
+                    {project.title}
+                  </motion.h3>
+
+                  {/* Project Description */}
+                  <motion.p 
+                    className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-sm lg:text-base"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + index * 0.05, duration: 0.6 }}
+                  >
                     {project.description}
-                  </p>
+                  </motion.p>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.map((tech) => (
-                      <span
+                  {/* Enhanced Technology Tags */}
+                  <motion.div 
+                    className="flex flex-wrap gap-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + index * 0.05, duration: 0.6 }}
+                  >
+                    {project.technologies.map((tech, techIndex) => (
+                      <motion.span
                         key={tech}
-                        className="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full"
+                        className="inline-flex items-center px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-full border border-indigo-200/50 dark:border-indigo-700/50 hover:bg-indigo-100 dark:hover:bg-indigo-800/40 transition-all duration-200"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ 
+                          delay: 0.5 + index * 0.05 + techIndex * 0.03, 
+                          duration: 0.3,
+                          type: "spring",
+                          stiffness: 200 
+                        }}
+                        whileHover={{ scale: 1.05 }}
                       >
                         {tech}
-                      </span>
+                      </motion.span>
                     ))}
-                  </div>
+                  </motion.div>
                 </CardContent>
 
-                <CardFooter className="p-6 pt-0">
+                {/* Enhanced Card Footer */}
+                <CardFooter className="p-6 lg:p-8 pt-0">
                   <div className="flex gap-3 w-full">
                     {project.githubUrl && (
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <motion.a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2"
-                          whileHover={{ scale: 1.08 }}
-                          transition={{ type: "spring", stiffness: 300 }}
+                      <motion.div
+                        className="flex-1"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-200"
                         >
-                          <svg
-                            className="w-4 h-4"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 w-full"
                           >
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                          </svg>
-                          Code
-                        </motion.a>
-                      </Button>
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            Code
+                          </a>
+                        </Button>
+                      </motion.div>
                     )}
                     {project.liveUrl && (
-                      <Button size="sm" className="flex-1">
-                        <motion.a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2"
-                          whileHover={{ scale: 1.08 }}
-                          transition={{ type: "spring", stiffness: 300 }}
+                      <motion.div
+                        className="flex-1"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Button 
+                          size="sm" 
+                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200"
                         >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 w-full"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
-                          </svg>
-                          Live Demo
-                        </motion.a>
-                      </Button>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            Live Demo
+                          </a>
+                        </Button>
+                      </motion.div>
                     )}
                   </div>
                 </CardFooter>
@@ -251,19 +435,44 @@ export function ProjectsSection() {
           ))}
         </motion.div>
 
-        <div className="text-center mt-12">
+        {/* Enhanced Call-to-Action */}
+        <motion.div
+          className="text-center mt-16 lg:mt-20"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
           <motion.div
-            whileHover={{ scale: 1.05, boxShadow: "0 8px 32px rgba(80,80,200,0.10)" }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 250 }}
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: "0 20px 40px rgba(79, 70, 229, 0.2)"
+            }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
             className="inline-block"
           >
-            <Button variant="outline" size="lg">
-              View All Projects
+            <Button 
+              variant="outline" 
+              size="lg"
+              className="px-8 py-4 text-lg font-semibold border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300"
+            >
+              <span className="flex items-center gap-3">
+                View All Projects
+                <motion.svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </motion.svg>
+              </span>
             </Button>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
