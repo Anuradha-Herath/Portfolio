@@ -76,10 +76,11 @@ const projectsData: Project[] = [
 ];
 
 export function ProjectsSection() {
-  // Animation variants
+  // Animation variants with proper easing
+  const ease: [number, number, number, number] = [0.4, 0, 0.2, 1];
   const sectionVariants = {
     hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
   };
   const gridVariants = {
     hidden: {},
@@ -91,24 +92,40 @@ export function ProjectsSection() {
   };
   const cardVariants = {
     hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
   };
 
   return (
     <motion.section
       id="projects"
-      className="py-20 bg-gray-50"
+      className="py-24 bg-[var(--background-secondary)] relative overflow-hidden"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={sectionVariants}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <Heading level={2} className="mb-4">
-            Featured <span className="text-blue-600">Projects</span>
+      {/* Premium Background Effects */}
+      <div className="absolute inset-0">
+        <motion.div
+          className="absolute top-1/3 left-1/4 w-80 h-80 bg-[var(--accent)]/5 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.4, 0.3],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-20">
+          <Heading level={2} className="mb-6">
+            Featured <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">Projects</span>
           </Heading>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
             Here are some of my recent projects that showcase my skills and
             experience in web development.
           </p>

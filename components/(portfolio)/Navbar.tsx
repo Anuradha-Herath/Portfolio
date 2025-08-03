@@ -42,34 +42,46 @@ export function Navbar() {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled 
+          ? 'bg-[var(--background)]/80 backdrop-blur-xl border-b border-[var(--border)] shadow-2xl' 
+          : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-gray-900">
-              Doomin
+          <motion.div 
+            className="flex-shrink-0"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+          >
+            <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">
+              Doomin Herath
             </Link>
-          </div>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+            <div className="ml-10 flex items-center space-x-1">
               {navigation.map((item, idx) => (
                 <motion.button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.96 }}
+                  className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-[var(--surface-hover)] relative group"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + idx * 0.05, duration: 0.3 }}
                 >
                   {item.name}
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] origin-left"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
                 </motion.button>
               ))}
             </div>
@@ -82,9 +94,12 @@ export function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + navigation.length * 0.05, duration: 0.3 }}
             >
-              <Button variant="outline" size="sm">
-                <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
-                  Download Resume
+              <Button variant="premium" size="sm" glow>
+                <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2">
+                  <span>Download Resume</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
                 </a>
               </Button>
             </motion.div>
@@ -94,17 +109,24 @@ export function Navbar() {
           <div className="md:hidden">
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 p-2"
+              className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] p-2 rounded-lg hover:bg-[var(--surface-hover)] transition-all duration-300"
               whileTap={{ scale: 0.9 }}
               aria-label="Toggle menu"
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <motion.svg 
+                className="h-6 w-6" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+                animate={isMobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
+                transition={{ duration: 0.3 }}
+              >
                 {isMobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 )}
-              </svg>
+              </motion.svg>
             </motion.button>
           </div>
         </div>
@@ -115,20 +137,20 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <motion.div
             key="mobile-menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden bg-white border-t border-gray-200"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="md:hidden bg-[var(--background)]/95 backdrop-blur-xl border-t border-[var(--border)] shadow-2xl"
           >
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {navigation.map((item, idx) => (
                 <motion.button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
+                  className="text-[var(--foreground-secondary)] hover:text-[var(--foreground)] block px-4 py-3 rounded-lg text-base font-medium w-full text-left hover:bg-[var(--surface-hover)] transition-all duration-300"
+                  whileHover={{ scale: 1.02, x: 8 }}
+                  whileTap={{ scale: 0.98 }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + idx * 0.04, duration: 0.2 }}
@@ -140,11 +162,14 @@ export function Navbar() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 + navigation.length * 0.04, duration: 0.2 }}
-                className="px-3 py-2"
+                className="px-4 py-3"
               >
-                <Button variant="outline" size="sm" className="w-full">
-                  <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
-                    Download Resume
+                <Button variant="premium" size="sm" className="w-full">
+                  <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2">
+                    <span>Download Resume</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
                   </a>
                 </Button>
               </motion.div>

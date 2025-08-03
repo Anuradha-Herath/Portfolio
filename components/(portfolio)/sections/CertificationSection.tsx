@@ -96,24 +96,24 @@ export function CertificationSection() {
   return (
     <motion.section
       id="certifications"
-      className="py-20 bg-white"
+      className="py-24 bg-[var(--background)] relative overflow-hidden"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={sectionVariants}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease }}
         >
-          <Heading level={2} className="mb-4">
-            Achievements & <span className="text-blue-600">Certifications</span>
+          <Heading level={2} className="mb-6">
+            Achievements & <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">Certifications</span>
           </Heading>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
             I believe in continuous learning and staying updated with the latest
             technologies. Here are some of my professional certifications and
             achievements.

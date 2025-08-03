@@ -67,32 +67,32 @@ export function ExperienceSection() {
   };
 
   return (
-    <section id="experience" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="experience" className="py-24 bg-[var(--background-tertiary)] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <Heading level={2} className="mb-4">
-            My <span className="text-blue-600">Experiences</span>
+          <Heading level={2} className="mb-6">
+            My <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">Experiences</span>
           </Heading>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
             Here's my professional journey and the experiences that have shaped
             my career in software development.
           </p>
         </motion.div>
 
         <div className="relative">
-          {/* Timeline line */}
+          {/* Premium Timeline line */}
           <motion.div
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-blue-200 origin-top"
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-[var(--accent)] via-[#5856d6] to-[var(--accent)] opacity-60 origin-top"
           ></motion.div>
 
           <div className="space-y-12">

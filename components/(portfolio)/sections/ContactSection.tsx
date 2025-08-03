@@ -77,13 +77,13 @@ export function ContactSection() {
   ];
 
   return (
-    <section id="contact" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <Heading level={2} className="mb-4">
-            Get In <span className="text-blue-600">Touch</span>
+    <section id="contact" className="py-24 bg-[var(--background-tertiary)] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-20">
+          <Heading level={2} className="mb-6">
+            Get In <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">Touch</span>
           </Heading>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
             I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology.
           </p>
         </div>

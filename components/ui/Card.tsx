@@ -5,14 +5,21 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;
+  glow?: boolean;
+  premium?: boolean;
 }
 
-export function Card({ children, className, hover = false }: CardProps) {
+export function Card({ children, className, hover = false, glow = false, premium = true }: CardProps) {
   return (
     <div
       className={cn(
-        'bg-white rounded-lg shadow-lg border border-gray-200',
-        hover && 'hover:shadow-xl transition-shadow duration-300',
+        'rounded-xl border transition-all duration-300 ease-out',
+        premium 
+          ? 'bg-[var(--surface)] border-[var(--border)] shadow-[var(--shadow-card)]'
+          : 'bg-white border-gray-200 shadow-lg',
+        hover && premium && 'hover:shadow-[var(--shadow-premium)] hover:border-[var(--border-light)] hover:-translate-y-1',
+        hover && !premium && 'hover:shadow-xl',
+        glow && 'shadow-[var(--shadow-glow)]',
         className
       )}
     >
@@ -39,7 +46,7 @@ export function CardContent({ children, className }: { children: React.ReactNode
 
 export function CardFooter({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('p-6 pt-4 border-t border-gray-100', className)}>
+    <div className={cn('p-6 pt-4 border-t border-[var(--border)]', className)}>
       {children}
     </div>
   );
