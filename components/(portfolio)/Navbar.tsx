@@ -56,12 +56,6 @@ export function Navbar() {
 
   return (
     <>
-      {/* Scroll Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 z-[9999] origin-left"
-        style={{ scaleX }}
-      />
-
       <motion.nav
         initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -209,6 +203,11 @@ export function Navbar() {
             </motion.div>
           )}
         </AnimatePresence>
+        {/* Scroll Progress Bar at Bottom */}
+        <motion.div
+          className="absolute left-0 right-0 bottom-0 h-[3px] bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 z-[9999] origin-left"
+          style={{ scaleX }}
+        />
       </motion.nav>
     </>
   );
