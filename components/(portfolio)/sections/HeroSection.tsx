@@ -348,8 +348,7 @@ export function HeroSection() {
                 {/* Rotating gradient border */}
                 <motion.div 
                   className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-pink-500 p-1"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  // Removed rotation animation
                 >
                   <div className="w-full h-full rounded-full bg-white dark:bg-slate-900 p-2">
                     <motion.div 
