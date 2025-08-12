@@ -21,8 +21,7 @@ import {
 } from "lucide-react";
 
 const navigation = [
-  { name: "Home", href: "#hero", icon: <Home size={16} /> },
-  { name: "About", href: "#about", icon: <User size={16} /> },
+  { name: "Introduction", href: "#hero", icon: <Home size={16} /> },
   { name: "Education", href: "#education", icon: <GraduationCap size={16} /> },
   { name: "Experience", href: "#experience", icon: <Briefcase size={16} /> },
   { name: "Projects", href: "#projects", icon: <FolderOpen size={16} /> },
@@ -183,7 +182,7 @@ export function Navbar() {
                   <motion.button
                     key={item.name}
                     onClick={() => scrollToSection(item.href)}
-                    className="flex items-center gap-2 text-white/80 hover:text-white block px-4 py-3 rounded-lg text-base font-medium w-full text-left hover:bg-white/10 transition-all duration-300"
+                    className="flex items-center gap-2 text-white/80 hover:text-white px-4 py-3 rounded-lg text-base font-medium w-full text-left hover:bg-white/10 transition-all duration-300"
                     whileHover={{ scale: 1.02, x: 8 }}
                     whileTap={{ scale: 0.98 }}
                     initial={{ opacity: 0, x: -20 }}
