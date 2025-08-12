@@ -543,13 +543,6 @@ export function Navbar() {
             className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 origin-left"
             style={{ scaleX: delayedScrollProgress }}
           />
-          
-          {/* Top highlight layer */}
-          <motion.div
-            className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 origin-left"
-            style={{ scaleX: smoothScrollProgress }}
-            transition={{ type: "spring", stiffness: 150, damping: 25 }}
-          />
         </div>
       </motion.nav>
     </>
