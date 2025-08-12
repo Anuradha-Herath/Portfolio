@@ -195,7 +195,7 @@ export function HeroSection() {
                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight mb-4"
               >
                 <span className="bg-gradient-to-r from-slate-900 via-indigo-800 to-slate-900 dark:from-white dark:via-indigo-200 dark:to-white bg-clip-text text-transparent">
-                  Doomin
+                  Anuradha
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -231,29 +231,7 @@ export function HeroSection() {
               {" "}that make a real impact.
             </motion.p>
 
-            {/* Key highlights */}
-            <motion.div
-              className="flex flex-wrap gap-4 justify-center lg:justify-start"
-              variants={itemVariants}
-            >
-              {[
-                { icon: "⚡", text: "5+ Years Experience" },
-                { icon: "🚀", text: "50+ Projects Delivered" },
-                { icon: "🏆", text: "Award-Winning Design" }
-              ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-full"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <span className="text-lg">{item.icon}</span>
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    {item.text}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
+            {/* ...removed key highlights section... */}
 
             {/* Enhanced CTA Buttons */}
             <motion.div
