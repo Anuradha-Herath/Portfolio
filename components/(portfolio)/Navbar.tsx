@@ -7,6 +7,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  useMotionValue,
 } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
@@ -32,18 +33,80 @@ const navigation = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const [activeSection, setActiveSection] = useState("");
+  
   const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+  
+  // Enhanced spring animations with different characteristics
+  const smoothScrollProgress = useSpring(scrollYProgress, {
+    stiffness: 50,
+    damping: 40,
     restDelta: 0.001,
   });
+  
+  // Delayed scroll progress for premium feel
+  const delayedScrollProgress = useSpring(scrollYProgress, {
+    stiffness: 30,
+    damping: 50,
+    restDelta: 0.001,
+  });
+  
+  // Scroll-based background opacity
+  const backgroundOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.2],
+    [0, 0.5, 0.9]
+  );
+  
+  const backdropBlur = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.2],
+    [0, 8, 16]
+  );
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 20;
+      setIsScrolled(scrolled);
+    };
+    
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const optimizedScrollHandler = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener("scroll", optimizedScrollHandler, { passive: true });
+    return () => window.removeEventListener("scroll", optimizedScrollHandler);
+  }, []);
+
+  // Enhanced active section detection
+  useEffect(() => {
+    const handleActiveSection = () => {
+      const sections = navigation.map(nav => nav.href.substring(1));
+      let current = "";
+      
+      sections.forEach(section => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            current = section;
+          }
+        }
+      });
+      
+      setActiveSection(current);
+    };
+    
+    window.addEventListener("scroll", handleActiveSection, { passive: true });
+    return () => window.removeEventListener("scroll", handleActiveSection);
   }, []);
 
   const scrollToSection = (href: string) => {
@@ -57,12 +120,18 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -60, opacity: 0 }}
+        initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        transition={{ 
+          type: "spring",
+          stiffness: 100,
+          damping: 20,
+          duration: 0.8,
+          ease: "easeOut" 
+        }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
           isScrolled
-            ? "bg-white/10 backdrop-blur-lg shadow-[0_0_20px_rgba(88,86,214,0.3)]"
+            ? "bg-white/10 backdrop-blur-lg shadow-[0_0_30px_rgba(88,86,214,0.4)]"
             : "bg-transparent"
         }`}
       >
@@ -71,8 +140,16 @@ export function Navbar() {
             {/* Logo */}
             <motion.div
               className="flex-shrink-0 relative"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              whileHover={{ 
+                scale: 1.08,
+                rotate: [0, -1, 1, 0],
+              }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 400, 
+                damping: 15,
+                rotate: { duration: 0.6 }
+              }}
             >
               <Link
                 href="/"
@@ -89,28 +166,108 @@ export function Navbar() {
                   <motion.button
                     key={item.name}
                     onClick={() => scrollToSection(item.href)}
-                    className="flex items-center gap-2 text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/10 relative group"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 + idx * 0.05, duration: 0.3 }}
+                    className="flex items-center gap-2 text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/10 relative group overflow-hidden"
+                    whileHover={{ 
+                      scale: 1.08,
+                      y: -2,
+                    }}
+                    whileTap={{ 
+                      scale: 0.95,
+                      y: 0,
+                    }}
+                    initial={{ opacity: 0, y: -20, rotateX: -15 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ 
+                      delay: 0.2 + idx * 0.08,
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 15,
+                      duration: 0.6
+                    }}
                   >
-                    {item.icon}
-                    {item.name}
                     <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-[length:200%_200%]"
-                      initial={{ scaleX: 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.3 }}
+                      whileHover={{ rotate: 360, scale: 1.2 }}
+                      transition={{ 
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20
+                      }}
+                    >
+                      {item.icon}
+                    </motion.div>
+                    {item.name}
+                    
+                    {/* Enhanced gradient underline with animation */}
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-[length:200%_200%] origin-center"
+                      initial={{ scaleX: 0, backgroundPosition: "0% 50%" }}
+                      whileHover={{ 
+                        scaleX: 1,
+                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                      }}
+                      transition={{ 
+                        scaleX: { type: "spring", stiffness: 400, damping: 30 },
+                        backgroundPosition: { 
+                          duration: 2,
+                          ease: "linear",
+                          repeat: Infinity
+                        }
+                      }}
                     />
+                    
+                    {/* Floating particles effect on hover */}
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                    >
+                      {[...Array(3)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1 h-1 bg-gradient-to-r from-pink-400 to-blue-400 rounded-full"
+                          initial={{ 
+                            x: "50%", 
+                            y: "50%", 
+                            scale: 0,
+                            opacity: 0 
+                          }}
+                          whileHover={{
+                            x: `${50 + (i - 1) * 30}%`,
+                            y: `${30 + i * 20}%`,
+                            scale: [0, 1, 0],
+                            opacity: [0, 1, 0],
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            delay: i * 0.1,
+                            repeat: Infinity,
+                            repeatDelay: 0.5,
+                          }}
+                        />
+                      ))}
+                    </motion.div>
                   </motion.button>
                 ))}
               </div>
             </div>
 
             {/* Resume Button */}
-            <div className="hidden md:block">
+            <motion.div 
+              className="hidden md:block"
+              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ 
+                delay: 0.8,
+                type: "spring",
+                stiffness: 200,
+                damping: 15
+              }}
+              whileHover={{ 
+                scale: 1.05,
+                rotate: [0, -2, 2, 0],
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
               <Button variant="premium" size="sm" glow>
                 <a
                   href="/resume.pdf"
@@ -121,14 +278,33 @@ export function Navbar() {
                   <span>Download Resume</span>
                 </a>
               </Button>
-            </div>
+            </motion.div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            <motion.div 
+              className="md:hidden"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                delay: 0.6,
+                type: "spring",
+                stiffness: 300,
+                damping: 20
+              }}
+            >
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-white/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 p-2 rounded-lg hover:bg-white/10 transition-all duration-300"
-                whileTap={{ scale: 0.9 }}
+                className="text-white/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 p-2 rounded-lg hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
+                whileTap={{ scale: 0.85 }}
+                whileHover={{ 
+                  scale: 1.1,
+                  rotate: isMobileMenuOpen ? 0 : [0, -10, 10, 0],
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 17
+                }}
                 aria-label="Toggle menu"
               >
                 <motion.svg
@@ -137,77 +313,244 @@ export function Navbar() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   animate={isMobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ 
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20
+                  }}
                 >
                   {isMobileMenuOpen ? (
-                    <path
+                    <motion.path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
                       d="M6 18L18 6M6 6l12 12"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.3 }}
                     />
                   ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
+                    <motion.g>
+                      <motion.path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 6h16"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.2, delay: 0 }}
+                      />
+                      <motion.path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 12h16"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                      />
+                      <motion.path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 18h16"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.2, delay: 0.2 }}
+                      />
+                    </motion.g>
                   )}
                 </motion.svg>
+                
+                {/* Ripple effect */}
+                <motion.div
+                  className="absolute inset-0 rounded-lg bg-white/20"
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileTap={{ 
+                    scale: [0, 1.5],
+                    opacity: [0.5, 0],
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.button>
-            </div>
+            </motion.div>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {isMobileMenuOpen && (
             <motion.div
               key="mobile-menu"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="md:hidden bg-white/10 backdrop-blur-xl border-t border-white/20 shadow-2xl"
+              initial={{ 
+                opacity: 0, 
+                y: -50, 
+                scale: 0.95,
+                rotateX: -15
+              }}
+              animate={{ 
+                opacity: 1, 
+                y: 0, 
+                scale: 1,
+                rotateX: 0
+              }}
+              exit={{ 
+                opacity: 0, 
+                y: -30, 
+                scale: 0.98,
+                rotateX: -10
+              }}
+              transition={{ 
+                type: "spring",
+                stiffness: 300,
+                damping: 25,
+                mass: 0.8
+              }}
+              className="md:hidden bg-white/10 backdrop-blur-xl border-t border-white/20 shadow-2xl overflow-hidden"
             >
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <motion.div 
+                className="px-2 pt-2 pb-3 space-y-1 sm:px-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+              >
                 {navigation.map((item, idx) => (
                   <motion.button
                     key={item.name}
                     onClick={() => scrollToSection(item.href)}
-                    className="flex items-center gap-2 text-white/80 hover:text-white px-4 py-3 rounded-lg text-base font-medium w-full text-left hover:bg-white/10 transition-all duration-300"
-                    whileHover={{ scale: 1.02, x: 8 }}
-                    whileTap={{ scale: 0.98 }}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + idx * 0.04, duration: 0.2 }}
+                    className="flex items-center gap-3 text-white/80 hover:text-white px-4 py-4 rounded-xl text-base font-medium w-full text-left hover:bg-white/10 transition-all duration-300 relative overflow-hidden group"
+                    whileHover={{ 
+                      scale: 1.03,
+                      x: 12,
+                      backgroundColor: "rgba(255, 255, 255, 0.15)"
+                    }}
+                    whileTap={{ 
+                      scale: 0.97,
+                      x: 8
+                    }}
+                    initial={{ 
+                      opacity: 0, 
+                      x: -50, 
+                      rotateY: -20
+                    }}
+                    animate={{ 
+                      opacity: 1, 
+                      x: 0, 
+                      rotateY: 0
+                    }}
+                    exit={{
+                      opacity: 0,
+                      x: -30,
+                      rotateY: -15
+                    }}
+                    transition={{ 
+                      delay: 0.1 + idx * 0.05,
+                      type: "spring",
+                      stiffness: 250,
+                      damping: 20,
+                      mass: 0.8
+                    }}
                   >
-                    {item.icon}
-                    {item.name}
+                    <motion.div
+                      whileHover={{ 
+                        rotate: [0, -10, 10, 0],
+                        scale: 1.3
+                      }}
+                      transition={{ 
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 15
+                      }}
+                      className="relative z-10"
+                    >
+                      {item.icon}
+                    </motion.div>
+                    <span className="relative z-10">{item.name}</span>
+                    
+                    {/* Animated background on hover */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 rounded-xl"
+                      initial={{ scaleX: 0, originX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30
+                      }}
+                    />
+                    
+                    {/* Side accent line */}
+                    <motion.div
+                      className="absolute left-0 top-1/2 w-1 h-0 bg-gradient-to-b from-pink-500 to-blue-500 rounded-full"
+                      initial={{ height: 0, y: "-50%" }}
+                      whileHover={{ height: "60%" }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 25
+                      }}
+                    />
                   </motion.button>
                 ))}
-                <div className="px-4 py-3">
-                  <Button variant="premium" size="sm" className="w-full">
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center space-x-2"
-                    >
-                      <span>Download Resume</span>
-                    </a>
-                  </Button>
-                </div>
-              </div>
+                
+                <motion.div 
+                  className="px-4 py-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    delay: 0.3 + navigation.length * 0.05,
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 20
+                  }}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25
+                    }}
+                  >
+                    <Button variant="premium" size="sm" className="w-full">
+                      <a
+                        href="/resume.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center space-x-2"
+                      >
+                        <span>Download Resume</span>
+                      </a>
+                    </Button>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-        {/* Scroll Progress Bar at Bottom */}
-        <motion.div
-          className="absolute left-0 right-0 bottom-0 h-[3px] bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 z-[9999] origin-left"
-          style={{ scaleX }}
-        />
+        {/* Enhanced Scroll Progress Bar with Multiple Layers */}
+        <div className="absolute left-0 right-0 bottom-0 h-[3px] overflow-hidden">
+          {/* Base glow layer */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-blue-500/30 blur-sm"
+            style={{ scaleX: smoothScrollProgress }}
+            transition={{ type: "spring", stiffness: 100, damping: 30 }}
+          />
+          
+          {/* Main progress bar with slight delay for premium feel */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 origin-left"
+            style={{ scaleX: delayedScrollProgress }}
+          />
+          
+          {/* Top highlight layer */}
+          <motion.div
+            className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300 origin-left"
+            style={{ scaleX: smoothScrollProgress }}
+            transition={{ type: "spring", stiffness: 150, damping: 25 }}
+          />
+        </div>
       </motion.nav>
     </>
   );
