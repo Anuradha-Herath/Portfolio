@@ -145,10 +145,8 @@ export function Navbar() {
                 rotate: [0, -1, 1, 0],
               }}
               transition={{ 
-                type: "spring", 
-                stiffness: 400, 
-                damping: 15,
-                rotate: { duration: 0.6 }
+                scale: { type: "spring", stiffness: 400, damping: 15 },
+                rotate: { duration: 0.6, ease: "linear" }
               }}
             >
               <Link
@@ -256,17 +254,16 @@ export function Navbar() {
               className="hidden md:block"
               initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ 
-                delay: 0.8,
-                type: "spring",
-                stiffness: 200,
-                damping: 15
-              }}
               whileHover={{ 
                 scale: 1.05,
                 rotate: [0, -2, 2, 0],
               }}
               whileTap={{ scale: 0.95 }}
+              transition={{
+                delay: 0.8,
+                scale: { type: "spring", stiffness: 200, damping: 15 },
+                rotate: { duration: 0.6, ease: "linear" }
+              }}
             >
               <Button variant="premium" size="sm" glow>
                 <a
