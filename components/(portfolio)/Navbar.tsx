@@ -153,7 +153,7 @@ export function Navbar() {
                 href="/"
                 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent"
               >
-                Doomin Herath
+                Anuradha Herath
               </Link>
             </motion.div>
 
