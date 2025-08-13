@@ -137,20 +137,12 @@ export function HeroSection() {
           >
             {/* Simplified greeting */}
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-full"
+              className=""
               variants={itemVariants}
               whileHover={{ scale: 1.02 }}
             >
-              <motion.span
-                className="text-2xl"
-                animate={{ rotate: [0, 15, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 4 }}
-              >
-                👋
-              </motion.span>
-              <span className="text-slate-700 dark:text-slate-300 font-medium">
-                Hello, I'm
-              </span>
+              
+              
             </motion.div>
 
             {/* Enhanced Name with single gradient and shimmer effect */}
