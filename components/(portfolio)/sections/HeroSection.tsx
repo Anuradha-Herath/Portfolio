@@ -311,38 +311,12 @@ export function HeroSection() {
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 p-1">
                   <div className="w-full h-full rounded-full bg-white dark:bg-slate-900 p-1">
                     <motion.div 
-                      className="relative w-full h-full rounded-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden shadow-xl"
+                      className="relative w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden shadow-xl rounded-full"
                       whileHover={{ scale: 1.02 }}
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     >
                       {/* Professional placeholder - suggestion to replace with actual photo */}
-                      <div className="relative w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 flex flex-col items-center justify-center">
-                        {/* Suggestion: Replace this section with: */}
-                        {/* <img src="/path-to-your-professional-photo.jpg" alt="Anuradha Herath" className="w-full h-full object-cover" /> */}
-                        
-                        {/* Current placeholder - improved design */}
-                        <div className="text-center space-y-3">
-                          <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg mx-auto">
-                            <svg 
-                              className="w-10 h-10 lg:w-12 lg:h-12 text-white" 
-                              fill="currentColor" 
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                          </div>
-                          
-                          <div className="space-y-1">
-                            <div className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                              Add your photo here
-                            </div>
-                            <div className="flex items-center justify-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-medium">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              Available for work
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <img src="/images/profile_photo.jpg" alt="Anuradha Herath" className="w-full h-full object-cover" />
                     </motion.div>
                   </div>
                 </div>
