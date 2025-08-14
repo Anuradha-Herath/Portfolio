@@ -354,7 +354,7 @@ export function HeroSection() {
 
         {/* Simplified Scroll Indicator */}
         <motion.div
-          className="flex justify-center mt-12 lg:mt-16"
+          className="flex justify-center mt-8 lg:mt-10"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 0.6 }}
