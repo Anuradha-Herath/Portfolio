@@ -94,7 +94,7 @@ export function HeroSection() {
   return (
     <section 
       id="hero" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
+      className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
     >
       {/* Simplified Background Effects - Only 2 main elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -132,7 +132,7 @@ export function HeroSection() {
         >
           {/* Content Section - Improved Typography Hierarchy */}
           <motion.div
-            className="text-center lg:text-left space-y-6"
+            className="mt-16 text-center lg:text-left space-y-6"
             variants={itemVariants}
           >
             {/* Simplified greeting */}
