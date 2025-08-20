@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
@@ -7,78 +7,29 @@ import { Project } from "@/lib/types";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
-const projectsData: Project[] = [
-  {
-    id: "1",
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce solution with React frontend, Node.js backend, and PostgreSQL database. Features include user authentication, product catalog, shopping cart, and payment integration.",
-    imageUrl: "/images/project1.jpg",
-    technologies: ["React", "Node.js", "PostgreSQL", "Stripe", "Tailwind CSS"],
-    githubUrl: "https://github.com/username/ecommerce",
-    liveUrl: "https://ecommerce-demo.com",
-    featured: true,
-  },
-  {
-    id: "2",
-    title: "Task Management App",
-    description:
-      "A collaborative task management application built with Next.js and Prisma. Includes real-time updates, team collaboration features, and detailed analytics dashboard.",
-    imageUrl: "/images/project2.jpg",
-    technologies: ["Next.js", "Prisma", "Socket.io", "TypeScript", "Chakra UI"],
-    githubUrl: "https://github.com/username/task-manager",
-    liveUrl: "https://taskapp-demo.com",
-    featured: true,
-  },
-  {
-    id: "3",
-    title: "Weather App",
-    description:
-      "A responsive weather application with location-based forecasts, interactive maps, and detailed weather analytics. Built with React and integrated with multiple weather APIs.",
-    imageUrl: "/images/project3.jpg",
-    technologies: ["React", "OpenWeather API", "Chart.js", "CSS Modules"],
-    githubUrl: "https://github.com/username/weather-app",
-    liveUrl: "https://weather-demo.com",
-    featured: false,
-  },
-  {
-    id: "4",
-    title: "Blog Platform",
-    description:
-      "A modern blog platform with markdown support, SEO optimization, and content management system. Features include commenting, social sharing, and newsletter integration.",
-    imageUrl: "/images/project4.jpg",
-    technologies: ["Next.js", "MDX", "Contentful", "Vercel"],
-    githubUrl: "https://github.com/username/blog-platform",
-    liveUrl: "https://blog-demo.com",
-    featured: false,
-  },
-  {
-    id: "5",
-    title: "Portfolio Website",
-    description:
-      "A personal portfolio website showcasing projects, skills, and experience. Built with modern technologies and optimized for performance and SEO.",
-    imageUrl: "/images/project5.jpg",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
-    githubUrl: "https://github.com/username/portfolio",
-    liveUrl: "https://portfolio-demo.com",
-    featured: false,
-  },
-  {
-    id: "6",
-    title: "Chat Application",
-    description:
-      "Real-time chat application with multiple rooms, file sharing, and emoji support. Built with Socket.io for real-time communication and MongoDB for data persistence.",
-    imageUrl: "/images/project6.jpg",
-    technologies: ["React", "Socket.io", "MongoDB", "Express", "Material-UI"],
-    githubUrl: "https://github.com/username/chat-app",
-    liveUrl: "https://chat-demo.com",
-    featured: false,
-  },
-];
-
 export function ProjectsSection() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/projects');
+        if (response.ok) {
+          const data = await response.json();
+          setProjects(data);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   // Enhanced animation variants
   const containerVariants = {
@@ -260,14 +211,31 @@ export function ProjectsSection() {
           </motion.p>
         </motion.div>
 
-        {/* Enhanced Projects Grid */}
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        )}
+
+        {/* No Projects State */}
+        {!isLoading && projects.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-slate-600 dark:text-slate-300 text-lg">
+              No projects available at the moment.
+            </p>
+          </div>
+        )}
+
+        {/* Projects Grid */}
+        {!isLoading && projects.length > 0 && (
         <motion.div
           variants={gridVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
         >
-          {projectsData.map((project, index) => (
+          {projects.map((project, index) => (
             <motion.div
               key={project.id}
               variants={cardVariants}
@@ -379,7 +347,7 @@ export function ProjectsSection() {
                 {/* Enhanced Card Footer */}
                 <CardFooter className="p-6 lg:p-8 pt-0">
                   <div className="flex gap-3 w-full">
-                    {project.githubUrl && (
+                    {project.github_url && (
                       <motion.div
                         className="flex-1"
                         whileHover={{ scale: 1.02 }}
@@ -391,7 +359,7 @@ export function ProjectsSection() {
                           className="w-full border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-200"
                         >
                           <a
-                            href={project.githubUrl}
+                            href={project.github_url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 w-full"
@@ -404,7 +372,7 @@ export function ProjectsSection() {
                         </Button>
                       </motion.div>
                     )}
-                    {project.liveUrl && (
+                    {project.live_url && (
                       <motion.div
                         className="flex-1"
                         whileHover={{ scale: 1.02 }}
@@ -415,7 +383,7 @@ export function ProjectsSection() {
                           className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200"
                         >
                           <a
-                            href={project.liveUrl}
+                            href={project.live_url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 w-full"
@@ -434,6 +402,7 @@ export function ProjectsSection() {
             </motion.div>
           ))}
         </motion.div>
+        )}
 
         {/* Enhanced Call-to-Action */}
         <motion.div

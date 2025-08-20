@@ -1,39 +1,11 @@
 
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Heading } from "@/components/ui/Heading";
 import { Skill } from "@/lib/types";
-
-const skillsData: Skill[] = [
-  // Frontend
-  { id: "1", name: "React", category: "Frontend", level: "Expert" },
-  { id: "2", name: "Next.js", category: "Frontend", level: "Advanced" },
-  { id: "3", name: "TypeScript", category: "Frontend", level: "Advanced" },
-  { id: "4", name: "JavaScript", category: "Frontend", level: "Expert" },
-  { id: "5", name: "Tailwind CSS", category: "Frontend", level: "Advanced" },
-  { id: "6", name: "HTML/CSS", category: "Frontend", level: "Expert" },
-
-  // Backend
-  { id: "7", name: "Node.js", category: "Backend", level: "Advanced" },
-  { id: "8", name: "Express.js", category: "Backend", level: "Advanced" },
-  { id: "9", name: "Python", category: "Backend", level: "Intermediate" },
-  { id: "10", name: "Django", category: "Backend", level: "Intermediate" },
-
-  // Database
-  { id: "11", name: "PostgreSQL", category: "Database", level: "Advanced" },
-  { id: "12", name: "MongoDB", category: "Database", level: "Intermediate" },
-  { id: "13", name: "MySQL", category: "Database", level: "Advanced" },
-  { id: "14", name: "Prisma", category: "Database", level: "Intermediate" },
-
-  // Tools & Others
-  { id: "15", name: "Git", category: "Tools", level: "Advanced" },
-  { id: "16", name: "Docker", category: "Tools", level: "Intermediate" },
-  { id: "17", name: "AWS", category: "Tools", level: "Intermediate" },
-  { id: "18", name: "Vercel", category: "Tools", level: "Advanced" },
-];
 
 const skillCategories = [
   { name: "Frontend", color: "blue", icon: "🎨" },
@@ -50,6 +22,26 @@ const levelColors = {
 };
 
 export function SkillsSection() {
+  const [skillsData, setSkillsData] = useState<Skill[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch('/api/skills');
+        if (response.ok) {
+          const data = await response.json();
+          setSkillsData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching skills:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSkills();
+  }, []);
   return (
     <motion.section
       id="skills"

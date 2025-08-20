@@ -13,54 +13,54 @@ const certificationsData: Certification[] = [
     title: "AWS Certified Developer - Associate",
     issuer: "Amazon Web Services",
     date: "2023-10",
-    credentialId: "AWS-DEV-2023-001234",
+    credential_id: "AWS-DEV-2023-001234",
     url: "https://aws.amazon.com/certification/",
-    imageUrl: "/images/aws-cert.png",
+    image_url: "/images/aws-cert.png",
   },
   {
     id: "2",
     title: "Professional Scrum Master I (PSM I)",
     issuer: "Scrum.org",
     date: "2023-08",
-    credentialId: "PSM-I-2023-567890",
+    credential_id: "PSM-I-2023-567890",
     url: "https://scrum.org/certifications",
-    imageUrl: "/images/scrum-cert.png",
+    image_url: "/images/scrum-cert.png",
   },
   {
     id: "3",
     title: "Google Analytics Certified",
     issuer: "Google",
     date: "2023-06",
-    credentialId: "GA-2023-789012",
+    credential_id: "GA-2023-789012",
     url: "https://analytics.google.com/analytics/academy/",
-    imageUrl: "/images/google-cert.png",
+    image_url: "/images/google-cert.png",
   },
   {
     id: "4",
     title: "MongoDB Developer Certification",
     issuer: "MongoDB University",
     date: "2023-04",
-    credentialId: "MDB-DEV-2023-345678",
+    credential_id: "MDB-DEV-2023-345678",
     url: "https://university.mongodb.com/",
-    imageUrl: "/images/mongodb-cert.png",
+    image_url: "/images/mongodb-cert.png",
   },
   {
     id: "5",
     title: "React Developer Certificate",
     issuer: "Meta (Facebook)",
     date: "2023-02",
-    credentialId: "META-REACT-2023-901234",
+    credential_id: "META-REACT-2023-901234",
     url: "https://developers.facebook.com/certifications/",
-    imageUrl: "/images/meta-cert.png",
+    image_url: "/images/meta-cert.png",
   },
   {
     id: "6",
     title: "Docker Certified Associate",
     issuer: "Docker Inc.",
     date: "2022-12",
-    credentialId: "DCA-2022-456789",
+    credential_id: "DCA-2022-456789",
     url: "https://docker.com/certification/",
-    imageUrl: "/images/docker-cert.png",
+    image_url: "/images/docker-cert.png",
   },
 ];
 
@@ -156,9 +156,9 @@ export function CertificationSection() {
                     Earned: {formatDate(cert.date)}
                   </p>
 
-                  {cert.credentialId && (
+                  {cert.credential_id && (
                     <p className="text-gray-600 text-xs mb-4 font-mono bg-gray-50 p-2 rounded">
-                      ID: {cert.credentialId}
+                      ID: {cert.credential_id}
                     </p>
                   )}
 

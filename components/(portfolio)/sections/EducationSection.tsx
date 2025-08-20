@@ -12,8 +12,8 @@ const educationData: Education[] = [
     institution: "University of Moratuwa",
     degree: "Bachelor of Science",
     field: "Computer Science and Engineering",
-    startDate: "2020-01",
-    endDate: "2024-12",
+    start_date: "2020-01",
+    end_date: "2024-12",
     description:
       "Focused on software engineering, web development, and computer systems. Graduated with First Class Honors.",
     grade: "First Class Honors",
@@ -23,8 +23,8 @@ const educationData: Education[] = [
     institution: "Royal College Colombo",
     degree: "Advanced Level",
     field: "Physical Science",
-    startDate: "2017-01",
-    endDate: "2019-12",
+    start_date: "2017-01",
+    end_date: "2020-12",
     description:
       "Completed Advanced Level in Physical Science stream with excellent results in Mathematics, Physics, and Chemistry.",
     grade: "3 A passes",
@@ -150,8 +150,8 @@ export function EducationSection() {
                             className="inline-block bg-gradient-to-r from-[var(--accent)] to-[#5856d6] text-white text-sm font-semibold px-4 py-2 rounded-full shadow-lg"
                             whileHover={{ scale: 1.05 }}
                           >
-                            {new Date(education.startDate).getFullYear()} -{" "}
-                            {new Date(education.endDate).getFullYear()}
+                            {new Date(education.start_date).getFullYear()} -{" "}
+                            {new Date(education.end_date).getFullYear()}
                           </motion.span>
                         </div>
                       </div>

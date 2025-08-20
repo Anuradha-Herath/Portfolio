@@ -12,7 +12,7 @@ const testimonialsData: Testimonial[] = [
     position: 'Product Manager',
     company: 'TechCorp Solutions',
     content: 'Doomin is an exceptional developer who consistently delivers high-quality work. His attention to detail and problem-solving skills are outstanding. He was instrumental in launching our flagship product ahead of schedule.',
-    imageUrl: '/images/testimonial1.jpg',
+    image_url: '/images/testimonial1.jpg',
     rating: 5
   },
   {
@@ -21,7 +21,7 @@ const testimonialsData: Testimonial[] = [
     position: 'CTO',
     company: 'Digital Innovations Ltd',
     content: 'Working with Doomin has been a pleasure. He brings both technical expertise and creative thinking to every project. His ability to translate complex requirements into elegant solutions is remarkable.',
-    imageUrl: '/images/testimonial2.jpg',
+    image_url: '/images/testimonial2.jpg',
     rating: 5
   },
   {
@@ -30,7 +30,7 @@ const testimonialsData: Testimonial[] = [
     position: 'UI/UX Designer',
     company: 'Creative Studio',
     content: 'Doomin has an excellent eye for design implementation. He perfectly translated our designs into responsive, interactive web applications. His collaboration and communication skills are top-notch.',
-    imageUrl: '/images/testimonial3.jpg',
+    image_url: '/images/testimonial3.jpg',
     rating: 5
   },
   {
@@ -39,7 +39,7 @@ const testimonialsData: Testimonial[] = [
     position: 'Startup Founder',
     company: 'StartupXYZ',
     content: 'As a startup, we needed someone who could work fast without compromising quality. Doomin exceeded our expectations and helped us build our MVP in record time. Highly recommended!',
-    imageUrl: '/images/testimonial4.jpg',
+    image_url: '/images/testimonial4.jpg',
     rating: 5
   },
   {
@@ -48,7 +48,7 @@ const testimonialsData: Testimonial[] = [
     position: 'Project Manager',
     company: 'E-commerce Plus',
     content: 'Doomin\'s full-stack expertise was exactly what our e-commerce platform needed. He optimized our performance and implemented features that significantly improved our user experience.',
-    imageUrl: '/images/testimonial5.jpg',
+    image_url: '/images/testimonial5.jpg',
     rating: 5
   },
   {
@@ -57,7 +57,7 @@ const testimonialsData: Testimonial[] = [
     position: 'Lead Developer',
     company: 'FinTech Solutions',
     content: 'I\'ve had the pleasure of working alongside Doomin on several projects. His code quality, architectural decisions, and mentoring abilities make him a valuable team member.',
-    imageUrl: '/images/testimonial6.jpg',
+    image_url: '/images/testimonial6.jpg',
     rating: 5
   }
 ];
