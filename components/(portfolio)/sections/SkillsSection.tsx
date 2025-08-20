@@ -153,9 +153,24 @@ export function SkillsSection() {
                           transition={{ duration: 0.4, delay: 0.2 + j * 0.07 }}
                           whileHover={{ scale: 1.02, x: 4 }}
                         >
-                          <span className="font-semibold text-[var(--foreground)]">
-                            {skill.name}
-                          </span>
+                          <div className="flex items-center gap-3">
+                            {skill.icon && (
+                              <div className="w-6 h-6 flex-shrink-0">
+                                {skill.icon.startsWith('http') ? (
+                                  <img 
+                                    src={skill.icon} 
+                                    alt={`${skill.name} icon`}
+                                    className="w-full h-full object-contain"
+                                  />
+                                ) : (
+                                  <span className="text-lg">{skill.icon}</span>
+                                )}
+                              </div>
+                            )}
+                            <span className="font-semibold text-[var(--foreground)]">
+                              {skill.name}
+                            </span>
+                          </div>
                           <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${levelColors[skill.level as keyof typeof levelColors]}`}>
                             {skill.level}
                           </span>

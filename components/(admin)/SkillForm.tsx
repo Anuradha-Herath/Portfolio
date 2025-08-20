@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Skill } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
-import { XIcon } from 'lucide-react';
+import { XIcon, UploadIcon, ImageIcon, TrashIcon } from 'lucide-react';
 
 interface SkillFormProps {
   skill?: Skill;
-  onSubmit: (skillData: Omit<Skill, 'id'>) => void;
+  onSubmit: (skillData: Omit<Skill, 'id'>, iconFile?: File) => void;
   onCancel: () => void;
   isLoading?: boolean;
 }
@@ -18,12 +18,16 @@ const skillLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'] as const;
 const skillCategories = ['Frontend', 'Backend', 'Database', 'Tools', 'Mobile', 'DevOps', 'Design'] as const;
 
 export function SkillForm({ skill, onSubmit, onCancel, isLoading = false }: SkillFormProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
     level: 'Beginner' as 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert',
     icon: '',
   });
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const [iconPreview, setIconPreview] = useState<string>('');
+  const [dragOver, setDragOver] = useState(false);
 
   useEffect(() => {
     if (skill) {
@@ -33,12 +37,72 @@ export function SkillForm({ skill, onSubmit, onCancel, isLoading = false }: Skil
         level: skill.level,
         icon: skill.icon || '',
       });
+      // Set icon preview if existing skill has an icon URL
+      if (skill.icon && skill.icon.startsWith('http')) {
+        setIconPreview(skill.icon);
+      }
     }
   }, [skill]);
 
+  const handleFileSelect = (file: File | null) => {
+    if (file) {
+      if (!file.type.includes('svg')) {
+        alert('Please select an SVG file only.');
+        return;
+      }
+      
+      if (file.size > 1024 * 1024) { // 1MB limit
+        alert('File size should be less than 1MB.');
+        return;
+      }
+
+      setIconFile(file);
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setIconPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    handleFileSelect(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      handleFileSelect(file);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  };
+
+  const removeIcon = () => {
+    setIconFile(null);
+    setIconPreview('');
+    setFormData(prev => ({ ...prev, icon: '' }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData, iconFile || undefined);
   };
 
   return (
@@ -106,14 +170,83 @@ export function SkillForm({ skill, onSubmit, onCancel, isLoading = false }: Skil
 
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-              Icon (Optional)
+              Icon (SVG File)
             </label>
-            <Input
-              type="text"
-              value={formData.icon}
-              onChange={(e) => setFormData(prev => ({ ...prev, icon: e.target.value }))}
-              placeholder="Enter emoji or icon name"
-            />
+            
+            {/* File Upload Area */}
+            <div
+              className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
+                dragOver
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                  : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'
+              }`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+            >
+              {iconPreview ? (
+                <div className="text-center">
+                  <div className="relative inline-block">
+                    <div className="w-16 h-16 mx-auto mb-3 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-lg">
+                      <img 
+                        src={iconPreview} 
+                        alt="Icon preview" 
+                        className="w-12 h-12 object-contain"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={removeIcon}
+                      className="absolute -top-2 -right-2 w-6 h-6 p-0 rounded-full bg-red-500 hover:bg-red-600 text-white border-red-500"
+                    >
+                      <TrashIcon className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {iconFile ? iconFile.name : 'Current icon'}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="mt-2"
+                  >
+                    Change Icon
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <ImageIcon className="mx-auto h-12 w-12 text-slate-400" />
+                  <div className="mt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-2 mx-auto"
+                    >
+                      <UploadIcon className="h-4 w-4" />
+                      Upload SVG Icon
+                    </Button>
+                  </div>
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                    Drag and drop an SVG file here, or click to browse
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                    SVG files only, max 1MB
+                  </p>
+                </div>
+              )}
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".svg,image/svg+xml"
+                onChange={handleFileInputChange}
+                className="hidden"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end space-x-3 pt-6">

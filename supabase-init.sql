@@ -133,6 +133,17 @@ CREATE POLICY "Allow public read access" ON blog_posts FOR SELECT USING (true);
 -- Create policies for authenticated admin access (you'll need to set up authentication)
 -- For now, these will be handled by the service role key
 
+-- Create storage bucket for skill icons
+-- Note: Run this in Supabase Dashboard > Storage or use the dashboard to create the bucket
+-- INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+-- VALUES (
+--   'skill-icons',
+--   'skill-icons',
+--   true,
+--   1048576,
+--   ARRAY['image/svg+xml']
+-- ) ON CONFLICT (id) DO NOTHING;
+
 -- Insert sample data
 INSERT INTO projects (title, description, image_url, technologies, github_url, live_url, featured) VALUES
 ('E-Commerce Platform', 'A full-stack e-commerce solution with React frontend, Node.js backend, and PostgreSQL database. Features include user authentication, product catalog, shopping cart, and payment integration.', '/images/project1.jpg', ARRAY['React', 'Node.js', 'PostgreSQL', 'Stripe', 'Tailwind CSS'], 'https://github.com/username/ecommerce', 'https://ecommerce-demo.com', true),

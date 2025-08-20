@@ -33,23 +33,32 @@ export default function AdminSkillsPage() {
     }
   };
 
-  const handleSubmit = async (skillData: Omit<Skill, 'id'>) => {
+  const handleSubmit = async (skillData: Omit<Skill, 'id'>, iconFile?: File) => {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('admin-token');
       const url = '/api/skills';
       const method = editingSkill ? 'PUT' : 'POST';
-      const body = editingSkill 
-        ? JSON.stringify({ id: editingSkill.id, ...skillData })
-        : JSON.stringify(skillData);
+      
+      // Create FormData to handle file upload
+      const formData = new FormData();
+      
+      const dataToSend = editingSkill 
+        ? { id: editingSkill.id, ...skillData }
+        : skillData;
+      
+      formData.append('skillData', JSON.stringify(dataToSend));
+      
+      if (iconFile) {
+        formData.append('iconFile', iconFile);
+      }
 
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body,
+        body: formData,
       });
 
       if (response.ok) {
@@ -200,7 +209,17 @@ export default function AdminSkillsPage() {
             >
               <div className="space-y-3">
                 {skill.icon && (
-                  <div className="text-2xl">{skill.icon}</div>
+                  <div className="text-2xl flex justify-center">
+                    {skill.icon.startsWith('http') ? (
+                      <img 
+                        src={skill.icon} 
+                        alt={`${skill.name} icon`}
+                        className="w-8 h-8 object-contain"
+                      />
+                    ) : (
+                      <span>{skill.icon}</span>
+                    )}
+                  </div>
                 )}
                 
                 <div className="space-y-2">
