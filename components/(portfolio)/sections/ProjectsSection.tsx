@@ -10,6 +10,7 @@ import { useRef } from "react";
 export function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
@@ -30,6 +31,10 @@ export function ProjectsSection() {
 
     fetchProjects();
   }, []);
+
+  const handleImageError = (projectId: string) => {
+    setImageErrors(prev => new Set(prev).add(projectId));
+  };
 
   // Enhanced animation variants
   const containerVariants = {
@@ -247,33 +252,46 @@ export function ProjectsSection() {
             >
               <Card className="h-full flex flex-col bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/60 dark:border-slate-700/60 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden group-hover:border-indigo-300/60 dark:group-hover:border-indigo-600/60">
                 {/* Enhanced Project Image/Icon Section */}
-                <div className={`relative h-48 bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center overflow-hidden`}>
-                  {/* Animated background pattern */}
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 20 0 L 0 0 0 20' fill='none' stroke='white' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)' /%3E%3C/svg%3E")`
-                    }}></div>
-                  </div>
-                  
-                  {/* Floating animation container */}
-                  <motion.div
-                    className="relative z-10 text-white/90"
-                    animate={{
-                      y: [-5, 5, -5],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <ProjectIcon type={getProjectIcon(project.title)} />
-                  </motion.div>
+                <div className={`relative h-48 overflow-hidden ${!project.image_url || imageErrors.has(project.id) ? `bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center` : ''}`}>
+                  {project.image_url && !imageErrors.has(project.id) ? (
+                    // Display actual project image
+                    <img
+                      src={project.image_url}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                      onError={() => handleImageError(project.id)}
+                    />
+                  ) : (
+                    // Fallback to icon with gradient background
+                    <>
+                      {/* Animated background pattern */}
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="absolute inset-0" style={{
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 20 0 L 0 0 0 20' fill='none' stroke='white' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)' /%3E%3C/svg%3E")`
+                        }}></div>
+                      </div>
+                      
+                      {/* Floating animation container */}
+                      <motion.div
+                        className="relative z-10 text-white/90"
+                        animate={{
+                          y: [-5, 5, -5],
+                        }}
+                        transition={{
+                          duration: 4,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <ProjectIcon type={getProjectIcon(project.title)} />
+                      </motion.div>
+                    </>
+                  )}
 
                   {/* Featured badge */}
                   {project.featured && (
                     <motion.div
-                      className="absolute top-4 right-4"
+                      className="absolute top-4 right-4 z-20"
                       initial={{ scale: 0, rotate: -180 }}
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ 
@@ -293,7 +311,7 @@ export function ProjectsSection() {
                   )}
 
                   {/* Hover overlay effect */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
                 </div>
 
                 <CardContent className="flex-1 p-6 lg:p-8">
