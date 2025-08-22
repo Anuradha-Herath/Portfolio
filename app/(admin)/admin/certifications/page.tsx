@@ -208,12 +208,12 @@ export default function AdminCertificationsPage() {
                 <p className="text-sm text-gray-600">
                   <strong>Date:</strong> {formatDate(certification.date)}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-400">
                   <strong>Category:</strong> 
-                  <span className={`ml-1 px-2 py-1 rounded-full text-xs ${
+                  <span className={`ml-1 px-2 py-1 rounded-full text-xs font-semibold ${
                     certification.category === 'course' 
-                      ? 'bg-blue-100 text-blue-800' 
-                      : 'bg-green-100 text-green-800'
+                      ? 'bg-blue-900/80 text-blue-100 border border-blue-700' 
+                      : 'bg-green-900/80 text-green-100 border border-green-700'
                   }`}>
                     {certification.category === 'course' ? 'Course' : 'Competition'}
                   </span>
@@ -234,7 +234,7 @@ export default function AdminCertificationsPage() {
                       href={certification.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded hover:bg-blue-100"
+                      className="text-xs bg-blue-800/80 text-blue-100 px-2 py-1 rounded hover:bg-blue-900 border border-blue-700 transition-colors"
                     >
                       Verify
                     </a>
@@ -244,7 +244,7 @@ export default function AdminCertificationsPage() {
                       href={certification.certificate_file_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs bg-green-50 text-green-600 px-2 py-1 rounded hover:bg-green-100"
+                      className="text-xs bg-green-800/80 text-green-100 px-2 py-1 rounded hover:bg-green-900 border border-green-700 transition-colors"
                     >
                       View Certificate
                     </a>
@@ -254,7 +254,7 @@ export default function AdminCertificationsPage() {
                       href={certification.image_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded hover:bg-purple-100"
+                      className="text-xs bg-purple-800/80 text-purple-100 px-2 py-1 rounded hover:bg-purple-900 border border-purple-700 transition-colors"
                     >
                       View Image
                     </a>

@@ -298,21 +298,21 @@ export function CertificationForm({
                 Category *
               </label>
               <select
-                id="category"
-                value={formData.category}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    category: e.target.value as "course" | "competition",
-                  }))
-                }
-                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.category ? "border-red-500" : ""
-                }`}
-              >
-                <option value="course">Course Certification</option>
-                <option value="competition">Competition Certificate</option>
-              </select>
+                  id="category"
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: e.target.value as "course" | "competition",
+                    }))
+                  }
+                  className={`w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 ${
+                    errors.category ? "border-red-500" : ""
+                  }`}
+                >
+                  <option value="course">Course Certification</option>
+                  <option value="competition">Competition Certificate</option>
+                </select>
               {errors.category && (
                 <p className="text-red-500 text-sm mt-1">{errors.category}</p>
               )}
@@ -378,7 +378,7 @@ export function CertificationForm({
               }
               placeholder="Brief description of the certification..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100"
             />
           </div>
 
