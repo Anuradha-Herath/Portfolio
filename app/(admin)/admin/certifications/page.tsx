@@ -143,23 +143,23 @@ export default function AdminCertificationsPage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg w-fit">
+      <div className="flex space-x-1 bg-gray-800 p-1 rounded-lg w-fit">
         <button
           onClick={() => setActiveTab('course')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
             activeTab === 'course'
-              ? 'bg-white text-blue-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-blue-900 text-blue-100 border-blue-700 shadow-sm'
+              : 'bg-transparent text-gray-300 border-transparent hover:text-blue-200 hover:bg-blue-900/40'
           }`}
         >
           Course Certifications ({courseCertifications.length})
         </button>
         <button
           onClick={() => setActiveTab('competition')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors border ${
             activeTab === 'competition'
-              ? 'bg-white text-blue-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-green-900 text-green-100 border-green-700 shadow-sm'
+              : 'bg-transparent text-gray-300 border-transparent hover:text-green-200 hover:bg-green-900/40'
           }`}
         >
           Competition Certificates ({competitionCertifications.length})
@@ -267,20 +267,20 @@ export default function AdminCertificationsPage() {
       )}
 
       {/* Summary Stats */}
-      <div className="bg-white rounded-lg shadow p-6 mt-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Summary</h3>
+      <div className="bg-gray-900 rounded-lg shadow p-6 mt-8 border border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-100 mb-4">Summary</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{courseCertifications.length}</div>
-            <div className="text-sm text-gray-600">Course Certifications</div>
+            <div className="text-2xl font-bold text-blue-200">{courseCertifications.length}</div>
+            <div className="text-sm text-gray-400">Course Certifications</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">{competitionCertifications.length}</div>
-            <div className="text-sm text-gray-600">Competition Certificates</div>
+            <div className="text-2xl font-bold text-green-200">{competitionCertifications.length}</div>
+            <div className="text-sm text-gray-400">Competition Certificates</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">{certifications.length}</div>
-            <div className="text-sm text-gray-600">Total Certifications</div>
+            <div className="text-2xl font-bold text-purple-200">{certifications.length}</div>
+            <div className="text-sm text-gray-400">Total Certifications</div>
           </div>
         </div>
       </div>
