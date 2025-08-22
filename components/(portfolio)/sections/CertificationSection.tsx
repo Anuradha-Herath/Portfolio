@@ -101,26 +101,70 @@ export function CertificationSection() {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, ease }}
         >
-          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+          <div className="flex space-x-1 bg-[var(--background-tertiary)] p-1 rounded-xl border border-[var(--border)] glass shadow-lg">
             <button
               onClick={() => setActiveTab('course')}
-              className={`px-6 py-3 rounded-md text-sm font-medium transition-all duration-300 ${
-                activeTab === 'course'
-                  ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
+                transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+                ${activeTab === 'course'
+                  ? 'text-blue-300 shadow-md scale-105 z-10'
+                  : 'text-[var(--foreground-tertiary)] hover:text-blue-200'}
+              `}
+              style={{
+                background: activeTab === 'course'
+                  ? 'linear-gradient(135deg, rgba(0,122,255,0.12) 0%, rgba(88,86,214,0.10) 100%)'
+                  : 'transparent',
+                boxShadow: activeTab === 'course' ? '0 4px 24px 0 rgba(0,122,255,0.10)' : 'none',
+                border: activeTab === 'course' ? '1.5px solid var(--accent)' : '1.5px solid transparent',
+                transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'}
+              onMouseLeave={e => e.currentTarget.style.transform = activeTab === 'course' ? 'scale(1.05)' : 'scale(1)'}
             >
-              Course Certifications ({courseCertifications.length})
+              <span className="relative z-10">Course Certifications ({courseCertifications.length})</span>
+              {activeTab === 'course' && (
+                <motion.span
+                  layoutId="cert-tab-bg"
+                  className="absolute inset-0 rounded-lg pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(0,122,255,0.18) 0%, rgba(88,86,214,0.14) 100%)',
+                    zIndex: 0,
+                  }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                />
+              )}
             </button>
             <button
               onClick={() => setActiveTab('competition')}
-              className={`px-6 py-3 rounded-md text-sm font-medium transition-all duration-300 ${
-                activeTab === 'competition'
-                  ? 'bg-white text-green-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
+                transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+                ${activeTab === 'competition'
+                  ? 'text-green-300 shadow-md scale-105 z-10'
+                  : 'text-[var(--foreground-tertiary)] hover:text-green-200'}
+              `}
+              style={{
+                background: activeTab === 'competition'
+                  ? 'linear-gradient(135deg, rgba(0,255,122,0.10) 0%, rgba(0,122,255,0.10) 100%)'
+                  : 'transparent',
+                boxShadow: activeTab === 'competition' ? '0 4px 24px 0 rgba(0,255,122,0.10)' : 'none',
+                border: activeTab === 'competition' ? '1.5px solid #22c55e' : '1.5px solid transparent',
+                transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'}
+              onMouseLeave={e => e.currentTarget.style.transform = activeTab === 'competition' ? 'scale(1.05)' : 'scale(1)'}
             >
-              Competition Certificates ({competitionCertifications.length})
+              <span className="relative z-10">Competition Certificates ({competitionCertifications.length})</span>
+              {activeTab === 'competition' && (
+                <motion.span
+                  layoutId="cert-tab-bg"
+                  className="absolute inset-0 rounded-lg pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(0,122,255,0.12) 100%)',
+                    zIndex: 0,
+                  }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                />
+              )}
             </button>
           </div>
         </motion.div>
