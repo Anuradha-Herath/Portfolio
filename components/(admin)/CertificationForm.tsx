@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { UploadIcon, ImageIcon, TrashIcon } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -30,6 +31,81 @@ export function CertificationForm({
   });
   const [certificateFile, setCertificateFile] = useState<File | null>(null);
   const [certificateImage, setCertificateImage] = useState<File | null>(null);
+  const [certificateImagePreview, setCertificateImagePreview] = useState<string>('');
+  const [dragOverImage, setDragOverImage] = useState(false);
+  const [dragOverFile, setDragOverFile] = useState(false);
+  const certificateImageInputRef = useRef<HTMLInputElement>(null);
+  const certificateFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Certificate Image Drag & Drop Handlers
+  const handleImageDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverImage(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleImageSelect(file);
+  };
+  const handleImageDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverImage(true);
+  };
+  const handleImageDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverImage(false);
+  };
+  const handleImageSelect = (file: File) => {
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      setErrors((prev) => ({ ...prev, certificate_image: 'Only image files (JPG, PNG, WebP) are allowed' }));
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, certificate_image: 'Image size must be less than 5MB' }));
+      return;
+    }
+    setCertificateImage(file);
+    setErrors((prev) => ({ ...prev, certificate_image: '' }));
+    const reader = new FileReader();
+    reader.onload = (e) => setCertificateImagePreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+  const removeCertificateImage = () => {
+    setCertificateImage(null);
+    setCertificateImagePreview('');
+    if (certificateImageInputRef.current) certificateImageInputRef.current.value = '';
+  };
+
+  // Certificate File Drag & Drop Handlers
+  const handleFileDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverFile(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
+  };
+  const handleFileDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverFile(true);
+  };
+  const handleFileDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverFile(false);
+  };
+  const handleFileSelect = (file: File) => {
+    const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      setErrors((prev) => ({ ...prev, certificate_file: 'Only PDF and image files (JPG, PNG, WebP) are allowed' }));
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, certificate_file: 'File size must be less than 10MB' }));
+      return;
+    }
+    setCertificateFile(file);
+    setErrors((prev) => ({ ...prev, certificate_file: '' }));
+  };
+  const removeCertificateFile = () => {
+    setCertificateFile(null);
+    if (certificateFileInputRef.current) certificateFileInputRef.current.value = '';
+  };
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
@@ -118,27 +194,27 @@ export function CertificationForm({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type - only images for certificate image
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
       if (!validTypes.includes(file.type)) {
-        setErrors(prev => ({ 
-          ...prev, 
-          certificate_image: 'Only image files (JPG, PNG, WebP) are allowed' 
+        setErrors(prev => ({
+          ...prev,
+          certificate_image: 'Only image files (JPG, PNG, WebP) are allowed'
         }));
         return;
       }
-
-      // Validate file size (5MB for images)
       if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({ 
-          ...prev, 
-          certificate_image: 'Image size must be less than 5MB' 
+        setErrors(prev => ({
+          ...prev,
+          certificate_image: 'Image size must be less than 5MB'
         }));
         return;
       }
-
       setErrors(prev => ({ ...prev, certificate_image: '' }));
       setCertificateImage(file);
+      // Set preview for file input selection
+      const reader = new FileReader();
+      reader.onload = (e) => setCertificateImagePreview(e.target?.result as string);
+      reader.readAsDataURL(file);
     }
   };
 
@@ -307,35 +383,86 @@ export function CertificationForm({
           </div>
 
           <div>
-            <label
-              htmlFor="certificate_image"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-            >
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Certificate Image
             </label>
-            <input
-              id="certificate_image"
-              type="file"
-              accept=".jpg,.jpeg,.png,.webp"
-              onChange={handleImageChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Upload an image of the certificate for display (max 5MB).
-              Supported formats: JPG, PNG, WebP
-            </p>
+            <div
+              className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
+                dragOverImage
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                  : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'
+              }`}
+              onDrop={handleImageDrop}
+              onDragOver={handleImageDragOver}
+              onDragLeave={handleImageDragLeave}
+            >
+              {certificateImagePreview ? (
+                <div className="text-center">
+                  <div className="relative inline-block">
+                    <div className="w-32 h-24 mx-auto mb-3 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-lg">
+                      <img
+                        src={certificateImagePreview}
+                        alt="Certificate preview"
+                        className="w-28 h-20 object-contain"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={removeCertificateImage}
+                      className="absolute -top-2 -right-2 w-6 h-6 p-0 rounded-full bg-red-500 hover:bg-red-600 text-white border-red-500"
+                    >
+                      <TrashIcon className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {certificateImage ? certificateImage.name : 'Current image'}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => certificateImageInputRef.current?.click()}
+                    className="mt-2"
+                  >
+                    Change Image
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <ImageIcon className="mx-auto h-12 w-12 text-slate-400" />
+                  <div className="mt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => certificateImageInputRef.current?.click()}
+                      className="flex items-center gap-2 mx-auto"
+                    >
+                      <UploadIcon className="h-4 w-4" />
+                      Upload Certificate Image
+                    </Button>
+                  </div>
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                    Drag and drop an image file here, or click to browse
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                    JPG, PNG, WebP only, max 5MB
+                  </p>
+                </div>
+              )}
+              <input
+                ref={certificateImageInputRef}
+                id="certificate_image"
+                type="file"
+                accept=".jpg,.jpeg,.png,.webp"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </div>
             {errors.certificate_image && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.certificate_image}
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.certificate_image}</p>
             )}
-            {certificateImage && (
-              <p className="text-green-600 text-sm mt-1">
-                Selected: {certificateImage.name} (
-                {(certificateImage.size / 1024 / 1024).toFixed(2)} MB)
-              </p>
-            )}
-            {certification?.image_url && !certificateImage && (
+            {certification?.image_url && !certificateImage && !certificateImagePreview && (
               <div className="mt-2">
                 <p className="text-blue-600 text-sm mb-2">Current image:</p>
                 <img
@@ -348,37 +475,84 @@ export function CertificationForm({
           </div>
 
           <div>
-            <label
-              htmlFor="certificate_file"
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-            >
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Certificate File
             </label>
-            <input
-              id="certificate_file"
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.png,.webp"
-              onChange={handleFileChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Upload PDF or image file (max 10MB). Supported formats: PDF, JPG,
-              PNG, WebP
-            </p>
+            <div
+              className={`relative border-2 border-dashed rounded-lg p-6 transition-colors ${
+                dragOverFile
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                  : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'
+              }`}
+              onDrop={handleFileDrop}
+              onDragOver={handleFileDragOver}
+              onDragLeave={handleFileDragLeave}
+            >
+              {certificateFile ? (
+                <div className="text-center">
+                  <div className="relative inline-block">
+                    <div className="w-16 h-16 mx-auto mb-3 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-lg">
+                      <UploadIcon className="w-8 h-8 text-blue-500" />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={removeCertificateFile}
+                      className="absolute -top-2 -right-2 w-6 h-6 p-0 rounded-full bg-red-500 hover:bg-red-600 text-white border-red-500"
+                    >
+                      <TrashIcon className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {certificateFile.name} ({(certificateFile.size / 1024 / 1024).toFixed(2)} MB)
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => certificateFileInputRef.current?.click()}
+                    className="mt-2"
+                  >
+                    Change File
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <UploadIcon className="mx-auto h-12 w-12 text-slate-400" />
+                  <div className="mt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => certificateFileInputRef.current?.click()}
+                      className="flex items-center gap-2 mx-auto"
+                    >
+                      <UploadIcon className="h-4 w-4" />
+                      Upload Certificate File
+                    </Button>
+                  </div>
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                    Drag and drop a PDF or image file here, or click to browse
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                    PDF, JPG, PNG, WebP only, max 10MB
+                  </p>
+                </div>
+              )}
+              <input
+                ref={certificateFileInputRef}
+                id="certificate_file"
+                type="file"
+                accept=".pdf,.jpg,.jpeg,.png,.webp"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </div>
             {errors.certificate_file && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.certificate_file}
-              </p>
-            )}
-            {certificateFile && (
-              <p className="text-green-600 text-sm mt-1">
-                Selected: {certificateFile.name} (
-                {(certificateFile.size / 1024 / 1024).toFixed(2)} MB)
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.certificate_file}</p>
             )}
             {certification?.certificate_file_url && !certificateFile && (
               <p className="text-blue-600 text-sm mt-1">
-                Current file:{" "}
+                Current file:{' '}
                 <a
                   href={certification.certificate_file_url}
                   target="_blank"
