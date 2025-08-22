@@ -4,7 +4,7 @@ import { requireAuth } from '@/lib/auth';
 
 export const POST = requireAuth(async () => {
   try {
-    await storageOperations.ensureBucketExists();
+    await storageOperations.ensureAllBucketsExist();
     return NextResponse.json({ message: 'Storage initialized successfully' });
   } catch (error) {
     console.error('Error initializing storage:', error);

@@ -47,6 +47,9 @@ export interface Certification {
   credential_id?: string;
   url?: string;
   image_url?: string;
+  category: 'course' | 'competition';
+  description?: string;
+  certificate_file_url?: string;
 }
 
 export interface Testimonial {
