@@ -144,59 +144,59 @@ export function CertificationSection() {
             >
               {currentCertifications.map((cert) => (
                 <motion.div key={cert.id} variants={cardVariants}>
-                  <Card hover className="h-full group">
-                    <CardContent className="p-6">
-                      {/* Certificate Image or Icon */}
-                      {cert.image_url ? (
-                        <div className="mb-4 group-hover:scale-105 transition-transform duration-300">
-                          <img 
-                            src={cert.image_url} 
-                            alt={`${cert.title} certificate`}
-                            className="w-full h-48 object-cover rounded-lg shadow-sm"
-                          />
-                        </div>
-                      ) : (
-                        <div className={`h-20 bg-gradient-to-br ${
-                          activeTab === 'course' 
-                            ? 'from-blue-100 to-purple-100' 
-                            : 'from-green-100 to-blue-100'
-                        } rounded-lg flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300`}>
-                          <div className={activeTab === 'course' ? 'text-blue-600' : 'text-green-600'}>
-                            {activeTab === 'course' ? (
-                              <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
-                              </svg>
-                            ) : (
-                              <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M5,16L3,5H1V3H4L6,14H18.5L19.5,7H8.5V5H21L19,17H5M6,20A1,1 0 0,0 7,21A1,1 0 0,0 8,20A1,1 0 0,0 7,19A1,1 0 0,0 6,20M16,20A1,1 0 0,0 17,21A1,1 0 0,0 18,20A1,1 0 0,0 17,19A1,1 0 0,0 16,20Z" />
-                              </svg>
-                            )}
+                    <Card hover className="h-full group card-premium border border-[var(--border)] bg-[var(--surface)]">
+                      <CardContent className="p-6">
+                        {/* Certificate Image or Icon */}
+                        {cert.image_url ? (
+                          <div className="mb-4 group-hover:scale-105 transition-transform duration-300">
+                            <img 
+                              src={cert.image_url} 
+                              alt={`${cert.title} certificate`}
+                              className="w-full h-48 object-cover rounded-lg shadow-sm bg-[var(--background-tertiary)]"
+                            />
                           </div>
-                        </div>
-                      )}
+                        ) : (
+                          <div className={`h-20 bg-gradient-to-br ${
+                            activeTab === 'course' 
+                              ? 'from-[var(--background-tertiary)] to-[var(--surface)]' 
+                              : 'from-[var(--background-secondary)] to-[var(--surface-hover)]'
+                          } rounded-lg flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300`}>
+                            <div className={activeTab === 'course' ? 'text-blue-400' : 'text-green-400'}>
+                              {activeTab === 'course' ? (
+                                <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
+                                </svg>
+                              ) : (
+                                <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M5,16L3,5H1V3H4L6,14H18.5L19.5,7H8.5V5H21L19,17H5M6,20A1,1 0 0,0 7,21A1,1 0 0,0 8,20A1,1 0 0,0 7,19A1,1 0 0,0 6,20M16,20A1,1 0 0,0 17,21A1,1 0 0,0 18,20A1,1 0 0,0 17,19A1,1 0 0,0 16,20Z" />
+                                </svg>
+                              )}
+                            </div>
+                          </div>
+                        )}
 
-                      <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight line-clamp-2">
+                      <h3 className="text-lg font-bold text-[var(--foreground)] mb-2 leading-tight line-clamp-2">
                         {cert.title}
                       </h3>
 
                       <p className={`font-semibold mb-2 ${
-                        activeTab === 'course' ? 'text-blue-600' : 'text-green-600'
+                        activeTab === 'course' ? 'text-blue-400' : 'text-green-400'
                       }`}>
                         {cert.issuer}
                       </p>
 
-                      <p className="text-gray-500 text-sm mb-3">
+                      <p className="text-[var(--foreground-tertiary)] text-sm mb-3">
                         Earned: {formatDate(cert.date)}
                       </p>
 
                       {cert.description && (
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                        <p className="text-[var(--foreground-secondary)] text-sm mb-3 line-clamp-2">
                           {cert.description}
                         </p>
                       )}
 
                       {cert.credential_id && (
-                        <p className="text-gray-600 text-xs mb-4 font-mono bg-gray-50 p-2 rounded">
+                        <p className="text-[var(--foreground-tertiary)] text-xs mb-4 font-mono bg-[var(--background-tertiary)] p-2 rounded">
                           ID: {cert.credential_id}
                         </p>
                       )}
@@ -209,8 +209,8 @@ export function CertificationSection() {
                             rel="noopener noreferrer"
                             className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                               activeTab === 'course'
-                                ? 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                                : 'bg-green-50 text-green-600 hover:bg-green-100'
+                                ? 'bg-[var(--background-tertiary)] text-blue-400 hover:bg-[var(--surface-hover)]'
+                                : 'bg-[var(--background-tertiary)] text-green-400 hover:bg-[var(--surface-hover)]'
                             }`}
                           >
                             Verify Certificate
@@ -221,7 +221,7 @@ export function CertificationSection() {
                             href={cert.certificate_file_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors"
+                            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[var(--background-tertiary)] text-purple-400 hover:bg-[var(--surface-hover)] transition-colors"
                           >
                             View Certificate
                           </a>
