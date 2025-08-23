@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.536.0",
     "next": "^15.4.5",
+    "nodemailer": "^7.0.5",
     "react": "^18",
     "react-dom": "^18",
     "react-intersection-observer": "^9.16.0",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/nodemailer": "^7.0.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",

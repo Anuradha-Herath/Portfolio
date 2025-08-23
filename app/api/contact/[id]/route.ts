@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbOperations } from '@/lib/db';
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const body = await request.json();
     const { status } = body;
-    const id = params.id;
+    const { id } = await context.params;
 
     // Validate status
     if (!['unread', 'read', 'replied'].includes(status)) {
@@ -29,12 +27,10 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const id = params.id;
+    const { id } = await context.params;
     await dbOperations.deleteContactMessage(id);
     return NextResponse.json({ message: 'Contact deleted successfully' });
   } catch (error) {

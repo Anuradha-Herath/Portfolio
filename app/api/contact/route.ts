@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbOperations } from '@/lib/db';
+import nodemailer from 'nodemailer';
 
 export async function GET() {
   try {
@@ -45,10 +46,56 @@ export async function POST(request: NextRequest) {
       status: 'unread'
     });
 
+    // Send email notification using Nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: process.env.GMAIL_USER, // send to yourself
+      subject: `Portfolio Contact: ${subject}`,
+      text: `You received a new contact message from your portfolio website.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
+            New Contact Form Submission
+          </h2>
+          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <div style="margin-top: 15px;">
+              <strong>Message:</strong>
+              <div style="background-color: white; padding: 15px; border-left: 4px solid #007bff; margin-top: 10px;">
+                ${message.replace(/\n/g, '<br>')}
+              </div>
+            </div>
+          </div>
+          <p style="color: #666; font-size: 12px;">
+            This message was sent from your portfolio contact form at ${new Date().toLocaleString()}.
+          </p>
+        </div>
+      `,
+      replyTo: email,
+    };
+
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Contact email sent successfully:', info.messageId);
+    } catch (mailError) {
+      console.error('Error sending contact email:', mailError);
+      // Log the error but don't fail the request - the contact message is still saved
+    }
+
     return NextResponse.json(
-      { 
+      {
         message: 'Contact message sent successfully',
-        id: contact.id 
+        id: contact.id,
       },
       { status: 201 }
     );
