@@ -81,3 +81,14 @@ export interface ContactInfo {
   github?: string;
   twitter?: string;
 }
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: 'unread' | 'read' | 'replied';
+  created_at: string;
+  updated_at: string;
+}

@@ -11,7 +11,8 @@ import {
   FileTextIcon,
   StarIcon,
   LogOutIcon,
-  FolderIcon
+  FolderIcon,
+  MailIcon
 } from 'lucide-react';
 
 interface AdminNavProps {
@@ -27,6 +28,7 @@ const navItems = [
   { name: 'Certifications', href: '/admin/certifications', icon: StarIcon },
   { name: 'Testimonials', href: '/admin/testimonials', icon: UserIcon },
   { name: 'Blogs', href: '/admin/blogs', icon: FileTextIcon },
+  { name: 'Messages', href: '/admin/messages', icon: MailIcon },
 ];
 
 export function AdminNav({ onLogout }: AdminNavProps) {

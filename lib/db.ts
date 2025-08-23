@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { Project, Skill, Experience, Education, Certification, Testimonial, BlogPost } from './types';
+import { Project, Skill, Experience, Education, Certification, Testimonial, BlogPost, ContactMessage } from './types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -54,6 +54,11 @@ export interface Database {
         Row: BlogPost;
         Insert: Omit<BlogPost, 'id'>;
         Update: Partial<Omit<BlogPost, 'id'>>;
+      };
+      contacts: {
+        Row: ContactMessage;
+        Insert: Omit<ContactMessage, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<ContactMessage, 'id' | 'created_at' | 'updated_at'>>;
       };
     };
   };
@@ -360,5 +365,56 @@ export const dbOperations = {
       .eq('id', id);
     
     if (error) throw error;
+  },
+
+  // Contact Messages
+  async getContactMessages() {
+    const { data, error } = await supabaseAdmin
+      .from('contacts')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data as ContactMessage[];
+  },
+
+  async createContactMessage(contact: Omit<ContactMessage, 'id' | 'created_at' | 'updated_at'>) {
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert(contact)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data as ContactMessage;
+  },
+
+  async updateContactMessage(id: string, updates: Partial<Omit<ContactMessage, 'id' | 'created_at' | 'updated_at'>>) {
+    const { data, error } = await supabaseAdmin
+      .from('contacts')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data as ContactMessage;
+  },
+
+  async deleteContactMessage(id: string) {
+    const { error } = await supabaseAdmin
+      .from('contacts')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+  },
+
+  async markContactAsRead(id: string) {
+    return this.updateContactMessage(id, { status: 'read' });
+  },
+
+  async markContactAsReplied(id: string) {
+    return this.updateContactMessage(id, { status: 'replied' });
   }
 };
