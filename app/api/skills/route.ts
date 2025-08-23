@@ -7,7 +7,7 @@ import { Skill } from '@/lib/types';
 export async function GET() {
   try {
     const skills = await dbOperations.getSkills();
-    return NextResponse.json(skills);
+    return NextResponse.json({ skills });
   } catch (error) {
     console.error('Error fetching skills:', error);
     return NextResponse.json(

@@ -42,7 +42,7 @@ export function SkillsSection() {
         const response = await fetch("/api/skills");
         if (response.ok) {
           const data = await response.json();
-          setSkillsData(data);
+          setSkillsData(data.skills || []);
         }
       } catch (error) {
         console.error("Error fetching skills:", error);

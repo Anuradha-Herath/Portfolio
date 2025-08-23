@@ -1,6 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
+import Cropper from 'react-easy-crop';
+import { Dialog } from '@headlessui/react';
+import { getCroppedImg } from '@/lib/utils';
+// Skill type for suggestions
+interface SkillSuggestion {
+  id: string;
+  name: string;
+}
 import { Project } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -31,7 +39,44 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  // Cropper states
+  const [showCropper, setShowCropper] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [skillSuggestions, setSkillSuggestions] = useState<SkillSuggestion[]>([]);
+  const [filteredSuggestions, setFilteredSuggestions] = useState<SkillSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Fetch skills for suggestions
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const res = await fetch('/api/skills');
+        if (!res.ok) return;
+        const data = await res.json();
+        setSkillSuggestions(data.skills || []);
+      } catch (err) {
+        // Ignore error
+      }
+    };
+    fetchSkills();
+  }, []);
+
+  // Filter suggestions as user types
+  useEffect(() => {
+    if (newTechnology.trim() === '') {
+      setFilteredSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    const filtered = skillSuggestions.filter(skill =>
+      skill.name.toLowerCase().includes(newTechnology.trim().toLowerCase()) &&
+      !formData.technologies.includes(skill.name)
+    );
+    setFilteredSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+  }, [newTechnology, skillSuggestions, formData.technologies]);
 
   useEffect(() => {
     if (project) {
@@ -62,19 +107,17 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
         alert('Please select a valid image file (JPG, PNG, WebP, GIF)');
         return;
       }
-
       // Validate file size (5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('File size must be less than 5MB');
         return;
       }
-
       setSelectedImage(file);
-      
-      // Create preview
+      // Show cropper modal
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
+      reader.onload = (ev) => {
+        setImagePreview(ev.target?.result as string);
+        setShowCropper(true);
       };
       reader.readAsDataURL(file);
     }
@@ -82,22 +125,26 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
 
   const uploadImage = async (): Promise<string | null> => {
     if (!selectedImage) return null;
-
     setIsUploadingImage(true);
     try {
+      let fileToUpload = selectedImage;
+      // If cropped, use cropped image
+      if (imagePreview && croppedAreaPixels) {
+        const croppedBlob = await getCroppedImg(imagePreview, croppedAreaPixels);
+        if (croppedBlob) {
+          fileToUpload = new File([croppedBlob], selectedImage.name, { type: croppedBlob.type });
+        }
+      }
       const formData = new FormData();
-      formData.append('file', selectedImage);
-      formData.append('fileName', selectedImage.name);
-
+      formData.append('file', fileToUpload);
+      formData.append('fileName', fileToUpload.name);
       const response = await fetch('/api/upload/project-image', {
         method: 'POST',
         body: formData,
       });
-
       if (!response.ok) {
         throw new Error('Failed to upload image');
       }
-
       const { url } = await response.json();
       return url;
     } catch (error) {
@@ -107,6 +154,27 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
     } finally {
       setIsUploadingImage(false);
     }
+  };
+  // Cropper helpers
+  const onCropComplete = (_: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const handleCropSave = async () => {
+    if (!imagePreview || !croppedAreaPixels) return;
+    const croppedBlob = await getCroppedImg(imagePreview, croppedAreaPixels);
+    if (croppedBlob) {
+      setImagePreview(URL.createObjectURL(croppedBlob));
+      setSelectedImage(new File([croppedBlob], selectedImage?.name || 'cropped-image', { type: croppedBlob.type }));
+    }
+    setShowCropper(false);
+  };
+
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setSelectedImage(null);
+    setImagePreview('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -138,13 +206,16 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
     }
   };
 
-  const addTechnology = () => {
-    if (newTechnology.trim() && !formData.technologies.includes(newTechnology.trim())) {
+
+  const addTechnology = (techName?: string) => {
+    const tech = (techName ?? newTechnology).trim();
+    if (tech && !formData.technologies.includes(tech)) {
       setFormData(prev => ({
         ...prev,
-        technologies: [...prev.technologies, newTechnology.trim()]
+        technologies: [...prev.technologies, tech]
       }));
       setNewTechnology('');
+      setShowSuggestions(false);
     }
   };
 
@@ -156,8 +227,45 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
   };
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      <CardContent className="p-6">
+    <>
+      {/* Cropper Modal */}
+      <Dialog open={showCropper} onClose={handleCropCancel} className="fixed z-50 inset-0 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-4">
+          <div className="fixed inset-0 bg-black opacity-50" aria-hidden="true" />
+          <div className="relative bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 z-10 w-full max-w-lg">
+            <Dialog.Title className="text-lg font-bold mb-4">Crop Project Image</Dialog.Title>
+            <div className="relative w-full h-72 bg-slate-200 rounded-md overflow-hidden">
+              <Cropper
+                image={imagePreview}
+                crop={crop}
+                zoom={zoom}
+                aspect={16/9}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+              />
+            </div>
+            <div className="flex items-center gap-4 mt-4">
+              <label className="text-sm">Zoom</label>
+              <input
+                type="range"
+                min={1}
+                max={3}
+                step={0.01}
+                value={zoom}
+                onChange={e => setZoom(Number(e.target.value))}
+                className="w-32"
+              />
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <Button type="button" variant="outline" onClick={handleCropCancel}>Cancel</Button>
+              <Button type="button" onClick={handleCropSave}>Crop & Save</Button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+      <Card className="max-w-2xl mx-auto">
+        <CardContent className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
             {project ? 'Edit Project' : 'Add New Project'}
@@ -252,17 +360,43 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Technologies
             </label>
-            <div className="flex gap-2 mb-3">
-              <Input
-                type="text"
-                value={newTechnology}
-                onChange={(e) => setNewTechnology(e.target.value)}
-                placeholder="Add technology"
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTechnology())}
-              />
-              <Button type="button" onClick={addTechnology} variant="outline" className="px-3">
-                <PlusIcon className="h-4 w-4" />
-              </Button>
+            <div className="flex flex-col gap-1 mb-3 relative">
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  value={newTechnology}
+                  onChange={(e) => setNewTechnology(e.target.value)}
+                  placeholder="Add technology"
+                  onFocus={() => setShowSuggestions(filteredSuggestions.length > 0)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (filteredSuggestions.length > 0) {
+                        addTechnology(filteredSuggestions[0].name);
+                      } else {
+                        addTechnology();
+                      }
+                    }
+                  }}
+                />
+                <Button type="button" onClick={() => addTechnology()} variant="outline" className="px-3">
+                  <PlusIcon className="h-4 w-4" />
+                </Button>
+              </div>
+              {showSuggestions && filteredSuggestions.length > 0 && (
+                <ul className="absolute z-10 top-full left-0 w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md shadow-lg mt-1 max-h-40 overflow-y-auto">
+                  {filteredSuggestions.map((skill) => (
+                    <li
+                      key={skill.id}
+                      className="px-3 py-2 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 text-slate-800 dark:text-white"
+                      onMouseDown={() => addTechnology(skill.name)}
+                    >
+                      {skill.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               {formData.technologies.map((tech) => (
@@ -360,5 +494,6 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
         </form>
       </CardContent>
     </Card>
+    </>
   );
 }
