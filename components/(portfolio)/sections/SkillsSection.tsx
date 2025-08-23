@@ -54,10 +54,12 @@ export function SkillsSection() {
     fetchSkills();
   }, []);
 
+  const levelOrder = ["Expert", "Advanced", "Intermediate", "Beginner"];
   const filteredSkills =
-    activeFilter === "All"
+    (activeFilter === "All"
       ? skillsData
-      : skillsData.filter((skill) => skill.category === activeFilter);
+      : skillsData.filter((skill) => skill.category === activeFilter)
+    ).slice().sort((a, b) => levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level));
 
   const renderProficiencyDots = (level: string) => {
     const totalDots = 4;
