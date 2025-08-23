@@ -55,34 +55,32 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: process.env.GMAIL_USER, // send to yourself
-      subject: `Portfolio Contact: ${subject}`,
-      text: `You received a new contact message from your portfolio website.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-            New Contact Form Submission
-          </h2>
-          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-            <p><strong>Subject:</strong> ${subject}</p>
-            <div style="margin-top: 15px;">
-              <strong>Message:</strong>
-              <div style="background-color: white; padding: 15px; border-left: 4px solid #007bff; margin-top: 10px;">
-                ${message.replace(/\n/g, '<br>')}
+      const mailOptions = {
+        from: process.env.GMAIL_USER,
+        to: process.env.GMAIL_USER, // send to yourself
+        subject: `Portfolio Contact: ${subject}`,
+        text: `You received a new contact message from your portfolio website.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;">
+            <div style="background: #5856d6; color: #fff; padding: 24px 32px;">
+              <h2 style="margin: 0;">New Contact Message</h2>
+            </div>
+            <div style="padding: 24px 32px;">
+              <p style="font-size: 16px; color: #333;"><strong>Name:</strong> ${name}</p>
+              <p style="font-size: 16px; color: #333;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #5856d6;">${email}</a></p>
+              <p style="font-size: 16px; color: #333;"><strong>Subject:</strong> ${subject}</p>
+              <div style="margin-top: 20px; padding: 16px; background: #fff; border-left: 4px solid #5856d6;">
+                <strong>Message:</strong>
+                <div style="margin-top: 8px; color: #444;">${message.replace(/\n/g, '<br>')}</div>
               </div>
             </div>
+            <div style="background: #f1f1f1; color: #888; padding: 16px 32px; font-size: 12px;">
+              Sent from your portfolio contact form • ${new Date().toLocaleString()}
+            </div>
           </div>
-          <p style="color: #666; font-size: 12px;">
-            This message was sent from your portfolio contact form at ${new Date().toLocaleString()}.
-          </p>
-        </div>
-      `,
-      replyTo: email,
-    };
+        `,
+        replyTo: email,
+      };
 
     try {
       const info = await transporter.sendMail(mailOptions);
