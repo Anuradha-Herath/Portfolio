@@ -93,42 +93,65 @@ export function SkillsSection() {
   return (
     <motion.section
       id="skills"
-      className="py-24 bg-[var(--background)] relative overflow-hidden"
+      className="relative py-24 bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/40 dark:from-slate-900 dark:via-indigo-950/50 dark:to-purple-950/20 overflow-hidden"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
     >
-      {/* Premium Background Effects */}
-      <div className="absolute inset-0">
+      {/* Animated Background Effects (copied from ProjectsSection) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Animated gradient orbs */}
         <motion.div
-          className="absolute top-1/4 right-1/4 w-72 h-72 bg-[var(--accent)]/5 rounded-full blur-3xl"
+          className="absolute top-20 -right-20 w-96 h-96 bg-gradient-to-br from-blue-400/20 via-indigo-500/20 to-purple-600/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
+            rotate: [0, 180, 360],
             opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
-            duration: 8,
+            duration: 20,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
         <motion.div
-          className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-[#5856d6]/5 rounded-full blur-3xl"
+          className="absolute -bottom-20 -left-20 w-96 h-96 bg-gradient-to-tr from-violet-400/20 via-purple-500/20 to-pink-600/20 rounded-full blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
-            opacity: [0.5, 0.3, 0.5],
+            rotate: [360, 180, 0],
+            opacity: [0.4, 0.2, 0.4],
           }}
           transition={{
-            duration: 10,
+            duration: 25,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 2,
           }}
         />
+        {/* Floating particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-indigo-400/30 rounded-full"
+            style={{
+              left: `${20 + i * 15}%`,
+              top: `${30 + i * 10}%`,
+            }}
+            animate={{
+              y: [-20, 20, -20],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: 4 + i,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.5,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
