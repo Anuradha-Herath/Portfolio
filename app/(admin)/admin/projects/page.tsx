@@ -169,7 +169,7 @@ export default function AdminProjectsPage() {
                   <img
                     src={project.image_url}
                     alt={project.title}
-                    className="w-full h-32 object-cover rounded-lg"
+                    className="w-full max-h-64 object-contain rounded-lg bg-slate-100 dark:bg-slate-800"
                   />
                 )}
 

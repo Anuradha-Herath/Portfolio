@@ -7,6 +7,8 @@ export interface Project {
   github_url?: string;
   live_url?: string;
   featured: boolean;
+  status: 'completed' | 'ongoing'; // Project status
+  type: 'individual' | 'group';   // Project type
 }
 
 export interface Education {
