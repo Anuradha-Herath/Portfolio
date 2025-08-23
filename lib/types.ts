@@ -2,10 +2,10 @@ export interface Project {
   id: string;
   title: string;
   description: string;
-  imageUrl: string;
+  image_url?: string;
   technologies: string[];
-  githubUrl?: string;
-  liveUrl?: string;
+  github_url?: string;
+  live_url?: string;
   featured: boolean;
 }
 
@@ -14,8 +14,8 @@ export interface Education {
   institution: string;
   degree: string;
   field: string;
-  startDate: string;
-  endDate: string;
+  start_date: string;
+  end_date: string;
   description: string;
   grade?: string;
 }
@@ -24,8 +24,8 @@ export interface Experience {
   id: string;
   company: string;
   position: string;
-  startDate: string;
-  endDate: string | null;
+  start_date: string;
+  end_date: string | null;
   description: string;
   technologies: string[];
   location: string;
@@ -44,9 +44,12 @@ export interface Certification {
   title: string;
   issuer: string;
   date: string;
-  credentialId?: string;
+  credential_id?: string;
   url?: string;
-  imageUrl?: string;
+  image_url?: string;
+  category: 'course' | 'competition';
+  description?: string;
+  certificate_file_url?: string;
 }
 
 export interface Testimonial {
@@ -55,7 +58,7 @@ export interface Testimonial {
   position: string;
   company: string;
   content: string;
-  imageUrl?: string;
+  image_url?: string;
   rating: number;
 }
 
@@ -64,10 +67,10 @@ export interface BlogPost {
   title: string;
   excerpt: string;
   content: string;
-  imageUrl: string;
-  publishedAt: string;
+  image_url: string;
+  published_at: string;
   tags: string[];
-  readTime: number;
+  read_time: number;
 }
 
 export interface ContactInfo {
@@ -77,4 +80,15 @@ export interface ContactInfo {
   linkedin?: string;
   github?: string;
   twitter?: string;
+}
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: 'unread' | 'read' | 'replied';
+  created_at: string;
+  updated_at: string;
 }

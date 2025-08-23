@@ -13,10 +13,10 @@ const blogPosts: BlogPost[] = [
     excerpt:
       "Learn how to structure large React applications using TypeScript for better maintainability and developer experience.",
     content: "Full content here...",
-    imageUrl: "/images/blog1.jpg",
-    publishedAt: "2024-01-15",
+    image_url: "/images/blog1.jpg",
+    published_at: "2024-01-15",
     tags: ["React", "TypeScript", "Frontend"],
-    readTime: 8,
+    read_time: 8,
   },
   {
     id: "2",
@@ -24,10 +24,10 @@ const blogPosts: BlogPost[] = [
     excerpt:
       "Explore best practices for building robust and performant backend APIs using Node.js and Express framework.",
     content: "Full content here...",
-    imageUrl: "/images/blog2.jpg",
-    publishedAt: "2024-01-08",
+    image_url: "/images/blog2.jpg",
+    published_at: "2024-01-08",
     tags: ["Node.js", "Express", "Backend"],
-    readTime: 12,
+    read_time: 12,
   },
   {
     id: "3",
@@ -35,10 +35,10 @@ const blogPosts: BlogPost[] = [
     excerpt:
       "Understanding the fundamentals of database design and how to optimize your data models for performance.",
     content: "Full content here...",
-    imageUrl: "/images/blog3.jpg",
-    publishedAt: "2024-01-01",
+    image_url: "/images/blog3.jpg",
+    published_at: "2024-01-01",
     tags: ["Database", "PostgreSQL", "Design"],
-    readTime: 10,
+    read_time: 10,
   },
 ];
 
@@ -84,10 +84,10 @@ export function BlogSection() {
               <CardContent className="flex-1 p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm text-gray-500">
-                    {formatDate(post.publishedAt)}
+                    {formatDate(post.published_at)}
                   </span>
                   <span className="text-sm text-gray-500">
-                    {post.readTime} min read
+                    {post.read_time} min read
                   </span>
                 </div>
 
