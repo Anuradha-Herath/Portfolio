@@ -147,7 +147,7 @@ export function ContactSection() {
 
           {/* Contact Form */}
           <Card>
-            <CardContent className="p-8">
+            <CardContent className="p-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
               <h3 className="text-2xl font-bold text-gray-100 mb-6">
                 Send Me a Message
               </h3>
