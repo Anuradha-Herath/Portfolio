@@ -296,48 +296,6 @@ export function SkillsSection() {
           </span>
         </motion.div>
 
-        {/* Additional Skills Grid */}
-        <motion.div
-          className="mt-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <h3 className="text-3xl font-bold text-center text-[var(--foreground)] mb-10">
-            Other Technologies I Work With
-          </h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            {[
-              "React Native",
-              "Vue.js",
-              "GraphQL",
-              "Redis",
-              "Socket.io",
-              "Jest",
-              "Cypress",
-              "Figma",
-              "Adobe XD",
-              "Postman",
-              "Jenkins",
-              "GitHub Actions",
-              "Linux",
-              "Nginx",
-            ].map((tech, idx) => (
-              <motion.span
-                key={tech}
-                className="inline-block bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground-secondary)] text-sm font-medium px-6 py-3 rounded-full hover:bg-[var(--surface-hover)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all duration-300 cursor-default"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.3, delay: 0.1 + idx * 0.04 }}
-                whileHover={{ scale: 1.05, y: -2 }}
-              >
-                {tech}
-              </motion.span>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </motion.section>
   );
