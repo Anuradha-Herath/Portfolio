@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
     "@types/jsonwebtoken": "^9.0.10",
+    "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
     "jsonwebtoken": "^9.0.2",

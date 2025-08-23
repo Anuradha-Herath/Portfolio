@@ -37,8 +37,9 @@ export function ContactSection() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
-    
+
     try {
+      // First, send the contact message to the backend
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -50,6 +51,20 @@ export function ContactSection() {
       const data = await response.json();
 
       if (response.ok) {
+        // Trigger SMS notification via TextBee
+        try {
+          await fetch('/api/send-sms', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              recipients: ['+94768952480'],
+              message: 'New contact form submission! Check admin page.'
+            })
+          });
+        } catch (smsError) {
+          // Optionally log or handle SMS error, but don't block form success
+          console.error('SMS notification failed', smsError);
+        }
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
