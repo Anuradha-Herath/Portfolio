@@ -166,11 +166,14 @@ export default function AdminProjectsPage() {
                 </p>
                 
                 {project.image_url && (
-                  <img
-                    src={project.image_url}
-                    alt={project.title}
-                    className="w-full max-h-64 object-contain rounded-lg bg-slate-100 dark:bg-slate-800"
-                  />
+                  <div className="w-full h-48 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <img
+                      src={project.image_url}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
                 )}
 
                 <div className="flex flex-wrap gap-1">

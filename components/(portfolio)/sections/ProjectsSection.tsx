@@ -254,12 +254,12 @@ export function ProjectsSection() {
                 {/* Enhanced Project Image/Icon Section */}
                 <div className={`relative h-48 overflow-hidden ${!project.image_url || imageErrors.has(project.id) ? `bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center` : ''}`}>
                   {project.image_url && !imageErrors.has(project.id) ? (
-                    // Display actual project image
+                    // Display actual project image (fill card with crop)
                     <img
                       src={project.image_url}
                       alt={project.title}
-                      className="w-full h-full object-contain bg-white"
-                      style={{ objectFit: 'contain' }}
+                      className="w-full h-full object-cover bg-white"
+                      style={{ objectFit: 'cover' }}
                       onError={() => handleImageError(project.id)}
                     />
                   ) : (

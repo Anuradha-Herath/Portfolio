@@ -310,11 +310,12 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
             
             {/* Image Preview */}
             {imagePreview && (
-              <div className="mb-4 relative">
+              <div className="mb-4 relative w-full max-w-md h-48 overflow-hidden rounded-lg">
                 <img
                   src={imagePreview}
                   alt="Project preview"
-                  className="w-full max-w-md h-48 object-cover rounded-lg border border-slate-300"
+                  className="w-full h-full object-cover bg-white"
+                  style={{ objectFit: 'cover' }}
                 />
                 <Button
                   type="button"
