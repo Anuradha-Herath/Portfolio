@@ -186,7 +186,7 @@ export function SkillsSection() {
 
         {/* Skills Grid */}
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
           layout
         >
           <AnimatePresence mode="wait">
@@ -207,7 +207,7 @@ export function SkillsSection() {
                 className="group"
               >
                 <motion.div
-                  className="relative bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)] transition-all duration-300 cursor-default overflow-hidden"
+                  className="relative bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-8 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)] transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl"
                   whileHover={{
                     scale: 1.05,
                     y: -8,
@@ -217,24 +217,34 @@ export function SkillsSection() {
                 >
                   {/* Skill Icon */}
                   <motion.div
-                    className="w-12 h-12 mb-3 flex items-center justify-center"
-                    whileHover={{ rotate: 360 }}
+                    className="w-20 h-20 mb-5 flex items-center justify-center relative transition-all duration-300"
+                    whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6, ease: "easeInOut" }}
                   >
+                    {/* Subtle highlight behind icon */}
+                    <span
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-[var(--accent)]/60 blur-3xl z-0"
+                      aria-hidden="true"
+                    />
+                    {/* White background for icon visibility */}
+                    <span
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md z-10"
+                      aria-hidden="true"
+                    />
                     {skill.icon &&
                       (skill.icon.startsWith("http") ? (
                         <img
                           src={skill.icon}
                           alt={`${skill.name} icon`}
-                          className="w-full h-full object-contain"
+                          className="w-12 h-12 object-contain relative z-20"
                         />
                       ) : (
-                        <span className="text-2xl">{skill.icon}</span>
+                        <span className="text-4xl relative z-20">{skill.icon}</span>
                       ))}
                   </motion.div>
 
                   {/* Skill Name */}
-                  <h3 className="font-semibold text-[var(--foreground)] text-sm mb-2 group-hover:text-[var(--accent)] transition-colors duration-300">
+                  <h3 className="font-bold text-[var(--foreground)] text-lg mb-2 group-hover:text-[var(--accent)] transition-colors duration-300">
                     {skill.name}
                   </h3>
 
