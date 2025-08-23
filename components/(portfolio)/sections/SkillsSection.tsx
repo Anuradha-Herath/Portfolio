@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Palette, Code2, Database, Wrench, Sparkles } from "lucide-react";
+import { Palette, Code2, Database, Wrench, Sparkles, Smartphone, ServerCog, PenTool } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heading } from "@/components/ui/Heading";
 import { Skill } from "@/lib/types";
@@ -12,6 +12,9 @@ const skillCategories = [
   { name: "Backend", color: "green", icon: <Code2 size={18} className="inline align-text-bottom" /> },
   { name: "Database", color: "purple", icon: <Database size={18} className="inline align-text-bottom" /> },
   { name: "Tools", color: "orange", icon: <Wrench size={18} className="inline align-text-bottom" /> },
+  { name: "Mobile", color: "teal", icon: <Smartphone size={18} className="inline align-text-bottom" /> },
+  { name: "DevOps", color: "indigo", icon: <ServerCog size={18} className="inline align-text-bottom" /> },
+  { name: "Design", color: "pink", icon: <PenTool size={18} className="inline align-text-bottom" /> },
 ];
 
 const levelColors = {
@@ -151,38 +154,44 @@ export function SkillsSection() {
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {skillCategories.map((category, index) => (
-            <motion.button
-              key={category.name}
-              onClick={() => setActiveFilter(category.name)}
-              className={`relative px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 border-2 ${
-                activeFilter === category.name
-                  ? "bg-[var(--accent)] text-white border-[var(--accent)] shadow-lg"
-                  : "bg-[var(--surface)] text-[var(--foreground-secondary)] border-[var(--border)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
-              }`}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                delay: index * 0.1,
-                type: "spring",
-                stiffness: 300,
-              }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="mr-2">{category.icon}</span>
-              {category.name}
+          {skillCategories
+            .filter((category) =>
+              category.name === "All"
+                ? true
+                : skillsData.some((skill) => skill.category === category.name)
+            )
+            .map((category, index) => (
+              <motion.button
+                key={category.name}
+                onClick={() => setActiveFilter(category.name)}
+                className={`relative px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 border-2 ${
+                  activeFilter === category.name
+                    ? "bg-[var(--accent)] text-white border-[var(--accent)] shadow-lg"
+                    : "bg-[var(--surface)] text-[var(--foreground-secondary)] border-[var(--border)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                }`}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  delay: index * 0.1,
+                  type: "spring",
+                  stiffness: 300,
+                }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="mr-2">{category.icon}</span>
+                {category.name}
 
-              {activeFilter === category.name && (
-                <motion.div
-                  className="absolute inset-0 rounded-full bg-[var(--accent)]/20"
-                  layoutId="activeFilter"
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
-            </motion.button>
-          ))}
+                {activeFilter === category.name && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-[var(--accent)]/20"
+                    layoutId="activeFilter"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </motion.button>
+            ))}
         </motion.div>
 
         {/* Skills Grid */}
