@@ -186,7 +186,7 @@ export function SkillsSection() {
 
         {/* Skills Grid */}
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4"
           layout
         >
           <AnimatePresence mode="wait">
@@ -207,7 +207,7 @@ export function SkillsSection() {
                 className="group"
               >
                 <motion.div
-                  className="relative bg-[var(--surface)] border border-[var(--border)] rounded-3xl p-8 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)] transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl"
+                  className="relative bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)] transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl min-w-0"
                   whileHover={{
                     scale: 1.05,
                     y: -8,
@@ -217,7 +217,7 @@ export function SkillsSection() {
                 >
                   {/* Skill Icon */}
                   <motion.div
-                    className="w-20 h-20 mb-5 flex items-center justify-center relative transition-all duration-300"
+                    className="w-20 h-20 mb-2 flex items-center justify-center relative transition-all duration-300"
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6, ease: "easeInOut" }}
                   >
@@ -244,7 +244,7 @@ export function SkillsSection() {
                   </motion.div>
 
                   {/* Skill Name */}
-                  <h3 className="font-bold text-[var(--foreground)] text-lg mb-2 group-hover:text-[var(--accent)] transition-colors duration-300">
+                  <h3 className="font-semibold text-[var(--foreground)] text-base mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">
                     {skill.name}
                   </h3>
 
