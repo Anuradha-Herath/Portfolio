@@ -258,8 +258,8 @@ export function ProjectsSection() {
                     <img
                       src={project.image_url}
                       alt={project.title}
-                      className="w-full h-full object-contain bg-white"
-                      style={{ objectFit: 'contain' }}
+                      className="w-full h-full object-cover"
+                      style={{ objectFit: 'cover' }}
                       onError={() => handleImageError(project.id)}
                     />
                   ) : (
