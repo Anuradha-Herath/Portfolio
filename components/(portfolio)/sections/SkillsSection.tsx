@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Palette, Code2, Database, Wrench, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heading } from "@/components/ui/Heading";
 import { Skill } from "@/lib/types";
 
 const skillCategories = [
-  { name: "All", color: "gray", icon: "✨" },
-  { name: "Frontend", color: "blue", icon: "🎨" },
-  { name: "Backend", color: "green", icon: "⚙️" },
-  { name: "Database", color: "purple", icon: "🗄️" },
-  { name: "Tools", color: "orange", icon: "🛠️" },
+  { name: "All", color: "gray", icon: <Sparkles size={18} className="inline align-text-bottom" /> },
+  { name: "Frontend", color: "blue", icon: <Palette size={18} className="inline align-text-bottom" /> },
+  { name: "Backend", color: "green", icon: <Code2 size={18} className="inline align-text-bottom" /> },
+  { name: "Database", color: "purple", icon: <Database size={18} className="inline align-text-bottom" /> },
+  { name: "Tools", color: "orange", icon: <Wrench size={18} className="inline align-text-bottom" /> },
 ];
 
 const levelColors = {
