@@ -19,6 +19,25 @@ interface ProjectFormProps {
 }
 
 export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: ProjectFormProps) {
+  // Skills for autocomplete
+  const [allSkills, setAllSkills] = useState<string[]>([]);
+  const [techSuggestions, setTechSuggestions] = useState<Record<TechCategory, string[]>>({
+    languages: [], frontend: [], backend: [], database: [], apis_tools: []
+  });
+  const [techInput, setTechInput] = useState<Record<TechCategory, string>>({
+    languages: '', frontend: '', backend: '', database: '', apis_tools: ''
+  });
+
+  // Fetch all skills for suggestions
+  useEffect(() => {
+    fetch('/api/skills')
+      .then(res => res.json())
+      .then((skills) => {
+        if (Array.isArray(skills)) {
+          setAllSkills(skills.map((s: any) => s.name));
+        }
+      });
+  }, []);
   const [formData, setFormData] = useState({
     // Basic info
     title: '',
@@ -300,21 +319,78 @@ export function ProjectForm({ project, onSubmit, onCancel, isLoading = false }: 
               {TECH_CATEGORIES.map((cat) => (
                 <div key={cat}>
                   <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1 capitalize">{cat.replace('_', ' ')}</label>
-                  <Input
-                    type="text"
-                    value={formData.technologies_used[cat].join(', ')}
-                    onChange={e => {
-                      const arr = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-                      setFormData(prev => ({
-                        ...prev,
-                        technologies_used: {
-                          ...prev.technologies_used,
-                          [cat]: arr
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      value={techInput[cat] !== undefined ? techInput[cat] : formData.technologies_used[cat].join(', ')}
+                      onChange={e => {
+                        const value = e.target.value;
+                        setTechInput(prev => ({ ...prev, [cat]: value }));
+                        // Show suggestions for last token
+                        const last = value.split(',').pop()?.trim().toLowerCase() || '';
+                        if (last.length > 0) {
+                          setTechSuggestions(prev => ({
+                            ...prev,
+                            [cat]: allSkills.filter(skill => skill.toLowerCase().includes(last) && !formData.technologies_used[cat].includes(skill))
+                          }));
+                        } else {
+                          setTechSuggestions(prev => ({ ...prev, [cat]: [] }));
                         }
-                      }));
-                    }}
-                    placeholder={`Comma-separated list for ${cat}`}
-                  />
+                        // Update formData if comma entered
+                        if (value.endsWith(',')) {
+                          const arr = value.split(',').map(s => s.trim()).filter(Boolean);
+                          setFormData(prev => ({
+                            ...prev,
+                            technologies_used: {
+                              ...prev.technologies_used,
+                              [cat]: arr
+                            }
+                          }));
+                        }
+                      }}
+                      onBlur={() => {
+                        // On blur, update formData and clear suggestions
+                        const arr = techInput[cat].split(',').map(s => s.trim()).filter(Boolean);
+                        setFormData(prev => ({
+                          ...prev,
+                          technologies_used: {
+                            ...prev.technologies_used,
+                            [cat]: arr
+                          }
+                        }));
+                        setTechSuggestions(prev => ({ ...prev, [cat]: [] }));
+                      }}
+                      placeholder={`Comma-separated list for ${cat}`}
+                      autoComplete="off"
+                    />
+                    {/* Suggestions dropdown */}
+                    {techSuggestions[cat].length > 0 && (
+                      <ul className="absolute z-10 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded shadow w-full mt-1 max-h-40 overflow-y-auto">
+                        {techSuggestions[cat].map((suggestion) => (
+                          <li
+                            key={suggestion}
+                            className="px-3 py-1 cursor-pointer hover:bg-blue-100 dark:hover:bg-slate-700"
+                            onMouseDown={() => {
+                              // Add suggestion to list
+                              const arr = techInput[cat].split(',').map(s => s.trim()).filter(Boolean);
+                              arr[arr.length - 1] = suggestion;
+                              setFormData(prev => ({
+                                ...prev,
+                                technologies_used: {
+                                  ...prev.technologies_used,
+                                  [cat]: Array.from(new Set([...arr]))
+                                }
+                              }));
+                              setTechInput(prev => ({ ...prev, [cat]: arr.join(', ') + ', '}));
+                              setTechSuggestions(prev => ({ ...prev, [cat]: [] }));
+                            }}
+                          >
+                            {suggestion}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
