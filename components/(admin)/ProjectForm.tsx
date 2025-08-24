@@ -98,42 +98,92 @@ export function ProjectForm({
 
   useEffect(() => {
     if (project) {
-      setFormData({
-        title: project.title,
-        description: project.description,
+      const newFormData = {
+        title: project.title || "",
+        description: project.description || "",
         image_url: project.image_url || "",
         github_url: project.github_url || "",
         live_url: project.live_url || "",
-        featured: project.featured,
+        featured: project.featured || false,
         status: project.status || "completed",
         type: project.type || "individual",
         project_type_detail: project.project_type_detail || "",
         role: project.role || "",
         duration: project.duration || "",
         technologies_used: {
-          languages: project.technologies_used?.languages ?? [],
-          frontend: project.technologies_used?.frontend ?? [],
-          backend: project.technologies_used?.backend ?? [],
-          database: project.technologies_used?.database ?? [],
-          apis_tools: project.technologies_used?.apis_tools ?? [],
+          languages: project.technologies_used?.languages || [],
+          frontend: project.technologies_used?.frontend || [],
+          backend: project.technologies_used?.backend || [],
+          database: project.technologies_used?.database || [],
+          apis_tools: project.technologies_used?.apis_tools || [],
         },
         key_features: project.key_features || [],
         my_contributions: project.my_contributions || [],
-      });
+      };
+      
+      setFormData(newFormData);
+      
+      // Initialize techInput with existing project data
+      const newTechInput = {
+        languages: newFormData.technologies_used.languages.join(", "),
+        frontend: newFormData.technologies_used.frontend.join(", "),
+        backend: newFormData.technologies_used.backend.join(", "),
+        database: newFormData.technologies_used.database.join(", "),
+        apis_tools: newFormData.technologies_used.apis_tools.join(", "),
+      };
+      
+      setTechInput(newTechInput);
+      
       // Set image preview if editing existing project
       if (project.image_url) {
         setImagePreview(project.image_url);
+      } else {
+        setImagePreview("");
       }
+      
       // Set additional images if editing existing project
-      if (
-        project.additional_images &&
-        Array.isArray(project.additional_images)
-      ) {
+      if (project.additional_images && Array.isArray(project.additional_images)) {
         setAdditionalImagePreviews(project.additional_images);
       } else {
         setAdditionalImagePreviews([]);
       }
       setAdditionalImages([]); // always reset files
+    } else {
+      // Reset form when no project (adding new project)
+      setFormData({
+        title: "",
+        description: "",
+        image_url: "",
+        github_url: "",
+        live_url: "",
+        featured: false,
+        status: "completed",
+        type: "individual",
+        project_type_detail: "",
+        role: "",
+        duration: "",
+        technologies_used: {
+          languages: [],
+          frontend: [],
+          backend: [],
+          database: [],
+          apis_tools: [],
+        },
+        key_features: [],
+        my_contributions: [],
+      });
+      
+      setTechInput({
+        languages: "",
+        frontend: "",
+        backend: "",
+        database: "",
+        apis_tools: "",
+      });
+      
+      setImagePreview("");
+      setAdditionalImagePreviews([]);
+      setAdditionalImages([]);
     }
   }, [project]);
 
@@ -400,11 +450,7 @@ export function ProjectForm({
                   <div className="relative">
                     <Input
                       type="text"
-                      value={
-                        techInput[cat] !== undefined
-                          ? techInput[cat]
-                          : formData.technologies_used[cat].join(", ")
-                      }
+                      value={techInput[cat]}
                       onChange={(e) => {
                         const value = e.target.value;
                         setTechInput((prev) => ({ ...prev, [cat]: value }));
