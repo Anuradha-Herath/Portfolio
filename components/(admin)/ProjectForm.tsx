@@ -89,7 +89,9 @@ export function ProjectForm({
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
   const currentYear = new Date().getFullYear();
+  // Show most recent year at the top
   const YEARS = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  
   const [startMonth, setStartMonth] = useState("");
   const [startYear, setStartYear] = useState("");
   const [endMonth, setEndMonth] = useState("");
@@ -470,7 +472,7 @@ export function ProjectForm({
                 <select
                   value={startYear}
                   onChange={(e) => setStartYear(e.target.value)}
-                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white !overflow-y-auto !max-h-60"
                   required
                 >
                   <option value="">Year</option>
@@ -500,7 +502,7 @@ export function ProjectForm({
                 <select
                   value={endYear}
                   onChange={(e) => setEndYear(e.target.value)}
-                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white !overflow-y-auto !max-h-60"
                   disabled={isOngoing}
                   required={!isOngoing}
                 >
