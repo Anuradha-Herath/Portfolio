@@ -298,8 +298,7 @@ export function SkillsSection() {
                     </span>
                   </motion.div>
 
-                  {/* Hover Glow Effect */}
-                  <motion.div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--accent)]/5 to-[#5856d6]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  {/* Hover Glow Effect Removed */}
                 </motion.div>
               </motion.div>
             ))}
