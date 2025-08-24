@@ -34,10 +34,24 @@
      - `image/webp`
    - Click "Save"
 
+5. **Create the 'project-images' bucket**
+   - Click "New bucket" again
+   - **Bucket name**: `project-images`
+   - **Public bucket**: ✅ Yes (checked)
+   - **File size limit**: `5242880` (5MB in bytes)
+   - **Allowed MIME types**: Add these one by one:
+     - `image/jpeg`
+     - `image/jpg`
+     - `image/png`
+     - `image/webp`
+     - `image/gif`
+   - Click "Save"
+
 ### Expected Result:
-You should see two buckets in your Storage dashboard:
+You should see three buckets in your Storage dashboard:
 - ✅ `skill-icons` (1MB limit, SVG only)
 - ✅ `certificates` (10MB limit, PDF and images)
+- ✅ `project-images` (5MB limit, images including GIF)
 
 ---
 
@@ -88,6 +102,16 @@ VALUES (
   true,
   10485760,
   ARRAY['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+) ON CONFLICT (id) DO NOTHING;
+
+-- Create project-images bucket
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'project-images',
+  'project-images',
+  true,
+  5242880,
+  ARRAY['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
 ) ON CONFLICT (id) DO NOTHING;
 ```
 

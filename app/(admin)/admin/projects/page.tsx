@@ -5,7 +5,7 @@ import { Project } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { DataCard } from '@/components/(admin)/DataCard';
 import { ProjectForm } from '@/components/(admin)/ProjectForm';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, GithubIcon, ExternalLinkIcon } from 'lucide-react';
 
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -164,7 +164,8 @@ export default function AdminProjectsPage() {
                 <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3">
                   {project.description}
                 </p>
-                
+
+                {/* Main image */}
                 {project.image_url && (
                   <img
                     src={project.image_url}
@@ -173,23 +174,70 @@ export default function AdminProjectsPage() {
                   />
                 )}
 
-                <div className="flex flex-wrap gap-1">
-                  {project.technologies?.slice(0, 3).map((tech) => (
-                    <span
-                      key={tech}
-                      className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full"
-                    >
-                      {tech}
+                {/* Additional images */}
+                {project.additional_images && project.additional_images.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {project.additional_images.map((img, idx) => (
+                      <img
+                        key={img + idx}
+                        src={img}
+                        alt={`Additional ${idx + 1}`}
+                        className="w-20 h-20 object-cover rounded border bg-slate-100 dark:bg-slate-800"
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Project meta info */}
+                <div className="flex flex-wrap gap-2 mt-2 text-xs">
+                  <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+                    Status: <span className="font-semibold">{project.status}</span>
+                  </span>
+                  <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+                    Type: <span className="font-semibold">{project.type}</span>
+                  </span>
+                  {project.role && (
+                    <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+                      Role: <span className="font-semibold">{project.role}</span>
                     </span>
-                  ))}
-                  {project.technologies && project.technologies.length > 3 && (
-                    <span className="inline-block px-2 py-1 text-xs bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400 rounded-full">
-                      +{project.technologies.length - 3} more
+                  )}
+                  {project.duration && (
+                    <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+                      Duration: <span className="font-semibold">{project.duration}</span>
+                    </span>
+                  )}
+                  {project.project_type_detail && (
+                    <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
+                      Detail: <span className="font-semibold">{project.project_type_detail}</span>
                     </span>
                   )}
                 </div>
 
-                <div className="flex justify-between items-center text-sm">
+                {/* Technologies used (detailed) */}
+                {project.technologies_used && (
+                  <div className="mt-2 space-y-1">
+                    {Object.entries(project.technologies_used).map(([cat, arr]) => (
+                      arr && arr.length > 0 && (
+                        <div key={cat} className="flex flex-wrap gap-1">
+                          <span className="font-semibold capitalize text-xs text-slate-700 dark:text-slate-300 mr-1">{cat}:</span>
+                          {arr.map((tech) => (
+                            <span
+                              key={tech}
+                              className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      )
+                    ))}
+                  </div>
+                )}
+
+                {/* Key features and My Contributions removed as per request */}
+
+                {/* Featured badge and links */}
+                <div className="flex justify-between items-center text-sm mt-2">
                   <span className={`px-2 py-1 rounded-full text-xs ${
                     project.featured
                       ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
@@ -197,7 +245,6 @@ export default function AdminProjectsPage() {
                   }`}>
                     {project.featured ? 'Featured' : 'Regular'}
                   </span>
-                  
                   <div className="flex gap-2">
                     {project.github_url && (
                       <a
@@ -205,8 +252,9 @@ export default function AdminProjectsPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                        title="GitHub Repository"
                       >
-                        GitHub
+                        <GithubIcon className="h-5 w-5" />
                       </a>
                     )}
                     {project.live_url && (
@@ -215,8 +263,9 @@ export default function AdminProjectsPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                        title="Live Demo"
                       >
-                        Live
+                        <ExternalLinkIcon className="h-5 w-5" />
                       </a>
                     )}
                   </div>
