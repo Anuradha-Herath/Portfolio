@@ -84,6 +84,18 @@ export function ProjectForm({
     my_contributions: [] as string[],
   });
 
+  // Duration fields
+  const MONTHS = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+  const currentYear = new Date().getFullYear();
+  const YEARS = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const [startMonth, setStartMonth] = useState("");
+  const [startYear, setStartYear] = useState("");
+  const [endMonth, setEndMonth] = useState("");
+  const [endYear, setEndYear] = useState("");
+  const [isOngoing, setIsOngoing] = useState(false);
+
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -120,9 +132,7 @@ export function ProjectForm({
         key_features: project.key_features || [],
         my_contributions: project.my_contributions || [],
       };
-      
       setFormData(newFormData);
-      
       // Initialize techInput with existing project data
       const newTechInput = {
         languages: newFormData.technologies_used.languages.join(", "),
@@ -131,16 +141,13 @@ export function ProjectForm({
         database: newFormData.technologies_used.database.join(", "),
         apis_tools: newFormData.technologies_used.apis_tools.join(", "),
       };
-      
       setTechInput(newTechInput);
-      
       // Set image preview if editing existing project
       if (project.image_url) {
         setImagePreview(project.image_url);
       } else {
         setImagePreview("");
       }
-      
       // Set additional images if editing existing project
       if (project.additional_images && Array.isArray(project.additional_images)) {
         setAdditionalImagePreviews(project.additional_images);
@@ -148,6 +155,24 @@ export function ProjectForm({
         setAdditionalImagePreviews([]);
       }
       setAdditionalImages([]); // always reset files
+      // Parse duration for edit mode
+      if (project.duration) {
+        // e.g., "Mar 2024 - Jul 2025" or "Mar 2024 - Ongoing"
+        const match = project.duration.match(/(\w{3}) (\d{4}) - (\w{3}|Ongoing)(?: (\d{4}))?/);
+        if (match) {
+          setStartMonth(match[1]);
+          setStartYear(match[2]);
+          if (match[3] === "Ongoing") {
+            setIsOngoing(true);
+            setEndMonth("");
+            setEndYear("");
+          } else {
+            setIsOngoing(false);
+            setEndMonth(match[3]);
+            setEndYear(match[4] || "");
+          }
+        }
+      }
     } else {
       // Reset form when no project (adding new project)
       setFormData({
@@ -172,7 +197,6 @@ export function ProjectForm({
         key_features: [],
         my_contributions: [],
       });
-      
       setTechInput({
         languages: "",
         frontend: "",
@@ -180,10 +204,14 @@ export function ProjectForm({
         database: "",
         apis_tools: "",
       });
-      
       setImagePreview("");
       setAdditionalImagePreviews([]);
       setAdditionalImages([]);
+      setStartMonth("");
+      setStartYear("");
+      setEndMonth("");
+      setEndYear("");
+      setIsOngoing(false);
     }
   }, [project]);
 
@@ -293,6 +321,20 @@ export function ProjectForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Compose duration string and status
+    let duration = "";
+    let status: "completed" | "ongoing" = "completed";
+    if (startMonth && startYear) {
+      duration = `${startMonth} ${startYear} - `;
+      if (isOngoing) {
+        duration += "Ongoing";
+        status = "ongoing";
+      } else if (endMonth && endYear) {
+        duration += `${endMonth} ${endYear}`;
+        status = "completed";
+      }
+    }
+
     let imageUrl = formData.image_url;
 
     // Upload new image if selected
@@ -329,6 +371,8 @@ export function ProjectForm({
 
     onSubmit({
       ...formData,
+      duration,
+      status,
       image_url: imageUrl,
       additional_images: additionalImageUrls,
     });
@@ -403,18 +447,85 @@ export function ProjectForm({
                 placeholder="e.g., Full Stack Developer, Lead Developer"
               />
             </div>
+            {/* Project Status dropdown removed; status is now determined by Ongoing checkbox and end date */}
+          </div>
+          {/* Duration Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Duration
+                Start Month & Year
               </label>
-              <Input
-                type="text"
-                value={formData.duration}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, duration: e.target.value }))
-                }
-                placeholder="e.g., Mar 2024 - Jul 2025"
-              />
+              <div className="flex gap-2">
+                <select
+                  value={startMonth}
+                  onChange={(e) => setStartMonth(e.target.value)}
+                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                  required
+                >
+                  <option value="">Month</option>
+                  {MONTHS.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+                <select
+                  value={startYear}
+                  onChange={(e) => setStartYear(e.target.value)}
+                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                  required
+                >
+                  <option value="">Year</option>
+                  {YEARS.map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                End Month & Year
+              </label>
+              <div className="flex gap-2 items-center">
+                <select
+                  value={endMonth}
+                  onChange={(e) => setEndMonth(e.target.value)}
+                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                  disabled={isOngoing}
+                  required={!isOngoing}
+                >
+                  <option value="">Month</option>
+                  {MONTHS.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+                <select
+                  value={endYear}
+                  onChange={(e) => setEndYear(e.target.value)}
+                  className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+                  disabled={isOngoing}
+                  required={!isOngoing}
+                >
+                  <option value="">Year</option>
+                  {YEARS.map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+                <label className="ml-2 flex items-center gap-1 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={isOngoing}
+                    onChange={(e) => {
+                      setIsOngoing(e.target.checked);
+                      if (e.target.checked) {
+                        setEndMonth("");
+                        setEndYear("");
+                        setFormData((prev) => ({ ...prev, status: "ongoing" }));
+                      }
+                    }}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+                  />
+                  Ongoing
+                </label>
+              </div>
             </div>
           </div>
           <div>
@@ -736,24 +847,6 @@ export function ProjectForm({
               >
                 Featured Project
               </label>
-            </div>
-            <div className="flex items-center">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mr-2">
-                Status:
-              </label>
-              <select
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    status: e.target.value as "completed" | "ongoing",
-                  }))
-                }
-                className="border border-slate-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
-              >
-                <option value="completed">Completed</option>
-                <option value="ongoing">Ongoing</option>
-              </select>
             </div>
             <div className="flex items-center">
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mr-2">
