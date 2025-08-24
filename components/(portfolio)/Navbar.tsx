@@ -19,6 +19,7 @@ import {
   FolderOpen,
   Star,
   Mail,
+  Award,
 } from "lucide-react";
 
 const navigation = [
@@ -27,6 +28,7 @@ const navigation = [
   { name: "Experience", href: "#experience", icon: <Briefcase size={16} /> },
   { name: "Projects", href: "#projects", icon: <FolderOpen size={16} /> },
   { name: "Skills", href: "#skills", icon: <Star size={16} /> },
+  { name: "Certifications", href: "#certifications", icon: <Award size={16} /> },
   { name: "Contact", href: "#contact", icon: <Mail size={16} /> },
 ];
 
@@ -158,8 +160,8 @@ export function Navbar() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-center space-x-1">
+            <div className="hidden md:flex flex-1 items-center justify-center">
+              <div className="flex items-center space-x-1">
                 {navigation.map((item, idx) => (
                   <motion.button
                     key={item.name}
@@ -251,7 +253,7 @@ export function Navbar() {
 
             {/* Resume Button */}
             <motion.div 
-              className="hidden md:block"
+              className="hidden md:flex items-center ml-6"
               initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               whileHover={{ 
