@@ -343,23 +343,27 @@ export function ProjectsSection() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 + index * 0.05, duration: 0.6 }}
                   >
-                    {project.technologies.map((tech, techIndex) => (
-                      <motion.span
-                        key={tech}
-                        className="inline-flex items-center px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-full border border-indigo-200/50 dark:border-indigo-700/50 hover:bg-indigo-100 dark:hover:bg-indigo-800/40 transition-all duration-200"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          delay: 0.5 + index * 0.05 + techIndex * 0.03, 
-                          duration: 0.3,
-                          type: "spring",
-                          stiffness: 200 
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        {tech}
-                      </motion.span>
-                    ))}
+                    {/* Render all technology tags from all categories in technologies_used */}
+                    {project.technologies_used && Object.entries(project.technologies_used).flatMap(
+                      ([cat, techs]) =>
+                        (techs as string[]).map((tech: string, techIndex: number) => (
+                          <motion.span
+                            key={cat + '-' + tech + '-' + techIndex}
+                            className="inline-flex items-center px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-full border border-indigo-200/50 dark:border-indigo-700/50 hover:bg-indigo-100 dark:hover:bg-indigo-800/40 transition-all duration-200"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ 
+                              delay: 0.5 + index * 0.05 + techIndex * 0.03, 
+                              duration: 0.3,
+                              type: "spring",
+                              stiffness: 200 
+                            }}
+                            whileHover={{ scale: 1.05 }}
+                          >
+                            {tech}
+                          </motion.span>
+                        ))
+                    )}
                   </motion.div>
                 </CardContent>
 

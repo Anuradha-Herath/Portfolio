@@ -1,14 +1,29 @@
-export interface Project {
+ export interface Project {
   id: string;
   title: string;
   description: string;
   image_url?: string;
-  technologies: string[];
   github_url?: string;
   live_url?: string;
   featured: boolean;
   status: 'completed' | 'ongoing'; // Project status
   type: 'individual' | 'group';   // Project type
+
+  // --- Detailed view fields (all optional) ---
+  project_type_detail?: string; // e.g., Solo Project, Team Project, Client Project
+  role?: string; // e.g., Full Stack Developer, Lead Developer
+  duration?: string; // e.g., Mar 2024 - Jul 2025
+  technologies_used?: {
+    languages: string[];
+    frontend: string[];
+    backend: string[];
+    database: string[];
+    apis_tools: string[];
+  };
+  key_features?: string[];
+  my_contributions?: string[];
+  additional_images?: string[]; // URLs of additional images
+  // Removed: challenges, solutions, outcome, future_enhancements
 }
 
 export interface Education {
