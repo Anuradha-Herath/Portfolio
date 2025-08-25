@@ -312,7 +312,7 @@ export function CertificationSection() {
     <>
       <motion.section
         id="certifications"
-        className="py-24 bg-[var(--background)] relative overflow-hidden"
+        className="py-16 lg:py-20 relative overflow-hidden"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}

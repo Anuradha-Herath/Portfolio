@@ -150,7 +150,7 @@ export function ProjectsSection() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative py-24 lg:py-32 bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/40 dark:from-slate-900 dark:via-indigo-950/50 dark:to-purple-950/20 overflow-hidden"
+      className="relative py-16 lg:py-20 overflow-hidden"
     >
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

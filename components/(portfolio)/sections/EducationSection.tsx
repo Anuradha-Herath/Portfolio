@@ -126,7 +126,7 @@ export function EducationSection() {
   return (
     <motion.section
       id="education"
-      className="py-24 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 relative overflow-hidden"
+      className="py-16 lg:py-20 relative overflow-hidden"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}

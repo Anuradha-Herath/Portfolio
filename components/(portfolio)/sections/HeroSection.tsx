@@ -94,7 +94,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-  className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pt-16 sm:pt-20"
+  className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20"
     >
       {/* Sophisticated Background - Subtle Grid of Dots */}
       <div className="absolute inset-0 overflow-hidden">

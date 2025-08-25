@@ -258,7 +258,7 @@ export function ExperienceSection() {
   return (
     <section
       id="experience"
-      className="relative py-24 lg:py-32 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 dark:from-slate-900 dark:via-slate-900/95 dark:to-indigo-950/20 overflow-hidden"
+      className="relative py-16 lg:py-20 overflow-hidden"
     >
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
