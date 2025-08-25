@@ -131,7 +131,7 @@ export function HeroSection() {
             className="flex justify-center lg:justify-start order-2 lg:order-1"
             variants={itemVariants}
           >
-            <div className="relative">
+            <div className="relative lg:ml-12">
               <motion.div
                 className="relative w-72 h-72 lg:w-80 lg:h-80"
                 initial={{ scale: 0.9, opacity: 0 }}
