@@ -93,7 +93,7 @@ export function SkillsSection() {
   return (
     <motion.section
       id="skills"
-      className="relative py-24 bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/40 dark:from-slate-900 dark:via-indigo-950/50 dark:to-purple-950/20 overflow-hidden"
+      className="relative py-16 lg:py-20 overflow-hidden"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}

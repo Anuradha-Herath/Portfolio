@@ -1,17 +1,245 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Heading } from '@/components/ui/Heading';
-import { Certification } from '@/lib/types';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, easeInOut } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Heading } from "@/components/ui/Heading";
+import { Certification } from "@/lib/types";
+
+// Animated Counter Component for Statistics
+interface AnimatedCounterProps {
+  value: number;
+  duration?: number;
+}
+
+function AnimatedCounter({ value, duration = 2 }: AnimatedCounterProps) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime: number;
+    let animationId: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+
+      // Easing function for smooth animation
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+      const easedProgress = easeOutCubic(progress);
+
+      setCount(Math.floor(easedProgress * value));
+
+      if (progress < 1) {
+        animationId = requestAnimationFrame(animate);
+      }
+    };
+
+    animationId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationId);
+  }, [value, duration]);
+
+  return <span>{count}</span>;
+}
+
+// Certificate Modal Component
+interface CertificateModalProps {
+  certification: Certification | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+function CertificateModal({
+  certification,
+  isOpen,
+  onClose,
+}: CertificateModalProps) {
+  if (!certification) return null;
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+          />
+
+          {/* Modal */}
+          <motion.div
+            className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          >
+            <div
+              className="max-w-4xl w-full max-h-[90vh] bg-[var(--surface)] rounded-2xl shadow-2xl border border-[var(--border)] overflow-hidden relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 overflow-y-auto max-h-[90vh] relative">
+                {/* Close Button - moved inside modal content */}
+                <button
+                  onClick={onClose}
+                  className="absolute top-0 right-0 mt-4 mr-4 z-10 w-9 h-9 bg-[var(--background-secondary)] hover:bg-[var(--surface-hover)] rounded-full flex items-center justify-center text-[var(--foreground-tertiary)] hover:text-[var(--foreground)] transition-all duration-200 ring-2 ring-[var(--accent)]/20 hover:ring-[var(--accent)]/40 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/40"
+                  style={{ boxShadow: "0 4px 16px 0 rgba(0,0,0,0.10)" }}
+                  aria-label="Close"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+
+                {/* Certificate Image */}
+                {certification.image_url && (
+                  <div className="mb-6">
+                    <img
+                      src={certification.image_url}
+                      alt={`${certification.title} certificate`}
+                      className="w-full max-w-2xl mx-auto rounded-xl shadow-lg bg-[var(--background-tertiary)]"
+                    />
+                  </div>
+                )}
+
+                {/* Certificate Details */}
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-[var(--foreground)] mb-2">
+                      {certification.title}
+                    </h2>
+                    <p className="text-xl text-[var(--accent)] font-semibold">
+                      {certification.issuer}
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="text-sm font-semibold text-[var(--foreground-tertiary)] uppercase tracking-wide mb-2">
+                        Date Earned
+                      </h3>
+                      <p className="text-[var(--foreground-secondary)]">
+                        {formatDate(certification.date)}
+                      </p>
+                    </div>
+
+                    {certification.credential_id && (
+                      <div>
+                        <h3 className="text-sm font-semibold text-[var(--foreground-tertiary)] uppercase tracking-wide mb-2">
+                          Credential ID
+                        </h3>
+                        <p className="text-[var(--foreground-secondary)] font-mono bg-[var(--background-tertiary)] p-2 rounded text-sm">
+                          {certification.credential_id}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {certification.description && (
+                    <div>
+                      <h3 className="text-sm font-semibold text-[var(--foreground-tertiary)] uppercase tracking-wide mb-2">
+                        Description
+                      </h3>
+                      <p className="text-[var(--foreground-secondary)] leading-relaxed">
+                        {certification.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap gap-4 pt-4">
+                    {certification.url && (
+                      <a
+                        href={certification.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-6 py-3 bg-[var(--accent)] hover:bg-[var(--accent)]/80 text-white rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                      >
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                        Verify Certificate
+                      </a>
+                    )}
+                    {certification.certificate_file_url && (
+                      <a
+                        href={certification.certificate_file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-6 py-3 bg-[var(--surface-hover)] hover:bg-[var(--background-secondary)] text-[var(--foreground)] rounded-lg font-semibold transition-all duration-200 border border-[var(--border)]"
+                      >
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
+                        </svg>
+                        Download Certificate
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
 
 export function CertificationSection() {
   const [certifications, setCertifications] = useState<Certification[]>([]);
-  const [courseCertifications, setCourseCertifications] = useState<Certification[]>([]);
-  const [competitionCertifications, setCompetitionCertifications] = useState<Certification[]>([]);
-  const [activeTab, setActiveTab] = useState<'course' | 'competition'>('course');
+  const [courseCertifications, setCourseCertifications] = useState<
+    Certification[]
+  >([]);
+  const [competitionCertifications, setCompetitionCertifications] = useState<
+    Certification[]
+  >([]);
+  const [activeTab, setActiveTab] = useState<"course" | "competition">(
+    "course"
+  );
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCertificate, setSelectedCertificate] =
+    useState<Certification | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCertifications();
@@ -19,31 +247,38 @@ export function CertificationSection() {
 
   useEffect(() => {
     // Filter certifications by category
-    setCourseCertifications(certifications.filter(cert => cert.category === 'course'));
-    setCompetitionCertifications(certifications.filter(cert => cert.category === 'competition'));
+    setCourseCertifications(
+      certifications.filter((cert) => cert.category === "course")
+    );
+    setCompetitionCertifications(
+      certifications.filter((cert) => cert.category === "competition")
+    );
   }, [certifications]);
 
   const fetchCertifications = async () => {
     try {
-      const response = await fetch('/api/certifications');
+      const response = await fetch("/api/certifications");
       if (response.ok) {
         const data = await response.json();
         setCertifications(data);
       } else {
-        console.error('Failed to fetch certifications');
+        console.error("Failed to fetch certifications");
       }
     } catch (error) {
-      console.error('Error fetching certifications:', error);
+      console.error("Error fetching certifications:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-    });
+  const handleCertificateClick = (cert: Certification) => {
+    setSelectedCertificate(cert);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedCertificate(null);
   };
 
   // Animation variants
@@ -56,275 +291,402 @@ export function CertificationSection() {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.1,
       },
     },
   };
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeInOut } },
+    hover: {
+      scale: 1.05,
+      y: -8,
+      transition: { duration: 0.3, ease: easeInOut },
+    },
   };
 
-  const currentCertifications = activeTab === 'course' ? courseCertifications : competitionCertifications;
+  const currentCertifications =
+    activeTab === "course" ? courseCertifications : competitionCertifications;
 
   return (
-    <motion.section
-      id="certifications"
-      className="py-24 bg-[var(--background)] relative overflow-hidden"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-      variants={sectionVariants}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, ease }}
-        >
-          <Heading level={2} className="mb-6">
-            Achievements & <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">Certifications</span>
-          </Heading>
-          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
-            I believe in continuous learning and staying updated with the latest
-            technologies. Here are my professional certifications and competition achievements.
-          </p>
-        </motion.div>
-
-        {/* Tab Navigation */}
-        <motion.div
-          className="flex justify-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease }}
-        >
-          <div className="flex space-x-1 bg-[var(--background-tertiary)] p-1 rounded-xl border border-[var(--border)] glass shadow-lg">
-            <button
-              onClick={() => setActiveTab('course')}
-              className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
-                transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-                ${activeTab === 'course'
-                  ? 'text-blue-300 shadow-md scale-105 z-10'
-                  : 'text-[var(--foreground-tertiary)] hover:text-blue-200'}
-              `}
-              style={{
-                background: activeTab === 'course'
-                  ? 'linear-gradient(135deg, rgba(0,122,255,0.12) 0%, rgba(88,86,214,0.10) 100%)'
-                  : 'transparent',
-                boxShadow: activeTab === 'course' ? '0 4px 24px 0 rgba(0,122,255,0.10)' : 'none',
-                border: activeTab === 'course' ? '1.5px solid var(--accent)' : '1.5px solid transparent',
-                transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
-              }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'}
-              onMouseLeave={e => e.currentTarget.style.transform = activeTab === 'course' ? 'scale(1.05)' : 'scale(1)'}
-            >
-              <span className="relative z-10">Course Certifications ({courseCertifications.length})</span>
-              {activeTab === 'course' && (
-                <motion.span
-                  layoutId="cert-tab-bg"
-                  className="absolute inset-0 rounded-lg pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(0,122,255,0.18) 0%, rgba(88,86,214,0.14) 100%)',
-                    zIndex: 0,
-                  }}
-                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                />
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('competition')}
-              className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
-                transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-                ${activeTab === 'competition'
-                  ? 'text-green-300 shadow-md scale-105 z-10'
-                  : 'text-[var(--foreground-tertiary)] hover:text-green-200'}
-              `}
-              style={{
-                background: activeTab === 'competition'
-                  ? 'linear-gradient(135deg, rgba(0,255,122,0.10) 0%, rgba(0,122,255,0.10) 100%)'
-                  : 'transparent',
-                boxShadow: activeTab === 'competition' ? '0 4px 24px 0 rgba(0,255,122,0.10)' : 'none',
-                border: activeTab === 'competition' ? '1.5px solid #22c55e' : '1.5px solid transparent',
-                transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)',
-              }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.06)'}
-              onMouseLeave={e => e.currentTarget.style.transform = activeTab === 'competition' ? 'scale(1.05)' : 'scale(1)'}
-            >
-              <span className="relative z-10">Competition Certificates ({competitionCertifications.length})</span>
-              {activeTab === 'competition' && (
-                <motion.span
-                  layoutId="cert-tab-bg"
-                  className="absolute inset-0 rounded-lg pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(0,122,255,0.12) 100%)',
-                    zIndex: 0,
-                  }}
-                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                />
-              )}
-            </button>
+    <>
+      <motion.section
+        id="certifications"
+        className="py-16 lg:py-20 relative overflow-hidden"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={sectionVariants}
+      >
+        {/* Dynamic Aurora Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-1/2 -left-1/2 w-full h-full opacity-30">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-radial from-blue-500/20 to-transparent rounded-full blur-3xl animate-pulse" />
+            <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-gradient-radial from-purple-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="absolute bottom-1/4 left-3/4 w-96 h-96 bg-gradient-radial from-green-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-2000" />
           </div>
-        </motion.div>
+        </div>
 
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-[var(--foreground-secondary)]">Loading certifications...</p>
-          </div>
-        ) : (
-          <>
-            {/* Certifications Grid */}
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={gridVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-              key={activeTab}
-            >
-              {currentCertifications.map((cert) => (
-                <motion.div key={cert.id} variants={cardVariants}>
-                    <Card hover className="h-full group card-premium border border-[var(--border)] bg-[var(--surface)]">
-                      <CardContent className="p-6">
-                        {/* Certificate Image or Icon */}
-                        {cert.image_url ? (
-                          <div className="mb-4 group-hover:scale-105 transition-transform duration-300">
-                            <img 
-                              src={cert.image_url} 
-                              alt={`${cert.title} certificate`}
-                              className="w-full h-48 object-cover rounded-lg shadow-sm bg-[var(--background-tertiary)]"
-                            />
-                          </div>
-                        ) : (
-                          <div className={`h-20 bg-gradient-to-br ${
-                            activeTab === 'course' 
-                              ? 'from-[var(--background-tertiary)] to-[var(--surface)]' 
-                              : 'from-[var(--background-secondary)] to-[var(--surface-hover)]'
-                          } rounded-lg flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300`}>
-                            <div className={activeTab === 'course' ? 'text-blue-400' : 'text-green-400'}>
-                              {activeTab === 'course' ? (
-                                <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
-                                </svg>
-                              ) : (
-                                <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
-                                  <path d="M5,16L3,5H1V3H4L6,14H18.5L19.5,7H8.5V5H21L19,17H5M6,20A1,1 0 0,0 7,21A1,1 0 0,0 8,20A1,1 0 0,0 7,19A1,1 0 0,0 6,20M16,20A1,1 0 0,0 17,21A1,1 0 0,0 18,20A1,1 0 0,0 17,19A1,1 0 0,0 16,20Z" />
-                                </svg>
-                              )}
-                            </div>
-                          </div>
-                        )}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease }}
+          >
+            <Heading level={2} className="mb-6">
+              Achievements &{" "}
+              <span className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">
+                Certifications
+              </span>
+            </Heading>
+            <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
+              I believe in continuous learning and staying updated with the
+              latest technologies. Here are my professional certifications and
+              competition achievements.
+            </p>
+          </motion.div>
 
-                      <h3 className="text-lg font-bold text-[var(--foreground)] mb-2 leading-tight line-clamp-2">
-                        {cert.title}
-                      </h3>
+          {/* Tab Navigation - Enhanced */}
+          <motion.div
+            className="flex justify-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6, ease }}
+          >
+            <div className="flex space-x-1 bg-[var(--background-tertiary)]/80 backdrop-blur-sm p-1 rounded-xl border border-[var(--border)] shadow-2xl">
+              <button
+                onClick={() => setActiveTab("course")}
+                className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
+                  transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+                  ${
+                    activeTab === "course"
+                      ? "text-blue-300 shadow-md scale-105 z-10"
+                      : "text-[var(--foreground-tertiary)] hover:text-blue-200"
+                  }
+                `}
+                style={{
+                  background:
+                    activeTab === "course"
+                      ? "linear-gradient(135deg, rgba(0,122,255,0.15) 0%, rgba(88,86,214,0.12) 100%)"
+                      : "transparent",
+                  boxShadow:
+                    activeTab === "course"
+                      ? "0 8px 32px 0 rgba(0,122,255,0.15)"
+                      : "none",
+                  border:
+                    activeTab === "course"
+                      ? "1.5px solid var(--accent)"
+                      : "1.5px solid transparent",
+                }}
+              >
+                <span className="relative z-10">
+                  Course Certifications ({courseCertifications.length})
+                </span>
+              </button>
+              <button
+                onClick={() => setActiveTab("competition")}
+                className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
+                  transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+                  ${
+                    activeTab === "competition"
+                      ? "text-green-300 shadow-md scale-105 z-10"
+                      : "text-[var(--foreground-tertiary)] hover:text-green-200"
+                  }
+                `}
+                style={{
+                  background:
+                    activeTab === "competition"
+                      ? "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(0,122,255,0.12) 100%)"
+                      : "transparent",
+                  boxShadow:
+                    activeTab === "competition"
+                      ? "0 8px 32px 0 rgba(34,197,94,0.15)"
+                      : "none",
+                  border:
+                    activeTab === "competition"
+                      ? "1.5px solid #22c55e"
+                      : "1.5px solid transparent",
+                }}
+              >
+                <span className="relative z-10">
+                  Competition Certificates ({competitionCertifications.length})
+                </span>
+              </button>
+            </div>
+          </motion.div>
 
-                      <p className={`font-semibold mb-2 ${
-                        activeTab === 'course' ? 'text-blue-400' : 'text-green-400'
-                      }`}>
-                        {cert.issuer}
-                      </p>
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-[var(--foreground-secondary)]">
+                Loading certifications...
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Enhanced Certifications Grid */}
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                variants={gridVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                key={activeTab}
+              >
+                {currentCertifications.map((cert) => (
+                  <motion.div
+                    key={cert.id}
+                    variants={cardVariants}
+                    whileHover="hover"
+                    whileTap={{ scale: 0.98 }}
+                    className="cursor-pointer"
+                    onClick={() => handleCertificateClick(cert)}
+                  >
+                    <div className="relative h-full group">
+                      {/* Glowing border effect */}
+                      <div
+                        className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${
+                          activeTab === "course"
+                            ? "from-blue-500/20 to-purple-500/20"
+                            : "from-green-500/20 to-blue-500/20"
+                        } opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
+                      />
 
-                      <p className="text-[var(--foreground-tertiary)] text-sm mb-3">
-                        Earned: {formatDate(cert.date)}
-                      </p>
+                      <Card className="h-full relative bg-[var(--surface)]/80 backdrop-blur-sm border-[var(--border)] hover:border-[var(--accent)]/50 transition-all duration-300 overflow-hidden">
+                        <CardContent className="p-6 h-full flex flex-col">
+                          {/* Certificate Image or Icon */}
+                          {cert.image_url ? (
+                            <motion.div
+                              className="mb-6 overflow-hidden rounded-lg"
+                              whileHover={{ scale: 1.05 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <img
+                                src={cert.image_url}
+                                alt={`${cert.title} certificate`}
+                                className="w-full h-48 object-cover shadow-lg bg-[var(--background-tertiary)]"
+                              />
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              className={`h-20 bg-gradient-to-br ${
+                                activeTab === "course"
+                                  ? "from-blue-500/10 to-purple-500/10"
+                                  : "from-green-500/10 to-blue-500/10"
+                              } rounded-lg flex items-center justify-center mb-6`}
+                              whileHover={{ scale: 1.05 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <div
+                                className={
+                                  activeTab === "course"
+                                    ? "text-blue-400"
+                                    : "text-green-400"
+                                }
+                              >
+                                {activeTab === "course" ? (
+                                  <svg
+                                    className="w-10 h-10"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
+                                  </svg>
+                                ) : (
+                                  <svg
+                                    className="w-10 h-10"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path d="M5,16L3,5H1V3H4L6,14H18.5L19.5,7H8.5V5H21L19,17H5M6,20A1,1 0 0,0 7,21A1,1 0 0,0 8,20A1,1 0 0,0 7,19A1,1 0 0,0 6,20M16,20A1,1 0 0,0 17,21A1,1 0 0,0 18,20A1,1 0 0,0 17,19A1,1 0 0,0 16,20Z" />
+                                  </svg>
+                                )}
+                              </div>
+                            </motion.div>
+                          )}
 
-                      {cert.description && (
-                        <p className="text-[var(--foreground-secondary)] text-sm mb-3 line-clamp-2">
-                          {cert.description}
-                        </p>
-                      )}
+                          {/* Always visible content */}
+                          <h3 className="text-lg font-bold text-[var(--foreground)] mb-2 leading-tight line-clamp-2">
+                            {cert.title}
+                          </h3>
 
-                      {cert.credential_id && (
-                        <p className="text-[var(--foreground-tertiary)] text-xs mb-4 font-mono bg-[var(--background-tertiary)] p-2 rounded">
-                          ID: {cert.credential_id}
-                        </p>
-                      )}
-
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        {cert.url && (
-                          <a
-                            href={cert.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                              activeTab === 'course'
-                                ? 'bg-[var(--background-tertiary)] text-blue-400 hover:bg-[var(--surface-hover)]'
-                                : 'bg-[var(--background-tertiary)] text-green-400 hover:bg-[var(--surface-hover)]'
+                          <p
+                            className={`font-semibold mb-4 ${
+                              activeTab === "course"
+                                ? "text-blue-400"
+                                : "text-green-400"
                             }`}
                           >
-                            Verify Certificate
-                          </a>
-                        )}
-                        {cert.certificate_file_url && (
-                          <a
-                            href={cert.certificate_file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[var(--background-tertiary)] text-purple-400 hover:bg-[var(--surface-hover)] transition-colors"
+                            {cert.issuer}
+                          </p>
+
+                          {/* Progressive disclosure content - hidden by default, shown on hover */}
+                          <motion.div
+                            className="mt-auto opacity-0 group-hover:opacity-100 transition-all duration-300"
+                            initial={{ y: 20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.1 }}
                           >
-                            View Certificate
-                          </a>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                            <p className="text-[var(--foreground-tertiary)] text-sm mb-3">
+                              Earned:{" "}
+                              {new Date(cert.date).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                              })}
+                            </p>
+
+                            {cert.description && (
+                              <p className="text-[var(--foreground-secondary)] text-sm mb-3 line-clamp-2">
+                                {cert.description}
+                              </p>
+                            )}
+
+                            {cert.credential_id && (
+                              <p className="text-[var(--foreground-tertiary)] text-xs mb-4 font-mono bg-[var(--background-tertiary)] p-2 rounded">
+                                ID: {cert.credential_id}
+                              </p>
+                            )}
+
+                            <div className="text-xs text-[var(--foreground-tertiary)] italic">
+                              Click to view details
+                            </div>
+                          </motion.div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {/* Empty State */}
+              {currentCertifications.length === 0 && (
+                <motion.div
+                  className="text-center py-12"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <p className="text-[var(--foreground-secondary)] text-lg">
+                    No{" "}
+                    {activeTab === "course"
+                      ? "course certifications"
+                      : "competition certificates"}{" "}
+                    available.
+                  </p>
                 </motion.div>
-              ))}
+              )}
+            </>
+          )}
+
+          {/* Enhanced Animated Statistics */}
+          <motion.div
+            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, ease }}
+          >
+            <motion.div
+              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center justify-center mb-2">
+                <svg
+                  className="w-6 h-6 text-blue-500 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
+                </svg>
+                <div className="text-3xl font-bold text-blue-500">
+                  <AnimatedCounter value={courseCertifications.length} />
+                </div>
+              </div>
+              <div className="text-[var(--foreground-tertiary)]">
+                Course Certifications
+              </div>
             </motion.div>
 
-            {/* Empty State */}
-            {currentCertifications.length === 0 && (
-              <motion.div
-                className="text-center py-12"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <p className="text-[var(--foreground-secondary)] text-lg">
-                  No {activeTab === 'course' ? 'course certifications' : 'competition certificates'} available.
-                </p>
-              </motion.div>
-            )}
-          </>
-        )}
+            <motion.div
+              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center justify-center mb-2">
+                <svg
+                  className="w-6 h-6 text-green-500 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M5,16L3,5H1V3H4L6,14H18.5L19.5,7H8.5V5H21L19,17H5M6,20A1,1 0 0,0 7,21A1,1 0 0,0 8,20A1,1 0 0,0 7,19A1,1 0 0,0 6,20M16,20A1,1 0 0,0 17,21A1,1 0 0,0 18,20A1,1 0 0,0 17,19A1,1 0 0,0 16,20Z" />
+                </svg>
+                <div className="text-3xl font-bold text-green-500">
+                  <AnimatedCounter value={competitionCertifications.length} />
+                </div>
+              </div>
+              <div className="text-[var(--foreground-tertiary)]">
+                Competition Certificates
+              </div>
+            </motion.div>
 
-        {/* Statistics */}
-        <motion.div
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7, ease }}
-        >
-          <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">
-              {courseCertifications.length}
-            </div>
-            <div className="text-gray-600">Course Certifications</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-600 mb-2">
-              {competitionCertifications.length}
-            </div>
-            <div className="text-gray-600">Competition Certificates</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-purple-600 mb-2">
-              {certifications.length}
-            </div>
-            <div className="text-gray-600">Total Achievements</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-orange-600 mb-2">100%</div>
-            <div className="text-gray-600">Commitment to Learning</div>
-          </div>
-        </motion.div>
-      </div>
-    </motion.section>
+            <motion.div
+              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center justify-center mb-2">
+                <svg
+                  className="w-6 h-6 text-purple-500 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M16,17H7V16H16M16,15H7V14H16M16,13H7V12H16M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z" />
+                </svg>
+                <div className="text-3xl font-bold text-purple-500">
+                  <AnimatedCounter value={certifications.length} />
+                </div>
+              </div>
+              <div className="text-[var(--foreground-tertiary)]">
+                Total Achievements
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center justify-center mb-2">
+                <svg
+                  className="w-6 h-6 text-orange-500 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,1H5C3.89,1 3,1.89 3,3V21A2,2 0 0,0 5,23H19A2,2 0 0,0 21,21V9M19,9H14V4H5V19H19V9Z" />
+                </svg>
+                <div className="text-3xl font-bold text-orange-500">
+                  <AnimatedCounter value={100} />%
+                </div>
+              </div>
+              <div className="text-[var(--foreground-tertiary)]">
+                Commitment to Learning
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Certificate Modal */}
+      <CertificateModal
+        certification={selectedCertificate}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 }
