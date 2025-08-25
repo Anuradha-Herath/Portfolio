@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, easeInOut } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Heading } from "@/components/ui/Heading";
 import { Certification } from "@/lib/types";
@@ -85,30 +85,32 @@ function CertificateModal({
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
             <div
-              className="max-w-4xl w-full max-h-[90vh] bg-[var(--surface)] rounded-2xl shadow-2xl border border-[var(--border)] overflow-hidden"
+              className="max-w-4xl w-full max-h-[90vh] bg-[var(--surface)] rounded-2xl shadow-2xl border border-[var(--border)] overflow-hidden relative"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
-              <button
-                onClick={onClose}
-                className="absolute top-4 right-4 z-10 w-8 h-8 bg-[var(--background-secondary)] hover:bg-[var(--surface-hover)] rounded-full flex items-center justify-center text-[var(--foreground-tertiary)] hover:text-[var(--foreground)] transition-all duration-200"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="p-6 overflow-y-auto max-h-[90vh] relative">
+                {/* Close Button - moved inside modal content */}
+                <button
+                  onClick={onClose}
+                  className="absolute top-0 right-0 mt-4 mr-4 z-10 w-9 h-9 bg-[var(--background-secondary)] hover:bg-[var(--surface-hover)] rounded-full flex items-center justify-center text-[var(--foreground-tertiary)] hover:text-[var(--foreground)] transition-all duration-200 ring-2 ring-[var(--accent)]/20 hover:ring-[var(--accent)]/40 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/40"
+                  style={{ boxShadow: "0 4px 16px 0 rgba(0,0,0,0.10)" }}
+                  aria-label="Close"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
 
-              <div className="p-6 overflow-y-auto max-h-[90vh]">
                 {/* Certificate Image */}
                 {certification.image_url && (
                   <div className="mb-6">
@@ -295,11 +297,11 @@ export function CertificationSection() {
   };
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeInOut } },
     hover: {
       scale: 1.05,
       y: -8,
-      transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] },
+      transition: { duration: 0.3, ease: easeInOut },
     },
   };
 
