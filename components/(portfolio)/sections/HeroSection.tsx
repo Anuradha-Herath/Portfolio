@@ -5,6 +5,14 @@ import { Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
 import { motion, useAnimation, Variants } from "framer-motion";
 
+// Typing effect roles - moved outside component to avoid re-creation on every render
+const roles = [
+  "Full Stack Developer",
+  "UI/UX Designer",
+  "Problem Solver",
+  "Tech Innovator",
+];
+
 export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false);
   const controls = useAnimation();
@@ -29,13 +37,6 @@ export function HeroSection() {
   };
 
   // Typing effect with improved performance
-  const roles = [
-    "Full Stack Developer",
-    "UI/UX Designer",
-    "Problem Solver",
-    "Tech Innovator",
-  ];
-
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
@@ -64,7 +65,7 @@ export function HeroSection() {
     }
 
     return () => clearTimeout(timeout);
-  }, [displayedText, isTyping, currentRoleIndex, roles]);
+  }, [displayedText, isTyping, currentRoleIndex]);
 
   // Faster, more fluid animation variants
   const containerVariants: Variants = {

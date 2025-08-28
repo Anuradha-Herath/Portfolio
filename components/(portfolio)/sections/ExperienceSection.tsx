@@ -179,7 +179,7 @@ const FeaturedExperience: React.FC<{
               <div className="relative">
                 <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full opacity-30" />
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-lg pl-6 italic">
-                  "{experience.description}"
+                  &quot;{experience.description}&quot;
                 </p>
               </div>
             </motion.div>

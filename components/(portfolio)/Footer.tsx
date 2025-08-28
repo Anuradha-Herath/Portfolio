@@ -227,7 +227,7 @@ export function Footer() {
               variants={itemVariants}
             >
               <div>
-                <h4 className="text-xl font-semibold text-white mb-4">Let's Connect</h4>
+                <h4 className="text-xl font-semibold text-white mb-4">Let&apos;s Connect</h4>
                 <div className="space-y-3 text-slate-400">
                   <motion.div
                     className="flex items-center space-x-3"
