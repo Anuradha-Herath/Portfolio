@@ -605,90 +605,206 @@ export function CertificationSection() {
             transition={{ duration: 0.7, ease }}
           >
             <motion.div
-              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
+              className="group relative overflow-hidden"
+              whileHover={{ scale: 1.05, y: -5 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <div className="flex items-center justify-center mb-2">
-                <svg
-                  className="w-6 h-6 text-blue-500 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
-                </svg>
-                <div className="text-3xl font-bold text-blue-500">
-                  <AnimatedCounter value={courseCertifications.length} />
+              {/* Animated background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-blue-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-blue-400/40 transition-all duration-300">
+                <div className="flex flex-col items-center text-center space-y-4">
+                  {/* Enhanced Icon with Animation */}
+                  <motion.div
+                    className="relative"
+                    whileHover={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                  >
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-shadow duration-300">
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
+                      </svg>
+                    </div>
+                    {/* Floating particles */}
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [-2, -8, -2] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-blue-300 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [2, 6, 2] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                    />
+                  </motion.div>
+
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                      <AnimatedCounter value={courseCertifications.length} />
+                    </div>
+                    <div className="text-sm font-semibold text-blue-400 uppercase tracking-wide">
+                      Course Certifications
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="text-[var(--foreground-tertiary)]">
-                Course Certifications
               </div>
             </motion.div>
 
             <motion.div
-              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
+              className="group relative overflow-hidden"
+              whileHover={{ scale: 1.05, y: -5 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <div className="flex items-center justify-center mb-2">
-                <svg
-                  className="w-6 h-6 text-green-500 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M5,16L3,5H1V3H4L6,14H18.5L19.5,7H8.5V5H21L19,17H5M6,20A1,1 0 0,0 7,21A1,1 0 0,0 8,20A1,1 0 0,0 7,19A1,1 0 0,0 6,20M16,20A1,1 0 0,0 17,21A1,1 0 0,0 18,20A1,1 0 0,0 17,19A1,1 0 0,0 16,20Z" />
-                </svg>
-                <div className="text-3xl font-bold text-green-500">
-                  <AnimatedCounter value={competitionCertifications.length} />
+              {/* Animated background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-green-600/5 to-emerald-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-green-400/40 transition-all duration-300">
+                <div className="flex flex-col items-center text-center space-y-4">
+                  {/* Enhanced Icon with Animation */}
+                  <motion.div
+                    className="relative"
+                    whileHover={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                  >
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-green-500/25 transition-shadow duration-300">
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,6V8H13V6H11M11,10V18H13V10H11Z" />
+                      </svg>
+                    </div>
+                    {/* Floating particles */}
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [-2, -8, -2] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-green-300 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [2, 6, 2] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                    />
+                  </motion.div>
+
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
+                      <AnimatedCounter value={competitionCertifications.length} />
+                    </div>
+                    <div className="text-sm font-semibold text-green-400 uppercase tracking-wide">
+                      Competition Certificates
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="text-[var(--foreground-tertiary)]">
-                Competition Certificates
               </div>
             </motion.div>
 
             <motion.div
-              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
+              className="group relative overflow-hidden"
+              whileHover={{ scale: 1.05, y: -5 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <div className="flex items-center justify-center mb-2">
-                <svg
-                  className="w-6 h-6 text-purple-500 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M16,17H7V16H16M16,15H7V14H16M16,13H7V12H16M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z" />
-                </svg>
-                <div className="text-3xl font-bold text-purple-500">
-                  <AnimatedCounter value={certifications.length} />
+              {/* Animated background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-600/5 to-indigo-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-purple-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-purple-400/40 transition-all duration-300">
+                <div className="flex flex-col items-center text-center space-y-4">
+                  {/* Enhanced Icon with Animation */}
+                  <motion.div
+                    className="relative"
+                    whileHover={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                  >
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-shadow duration-300">
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12,2L13.09,8.26L22,9L16.91,13.74L18.18,21.02L12,17.77L5.82,21.02L7.09,13.74L2,9L10.91,8.26L12,2Z" />
+                      </svg>
+                    </div>
+                    {/* Floating particles */}
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [-2, -8, -2] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-purple-300 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [2, 6, 2] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                    />
+                  </motion.div>
+
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+                      <AnimatedCounter value={certifications.length} />
+                    </div>
+                    <div className="text-sm font-semibold text-purple-400 uppercase tracking-wide">
+                      Total Achievements
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="text-[var(--foreground-tertiary)]">
-                Total Achievements
               </div>
             </motion.div>
 
             <motion.div
-              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
+              className="group relative overflow-hidden"
+              whileHover={{ scale: 1.05, y: -5 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <div className="flex items-center justify-center mb-2">
-                <svg
-                  className="w-6 h-6 text-orange-500 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,1H5C3.89,1 3,1.89 3,3V21A2,2 0 0,0 5,23H19A2,2 0 0,0 21,21V9M19,9H14V4H5V19H19V9Z" />
-                </svg>
-                <div className="text-3xl font-bold text-orange-500">
-                  <AnimatedCounter value={100} />%
+              {/* Animated background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/5 to-red-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-orange-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-orange-400/40 transition-all duration-300">
+                <div className="flex flex-col items-center text-center space-y-4">
+                  {/* Enhanced Icon with Animation */}
+                  <motion.div
+                    className="relative"
+                    whileHover={{ rotate: [0, -10, 10, 0] }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                  >
+                    <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-orange-500/25 transition-shadow duration-300">
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M13,2.05V4.05C17.39,4.59 20.5,8.58 20.5,13C20.5,15.21 19.71,17.21 18.4,18.85L16.68,17.13C17.54,15.89 18,14.5 18,13C18,9.69 15.31,7 12,7V9.79L7.5,5.29L12,0.79V2.05C16.18,2.05 19.5,5.37 19.5,9.55C19.5,10.53 19.3,11.47 18.93,12.33L17.21,10.61C17.43,10.14 17.5,9.58 17.5,9C17.5,6.79 15.71,5 13,5V2.05M12,11C10.9,11 10,11.9 10,13C10,14.1 10.9,15 12,15C13.1,15 14,14.1 14,13C14,11.9 13.1,11 12,11M6.5,13C6.5,8.58 9.61,4.59 14,4.05V2.05C9.82,2.05 6.5,5.37 6.5,9.55C6.5,10.53 6.7,11.47 7.07,12.33L8.79,10.61C8.57,10.14 8.5,9.58 8.5,9C8.5,6.79 10.29,5 13,5V7C9.69,7 7,9.69 7,13C7,14.5 7.46,15.89 8.32,17.13L10.04,18.85C8.73,17.21 7.93,15.21 7.93,13H6.5Z" />
+                      </svg>
+                    </div>
+                    {/* Floating particles */}
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [-2, -8, -2] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-orange-300 rounded-full opacity-0 group-hover:opacity-100"
+                      animate={{ y: [2, 6, 2] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                    />
+                  </motion.div>
+
+                  <div className="space-y-2">
+                    <div className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+                      <AnimatedCounter value={100} />%
+                    </div>
+                    <div className="text-sm font-semibold text-orange-400 uppercase tracking-wide">
+                      Commitment to Learning
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="text-[var(--foreground-tertiary)]">
-                Commitment to Learning
               </div>
             </motion.div>
           </motion.div>

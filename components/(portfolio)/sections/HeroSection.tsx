@@ -126,7 +126,7 @@ export function HeroSection() {
           initial="hidden"
           animate={controls}
         >
-          {/* Profile Image Section - Enhanced with Smooth Animations */}
+          {/* Profile Image Section - Enhanced with Sophisticated Animations */}
           <motion.div
             className="flex justify-center lg:justify-start order-2 lg:order-2"
             variants={itemVariants}
@@ -138,52 +138,69 @@ export function HeroSection() {
                 animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                 transition={{
                   delay: 0.3,
-                  duration: 0.8,
+                  duration: 1.2,
                   ease: [0.25, 0.46, 0.45, 0.94]
                 }}
               >
-                {/* Floating animation container */}
+                {/* Enhanced floating animation with multiple layers */}
                 <motion.div
                   className="relative w-full h-full"
                   animate={{
-                    y: [0, -10, 0],
-                    rotate: [0, 1, 0, -1, 0]
+                    y: [0, -12, 0],
+                    rotate: [0, 0.5, 0, -0.5, 0],
+                    scale: [1, 1.02, 1]
                   }}
                   transition={{
-                    duration: 6,
+                    duration: 8,
                     repeat: Infinity,
-                    ease: "easeInOut",
+                    ease: [0.25, 0.46, 0.45, 0.94],
                     delay: 1
                   }}
                 >
-                  {/* Enhanced glow effects */}
+                  {/* Primary glow effect with enhanced gradients */}
                   <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/30 via-purple-500/20 to-pink-500/30 blur-2xl"
+                    className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/40 via-purple-500/30 to-pink-500/40 blur-3xl"
                     animate={{
-                      scale: [1, 1.2, 1],
-                      opacity: [0.3, 0.6, 0.3],
+                      scale: [1, 1.3, 1],
+                      opacity: [0.4, 0.8, 0.4],
                       rotate: [0, 180, 360]
                     }}
                     transition={{
-                      duration: 8,
+                      duration: 12,
                       repeat: Infinity,
                       ease: "easeInOut",
                       delay: 0.5
                     }}
                   />
 
-                  {/* Secondary glow layer */}
+                  {/* Secondary glow with complementary colors */}
                   <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-tl from-cyan-400/20 to-blue-500/20 blur-xl"
+                    className="absolute inset-0 rounded-full bg-gradient-to-tl from-cyan-400/25 to-blue-500/25 blur-2xl"
                     animate={{
-                      scale: [1.1, 0.9, 1.1],
-                      opacity: [0.2, 0.4, 0.2]
+                      scale: [1.2, 0.8, 1.2],
+                      opacity: [0.3, 0.6, 0.3],
+                      rotate: [360, 180, 0]
+                    }}
+                    transition={{
+                      duration: 15,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 2
+                    }}
+                  />
+
+                  {/* Tertiary accent glow */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-400/20 to-fuchsia-400/20 blur-xl"
+                    animate={{
+                      scale: [0.9, 1.1, 0.9],
+                      opacity: [0.2, 0.5, 0.2]
                     }}
                     transition={{
                       duration: 10,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: 2
+                      delay: 3
                     }}
                   />
 
@@ -191,68 +208,114 @@ export function HeroSection() {
                   <motion.div
                     className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
                     whileHover={{
-                      scale: 1.05,
-                      rotateY: 5,
-                      rotateX: 5
+                      scale: 1.08,
+                      rotateY: 8,
+                      rotateX: 8,
+                      z: 50
                     }}
-                    whileTap={{ scale: 0.98 }}
+                    whileTap={{ scale: 0.95 }}
                     transition={{
                       type: "spring",
                       stiffness: 300,
-                      damping: 25
+                      damping: 25,
+                      mass: 0.8
                     }}
                     style={{
                       transformStyle: "preserve-3d"
                     }}
                   >
-                    {/* Animated border ring */}
+                    {/* Animated multi-layered border rings */}
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       style={{
-                        background: 'conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.8), transparent)',
-                        padding: '3px'
+                        background: 'conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7), transparent)',
+                        padding: '4px'
                       }}
                       animate={{ rotate: 360 }}
                       transition={{
-                        duration: 4,
+                        duration: 6,
                         repeat: Infinity,
                         ease: "linear"
                       }}
                     >
-                      <div className="w-full h-full rounded-full bg-white dark:bg-slate-900" />
+                      <motion.div
+                        className="w-full h-full rounded-full"
+                        style={{
+                          background: 'conic-gradient(from 180deg, transparent, rgba(6, 182, 212, 0.6), rgba(236, 72, 153, 0.4), transparent)',
+                          padding: '2px'
+                        }}
+                        animate={{ rotate: -360 }}
+                        transition={{
+                          duration: 8,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                      >
+                        <div className="w-full h-full rounded-full bg-white dark:bg-slate-900" />
+                      </motion.div>
                     </motion.div>
 
-                    {/* Dynamic shadow effects */}
+                    {/* Dynamic shadow effects with multiple layers */}
                     <motion.div
-                      className="absolute -inset-4 rounded-full bg-gradient-to-r from-indigo-500/20 to-purple-500/20 blur-lg"
+                      className="absolute -inset-6 rounded-full bg-gradient-to-r from-indigo-500/30 to-purple-500/30 blur-xl"
                       animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.5, 0.8, 0.5]
+                        scale: [1, 1.2, 1],
+                        opacity: [0.6, 1, 0.6],
+                        rotate: [0, 90, 180, 270, 360]
                       }}
                       transition={{
-                        duration: 3,
+                        duration: 4,
                         repeat: Infinity,
                         ease: "easeInOut"
                       }}
                     />
 
-                    {/* Main image container */}
-                    <div className="relative w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 border-2 border-white dark:border-slate-700 rounded-full overflow-hidden">
-                      {/* Loading shimmer effect */}
+                    {/* Secondary shadow layer */}
+                    <motion.div
+                      className="absolute -inset-4 rounded-full bg-gradient-to-br from-pink-400/20 to-cyan-400/20 blur-lg"
+                      animate={{
+                        scale: [1.1, 0.9, 1.1],
+                        opacity: [0.4, 0.7, 0.4]
+                      }}
+                      transition={{
+                        duration: 5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1
+                      }}
+                    />
+
+                    {/* Main image container with enhanced styling */}
+                    <div className="relative w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-2 border-white/50 dark:border-slate-700/50 rounded-full overflow-hidden">
+                      {/* Enhanced loading shimmer with multiple passes */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                         animate={{
-                          x: ['-100%', '100%']
+                          x: ['-150%', '150%']
                         }}
                         transition={{
-                          duration: 2,
+                          duration: 3,
                           repeat: Infinity,
                           ease: "easeInOut",
                           delay: 1.5
                         }}
                       />
 
-                      {/* Professional photo */}
+                      {/* Secondary shimmer layer */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-200/20 to-transparent"
+                        animate={{
+                          x: ['-150%', '150%']
+                        }}
+                        transition={{
+                          duration: 4,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 2.5
+                        }}
+                      />
+
+                      {/* Professional photo with enhanced animations */}
                       <motion.img
                         src="/images/profile_photo.jpg"
                         alt="Anuradha Herath"
@@ -261,30 +324,33 @@ export function HeroSection() {
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{
                           delay: 0.8,
-                          duration: 0.6,
-                          ease: "easeOut"
+                          duration: 0.8,
+                          ease: [0.25, 0.46, 0.45, 0.94]
                         }}
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{
+                          scale: 1.05,
+                          filter: "brightness(1.1) contrast(1.05)"
+                        }}
                         onError={(e) => {
-                          // Enhanced fallback with animation
+                          // Enhanced fallback with sophisticated animation
                           e.currentTarget.style.display = "none";
                           const parent = e.currentTarget.parentElement;
                           if (parent) {
                             parent.innerHTML = `
                               <motion.div
-                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30"
+                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 dark:from-indigo-900/40 dark:via-purple-900/30 dark:to-pink-900/20"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                transition={{ delay: 0.5, duration: 0.5 }}
+                                transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                               >
                                 <motion.div
-                                  class="text-4xl font-bold text-indigo-600 dark:text-indigo-400"
+                                  class="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
                                   animate={{
                                     scale: [1, 1.1, 1],
-                                    rotate: [0, 5, -5, 0]
+                                    rotate: [0, 2, -2, 0]
                                   }}
                                   transition={{
-                                    duration: 2,
+                                    duration: 3,
                                     repeat: Infinity,
                                     ease: "easeInOut",
                                     delay: 1
@@ -299,42 +365,67 @@ export function HeroSection() {
                       />
                     </div>
 
-                    {/* Hover overlay effects */}
+                    {/* Enhanced hover overlay with multiple effects */}
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-indigo-500/10 to-indigo-600/20"
+                      className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-indigo-500/15 to-indigo-600/25"
                       initial={{ opacity: 0 }}
                       whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.4 }}
                     />
 
-                    {/* Particle effect on hover */}
+                    {/* Sophisticated particle system */}
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       initial={{ opacity: 0 }}
                       whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      {[...Array(6)].map((_, i) => (
+                      {[...Array(12)].map((_, i) => (
                         <motion.div
                           key={i}
-                          className="absolute w-1 h-1 bg-indigo-400 rounded-full"
+                          className="absolute w-1 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"
                           style={{
-                            top: `${20 + i * 10}%`,
-                            left: `${10 + i * 15}%`
+                            top: `${15 + (i % 3) * 25}%`,
+                            left: `${10 + (i % 4) * 20}%`
                           }}
                           animate={{
-                            y: [0, -20, 0],
+                            y: [0, -25, 0],
+                            x: [0, Math.sin(i) * 10, 0],
                             opacity: [0, 1, 0],
-                            scale: [0, 1, 0]
+                            scale: [0, 1.2, 0]
                           }}
                           transition={{
-                            duration: 2,
+                            duration: 2.5,
                             repeat: Infinity,
-                            delay: i * 0.2,
-                            ease: "easeInOut"
+                            delay: i * 0.15,
+                            ease: [0.25, 0.46, 0.45, 0.94]
                           }}
                         />
                       ))}
                     </motion.div>
+
+                    {/* Additional floating elements */}
+                    {[...Array(6)].map((_, i) => (
+                      <motion.div
+                        key={`float-${i}`}
+                        className="absolute w-2 h-2 bg-gradient-to-r from-indigo-300/60 to-purple-300/60 rounded-full blur-sm"
+                        style={{
+                          top: `${20 + i * 12}%`,
+                          right: `${-5 + i * 8}%`
+                        }}
+                        animate={{
+                          y: [0, -15, 0],
+                          opacity: [0.3, 0.8, 0.3],
+                          scale: [0.8, 1.2, 0.8]
+                        }}
+                        transition={{
+                          duration: 4 + i * 0.5,
+                          repeat: Infinity,
+                          delay: i * 0.8,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    ))}
                   </motion.div>
                 </motion.div>
               </motion.div>

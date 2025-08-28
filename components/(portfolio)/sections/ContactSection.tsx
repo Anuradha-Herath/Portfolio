@@ -328,22 +328,40 @@ export function ContactSection() {
 
           {/* Contact Form */}
           <motion.div variants={itemVariants}>
-            <Card className="bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden">
-              <CardContent className="p-8 lg:p-10">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
-                    Send Me a Message
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-300 mb-8 text-lg">
-                    Fill out the form below and I&apos;ll get back to you as soon as possible.
-                  </p>
-                </motion.div>
+            <Card className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-2 border-white/30 dark:border-slate-700/30 shadow-2xl hover:shadow-3xl transition-all duration-500 rounded-3xl overflow-hidden">
+              {/* Decorative Header */}
+              <div className="relative bg-gradient-to-r from-[var(--accent)] via-[#5856d6] to-purple-600 p-1">
+                <div className="bg-white/10 dark:bg-slate-900/10 rounded-t-2xl p-6">
+                  <div className="flex items-center space-x-4">
+                    <motion.div
+                      className="flex-shrink-0 w-16 h-16 bg-white/20 dark:bg-slate-800/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
+                      whileHover={{ rotate: 360, scale: 1.05 }}
+                      transition={{ duration: 0.6, ease: "easeInOut" }}
+                    >
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </motion.div>
+                    <div className="flex-1">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        <h3 className="text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight">
+                          Send Me a Message
+                        </h3>
+                        <p className="text-white/90 text-lg leading-relaxed">
+                          Fill out the form below and I&apos;ll get back to you as soon as possible.
+                        </p>
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <CardContent className="p-8 lg:p-10 bg-white/50 dark:bg-slate-900/50">
+                <form onSubmit={handleSubmit} className="space-y-8">
                   {/* Success Message */}
                   <AnimatePresence>
                     {submitStatus === 'success' && (
@@ -351,21 +369,22 @@ export function ContactSection() {
                         initial={{ opacity: 0, scale: 0.95, y: -20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                        className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl backdrop-blur-sm"
+                        className="p-6 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-2 border-green-500/30 rounded-2xl backdrop-blur-sm shadow-lg"
                       >
-                        <div className="flex items-start space-x-3">
+                        <div className="flex items-start space-x-4">
                           <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                            className="flex-shrink-0 w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center"
                           >
-                            <svg className="h-6 w-6 text-green-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                            <svg className="h-7 w-7 text-green-500" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                             </svg>
                           </motion.div>
-                          <div>
-                            <h4 className="text-lg font-semibold text-green-400 mb-1">Message Sent Successfully!</h4>
-                            <p className="text-green-300 text-sm leading-relaxed">
+                          <div className="flex-1">
+                            <h4 className="text-xl font-bold text-green-700 dark:text-green-400 mb-2">Message Sent Successfully!</h4>
+                            <p className="text-green-600 dark:text-green-300 text-base leading-relaxed">
                               Thank you for your message! I&apos;ll get back to you within 24 hours.
                             </p>
                           </div>
@@ -381,21 +400,22 @@ export function ContactSection() {
                         initial={{ opacity: 0, scale: 0.95, y: -20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                        className="p-6 bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 rounded-xl backdrop-blur-sm"
+                        className="p-6 bg-gradient-to-r from-red-500/20 to-rose-500/20 border-2 border-red-500/30 rounded-2xl backdrop-blur-sm shadow-lg"
                       >
-                        <div className="flex items-start space-x-3">
+                        <div className="flex items-start space-x-4">
                           <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.2, type: "spring", stiffness: 300 }}
+                            className="flex-shrink-0 w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center"
                           >
-                            <svg className="h-6 w-6 text-red-500 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                            <svg className="h-7 w-7 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                             </svg>
                           </motion.div>
-                          <div>
-                            <h4 className="text-lg font-semibold text-red-400 mb-1">Failed to Send Message</h4>
-                            <p className="text-red-300 text-sm leading-relaxed">
+                          <div className="flex-1">
+                            <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">Failed to Send Message</h4>
+                            <p className="text-red-600 dark:text-red-300 text-base leading-relaxed">
                               {errorMessage}
                             </p>
                           </div>
@@ -404,117 +424,144 @@ export function ContactSection() {
                     )}
                   </AnimatePresence>
 
-                  {/* Form Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <motion.div
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 }}
-                    >
-                      <Input
-                        label="Name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        placeholder="Your full name"
-                        className="bg-white/5 dark:bg-slate-800/5 border-white/20 dark:border-slate-700/20 focus:border-[var(--accent)]/50 focus:ring-[var(--accent)]/20"
-                      />
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 }}
-                    >
-                      <Input
-                        label="Email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        placeholder="your.email@example.com"
-                        className="bg-white/5 dark:bg-slate-800/5 border-white/20 dark:border-slate-700/20 focus:border-[var(--accent)]/50 focus:ring-[var(--accent)]/20"
-                      />
-                    </motion.div>
+                  {/* Form Fields Container */}
+                  <div className="space-y-8">
+                    {/* Personal Information Section */}
+                    <div className="space-y-6">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] rounded-lg flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
+                        <h4 className="text-lg font-semibold text-slate-900 dark:text-white">Personal Information</h4>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <motion.div
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.4 }}
+                        >
+                          <Input
+                            label="Name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                            placeholder="Your full name"
+                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                          />
+                        </motion.div>
+                        <motion.div
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.5 }}
+                        >
+                          <Input
+                            label="Email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            placeholder="your.email@example.com"
+                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                          />
+                        </motion.div>
+                      </div>
+                    </div>
+
+                    {/* Message Section */}
+                    <div className="space-y-6">
+                      <div className="flex items-center space-x-3 mb-4">
+                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
+                        </div>
+                        <h4 className="text-lg font-semibold text-slate-900 dark:text-white">Your Message</h4>
+                      </div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                      >
+                        <Input
+                          label="Subject"
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleChange}
+                          required
+                          placeholder="What's this about?"
+                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                        />
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7 }}
+                      >
+                        <Textarea
+                          label="Message"
+                          name="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          required
+                          rows={6}
+                          placeholder="Tell me about your project or just say hello!"
+                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300 resize-none"
+                        />
+                      </motion.div>
+                    </div>
                   </div>
 
+                  {/* Submit Button */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
+                    transition={{ delay: 0.8 }}
+                    className="pt-6"
                   >
-                    <Input
-                      label="Subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      placeholder="What's this about?"
-                      className="bg-white/5 dark:bg-slate-800/5 border-white/20 dark:border-slate-700/20 focus:border-[var(--accent)]/50 focus:ring-[var(--accent)]/20"
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    <Textarea
-                      label="Message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={5}
-                      placeholder="Tell me about your project or just say hello!"
-                      className="bg-white/5 dark:bg-slate-800/5 border-white/20 dark:border-slate-700/20 focus:border-[var(--accent)]/50 focus:ring-[var(--accent)]/20 resize-none"
-                    />
-                  </motion.div>
-
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 }}
-                      className="pt-4"
+                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <motion.div
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        whileTap={{ scale: 0.98 }}
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-[var(--accent)] via-[#5856d6] to-purple-600 hover:from-[var(--accent)]/90 hover:via-[#5856d6]/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all duration-300 text-white text-lg font-bold py-5 rounded-2xl border-2 border-white/20"
+                        disabled={isSubmitting}
                       >
-                        <Button
-                          type="submit"
-                          size="lg"
-                          className="w-full bg-gradient-to-r from-[var(--accent)] to-[#5856d6] hover:from-[var(--accent)]/80 hover:to-[#5856d6]/80 shadow-lg hover:shadow-xl transition-all duration-300 text-lg font-semibold py-4"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? (
-                            <div className="flex items-center justify-center space-x-3">
-                              <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                              />
-                              <span>Sending...</span>
-                            </div>
-                          ) : (
-                            <div className="flex items-center justify-center space-x-3">
-                              <span>Send Message</span>
-                              <motion.svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                animate={{ x: [0, 4, 0] }}
-                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                              >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                              </motion.svg>
-                            </div>
-                          )}
-                        </Button>
-                      </motion.div>
+                        {isSubmitting ? (
+                          <div className="flex items-center justify-center space-x-4">
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full"
+                            />
+                            <span className="text-lg">Sending...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center space-x-4">
+                            <span className="text-lg">Send Message</span>
+                            <motion.svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              animate={{ x: [0, 5, 0] }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </motion.svg>
+                          </div>
+                        )}
+                      </Button>
                     </motion.div>
+                  </motion.div>
                 </form>
               </CardContent>
             </Card>

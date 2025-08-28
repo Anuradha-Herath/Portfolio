@@ -154,6 +154,7 @@ export function Footer() {
                       scale: 1.1,
                       y: -3,
                       rotate: [0, -5, 5, 0],
+                      transition: { type: "tween", duration: 0.3 }
                     }}
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, scale: 0.8 }}
