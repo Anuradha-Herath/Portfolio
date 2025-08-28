@@ -126,7 +126,7 @@ export function EducationSection() {
   return (
     <motion.section
       id="education"
-      className="py-16 lg:py-20 relative overflow-hidden"
+      className="py-16 lg:py-20 relative overflow-hidden section-background"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -139,41 +139,28 @@ export function EducationSection() {
         },
       }}
     >
-      {/* Enhanced Background Pattern */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(120, 119, 198, 0.4) 1px, transparent 0)`,
-          backgroundSize: '30px 30px'
-        }} />
-      </div>
+      {/* Unified Background - Matching Hero Section */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Subtle animated dot grid pattern - Same as Hero */}
+        <motion.div
+          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
+            backgroundSize: "40px 40px",
+          }}
+          animate={{
+            opacity: [0.15, 0.25, 0.15],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
 
-      {/* Floating Aurora Effects */}
-      <motion.div
-        className="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"
-        animate={{
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
-        animate={{
-          x: [0, -120, 0],
-          y: [0, 80, 0],
-          scale: [1, 0.8, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+        {/* Soft gradient overlay for depth - Same as Hero */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div

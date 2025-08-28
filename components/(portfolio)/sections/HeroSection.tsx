@@ -94,7 +94,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-  className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 section-background"
     >
       {/* Sophisticated Background - Subtle Grid of Dots */}
       <div className="absolute inset-0 overflow-hidden">
@@ -126,9 +126,9 @@ export function HeroSection() {
           initial="hidden"
           animate={controls}
         >
-          {/* Profile Image Section - Now on the Left */}
+          {/* Profile Image Section - Now on the Right */}
           <motion.div
-            className="flex justify-center lg:justify-start order-2 lg:order-1"
+            className="flex justify-center lg:justify-start order-2 lg:order-2"
             variants={itemVariants}
           >
             <div className="relative lg:ml-12">
@@ -184,9 +184,9 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Content Section - Now on the Right with Left Alignment */}
+          {/* Content Section - Now on the Left with Left Alignment */}
           <motion.div
-            className="text-left space-y-8 order-1 lg:order-2"
+            className="text-left space-y-8 order-1 lg:order-1"
             variants={itemVariants}
           >
             {/* Elegant greeting introduction */}

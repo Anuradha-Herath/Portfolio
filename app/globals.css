@@ -131,6 +131,11 @@ html {
   .btn-premium:hover::before {
     left: 100%;
   }
+
+  /* Shared Section Background */
+  .section-background {
+    background: linear-gradient(135deg, rgb(15, 23, 42) 0%, rgba(88, 28, 135, 0.2) 50%, rgb(15, 23, 42) 100%);
+  }
 }
 
 /* Premium Custom Scrollbar */
