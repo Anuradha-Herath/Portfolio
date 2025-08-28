@@ -26,12 +26,12 @@ export const throttle = (func: Function, limit: number) => {
 
 // Lazy loading hook for animations
 export const useLazyAnimation = (threshold: number = 0.1) => {
-  if (typeof window === 'undefined') return { ref: null, isVisible: false };
-  
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

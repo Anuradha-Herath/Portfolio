@@ -81,7 +81,7 @@ export default function TestEmailPage() {
             <ul className="text-sm text-yellow-700 space-y-1">
               <li>• Make sure your Gmail account has 2-factor authentication enabled</li>
               <li>• Use an App Password, not your regular Gmail password</li>
-              <li>• Check your spam folder if you don't receive the email</li>
+              <li>• Check your spam folder if you don&apos;t receive the email</li>
               <li>• Ensure GMAIL_USER and GMAIL_PASS are set in your .env.local file</li>
             </ul>
           </div>

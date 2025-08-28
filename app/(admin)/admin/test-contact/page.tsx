@@ -67,7 +67,7 @@ export default function ContactTestPage() {
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Test Contact Functionality</h2>
               <p className="text-gray-600 mb-6">
-                This page tests the contact form API endpoints. Make sure you've run the database migration first.
+                This page tests the contact form API endpoints. Make sure you&apos;ve run the database migration first.
               </p>
               
               <Button 
