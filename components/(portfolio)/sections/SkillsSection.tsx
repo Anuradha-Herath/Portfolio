@@ -99,56 +99,27 @@ export function SkillsSection() {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
     >
-      {/* Animated Background Effects (copied from ProjectsSection) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Animated gradient orbs */}
+      {/* Unified Background - Matching Projects Section */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Subtle animated dot grid pattern - Same as Projects */}
         <motion.div
-          className="absolute top-20 -right-20 w-96 h-96 bg-gradient-to-br from-blue-400/20 via-indigo-500/20 to-purple-600/20 rounded-full blur-3xl"
+          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
+            backgroundSize: "40px 40px",
+          }}
           animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-            opacity: [0.3, 0.5, 0.3],
+            opacity: [0.15, 0.25, 0.15],
           }}
           transition={{
-            duration: 20,
+            duration: 8,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
-        <motion.div
-          className="absolute -bottom-20 -left-20 w-96 h-96 bg-gradient-to-tr from-violet-400/20 via-purple-500/20 to-pink-600/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
-            opacity: [0.4, 0.2, 0.4],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        {/* Floating particles */}
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-indigo-400/30 rounded-full"
-            style={{
-              left: `${20 + i * 15}%`,
-              top: `${30 + i * 10}%`,
-            }}
-            animate={{
-              y: [-20, 20, -20],
-              opacity: [0.3, 0.8, 0.3],
-            }}
-            transition={{
-              duration: 4 + i,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.5,
-            }}
-          />
-        ))}
+
+        {/* Soft gradient overlay for depth - Same as Projects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -242,7 +213,7 @@ export function SkillsSection() {
                 className="group"
               >
                 <motion.div
-                  className="relative bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)] transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl min-w-0"
+                  className="relative bg-white/10 dark:bg-slate-800/10 border border-white/20 dark:border-slate-700/20 rounded-2xl p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)]/40 transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl min-w-0"
                   whileHover={{
                     scale: 1.05,
                     y: -8,

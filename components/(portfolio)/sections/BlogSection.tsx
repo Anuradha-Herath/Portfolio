@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { Card, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
@@ -52,8 +53,31 @@ export function BlogSection() {
   };
 
   return (
-    <section id="blog" className="py-16 lg:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="blog" className="py-16 lg:py-20 relative overflow-hidden">
+      {/* Unified Background - Matching Other Sections */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Subtle animated dot grid pattern - Same as other sections */}
+        <motion.div
+          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
+            backgroundSize: "40px 40px",
+          }}
+          animate={{
+            opacity: [0.15, 0.25, 0.15],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Soft gradient overlay for depth - Same as other sections */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <Heading level={2} className="mb-4">
             Latest Blog <span className="text-blue-600">Posts</span>

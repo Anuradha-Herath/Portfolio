@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Heading } from '@/components/ui/Heading';
 import { Testimonial } from '@/lib/types';
@@ -81,14 +82,37 @@ export function TestimonialSection() {
   };
 
   return (
-    <section id="testimonials" className="py-16 lg:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="testimonials" className="py-16 lg:py-20 relative overflow-hidden">
+      {/* Unified Background - Matching Other Sections */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Subtle animated dot grid pattern - Same as other sections */}
+        <motion.div
+          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
+            backgroundSize: "40px 40px",
+          }}
+          animate={{
+            opacity: [0.15, 0.25, 0.15],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Soft gradient overlay for depth - Same as other sections */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <Heading level={2} className="mb-4">
             What People Say <span className="text-blue-600">About Me</span>
           </Heading>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Don't just take my word for it. Here's what my colleagues, clients, and collaborators have to say about working with me.
+            Don&apos;t just take my word for it. Here&apos;s what my colleagues, clients, and collaborators have to say about working with me.
           </p>
         </div>
 
@@ -108,7 +132,7 @@ export function TestimonialSection() {
 
                 {/* Content */}
                 <p className="text-gray-700 leading-relaxed mb-6 italic">
-                  "{testimonial.content}"
+                  &ldquo;{testimonial.content}&rdquo;
                 </p>
 
                 {/* Author */}
@@ -142,7 +166,7 @@ export function TestimonialSection() {
               Ready to Work Together?
             </h3>
             <p className="text-lg mb-6 opacity-90">
-              Join these satisfied clients and let's create something amazing together.
+              Join these satisfied clients and let&apos;s create something amazing together.
             </p>
             <button
               onClick={() => {

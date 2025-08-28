@@ -94,7 +94,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 section-background"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20"
     >
       {/* Sophisticated Background - Subtle Grid of Dots */}
       <div className="absolute inset-0 overflow-hidden">
@@ -126,7 +126,7 @@ export function HeroSection() {
           initial="hidden"
           animate={controls}
         >
-          {/* Profile Image Section - Now on the Right */}
+          {/* Profile Image Section - Enhanced with Smooth Animations */}
           <motion.div
             className="flex justify-center lg:justify-start order-2 lg:order-2"
             variants={itemVariants}
@@ -134,51 +134,208 @@ export function HeroSection() {
             <div className="relative lg:ml-12">
               <motion.div
                 className="relative w-72 h-72 lg:w-80 lg:h-80"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                initial={{ scale: 0.8, opacity: 0, rotateY: -15 }}
+                animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+                transition={{
+                  delay: 0.3,
+                  duration: 0.8,
+                  ease: [0.25, 0.46, 0.45, 0.94]
+                }}
               >
-                {/* Clean, elegant single border with subtle glow */}
+                {/* Floating animation container */}
                 <motion.div
-                  className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="relative w-full h-full"
+                  animate={{
+                    y: [0, -10, 0],
+                    rotate: [0, 1, 0, -1, 0]
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1
+                  }}
                 >
-                  {/* Subtle glow effect that pulses on hover */}
+                  {/* Enhanced glow effects */}
                   <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-600/20 blur-xl"
+                    className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/30 via-purple-500/20 to-pink-500/30 blur-2xl"
                     animate={{
-                      scale: [1, 1.05, 1],
-                      opacity: [0.5, 0.8, 0.5],
+                      scale: [1, 1.2, 1],
+                      opacity: [0.3, 0.6, 0.3],
+                      rotate: [0, 180, 360]
                     }}
                     transition={{
-                      duration: 4,
+                      duration: 8,
                       repeat: Infinity,
                       ease: "easeInOut",
+                      delay: 0.5
                     }}
                   />
 
-                  {/* Main image container */}
-                  <div className="relative w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 border-2 border-white dark:border-slate-700 rounded-full overflow-hidden">
-                    {/* Professional photo placeholder */}
-                    <img
-                      src="/images/profile_photo.jpg"
-                      alt="Anuradha Herath"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        // Fallback to a elegant placeholder if image not found
-                        e.currentTarget.style.display = "none";
-                        const parent = e.currentTarget.parentElement;
-                        if (parent) {
-                          parent.innerHTML = `
-                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30">
-                              <div class="text-4xl font-bold text-indigo-600 dark:text-indigo-400">AH</div>
-                            </div>
-                          `;
-                        }
+                  {/* Secondary glow layer */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-gradient-to-tl from-cyan-400/20 to-blue-500/20 blur-xl"
+                    animate={{
+                      scale: [1.1, 0.9, 1.1],
+                      opacity: [0.2, 0.4, 0.2]
+                    }}
+                    transition={{
+                      duration: 10,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 2
+                    }}
+                  />
+
+                  {/* Main image container with enhanced interactions */}
+                  <motion.div
+                    className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
+                    whileHover={{
+                      scale: 1.05,
+                      rotateY: 5,
+                      rotateX: 5
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 25
+                    }}
+                    style={{
+                      transformStyle: "preserve-3d"
+                    }}
+                  >
+                    {/* Animated border ring */}
+                    <motion.div
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: 'conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.8), transparent)',
+                        padding: '3px'
+                      }}
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                    >
+                      <div className="w-full h-full rounded-full bg-white dark:bg-slate-900" />
+                    </motion.div>
+
+                    {/* Dynamic shadow effects */}
+                    <motion.div
+                      className="absolute -inset-4 rounded-full bg-gradient-to-r from-indigo-500/20 to-purple-500/20 blur-lg"
+                      animate={{
+                        scale: [1, 1.1, 1],
+                        opacity: [0.5, 0.8, 0.5]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
                       }}
                     />
-                  </div>
+
+                    {/* Main image container */}
+                    <div className="relative w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 border-2 border-white dark:border-slate-700 rounded-full overflow-hidden">
+                      {/* Loading shimmer effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        animate={{
+                          x: ['-100%', '100%']
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 1.5
+                        }}
+                      />
+
+                      {/* Professional photo */}
+                      <motion.img
+                        src="/images/profile_photo.jpg"
+                        alt="Anuradha Herath"
+                        className="w-full h-full object-cover"
+                        initial={{ scale: 1.1, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{
+                          delay: 0.8,
+                          duration: 0.6,
+                          ease: "easeOut"
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        onError={(e) => {
+                          // Enhanced fallback with animation
+                          e.currentTarget.style.display = "none";
+                          const parent = e.currentTarget.parentElement;
+                          if (parent) {
+                            parent.innerHTML = `
+                              <motion.div
+                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30"
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ delay: 0.5, duration: 0.5 }}
+                              >
+                                <motion.div
+                                  class="text-4xl font-bold text-indigo-600 dark:text-indigo-400"
+                                  animate={{
+                                    scale: [1, 1.1, 1],
+                                    rotate: [0, 5, -5, 0]
+                                  }}
+                                  transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    ease: "easeInOut",
+                                    delay: 1
+                                  }}
+                                >
+                                  AH
+                                </motion.div>
+                              </motion.div>
+                            `;
+                          }
+                        }}
+                      />
+                    </div>
+
+                    {/* Hover overlay effects */}
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-indigo-500/10 to-indigo-600/20"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+
+                    {/* Particle effect on hover */}
+                    <motion.div
+                      className="absolute inset-0 rounded-full"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                    >
+                      {[...Array(6)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1 h-1 bg-indigo-400 rounded-full"
+                          style={{
+                            top: `${20 + i * 10}%`,
+                            left: `${10 + i * 15}%`
+                          }}
+                          animate={{
+                            y: [0, -20, 0],
+                            opacity: [0, 1, 0],
+                            scale: [0, 1, 0]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: i * 0.2,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      ))}
+                    </motion.div>
+                  </motion.div>
                 </motion.div>
               </motion.div>
             </div>
@@ -195,7 +352,7 @@ export function HeroSection() {
                 className="text-sm font-semibold tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400"
                 variants={itemVariants}
               >
-                — Hello, I'm
+                — Hello, I&apos;m
               </motion.p>
 
               {/* Refined name with subtle, unified gradient */}
@@ -270,7 +427,7 @@ export function HeroSection() {
                   className="px-8 py-4 text-base font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <span className="flex items-center gap-2">
-                    Let's Connect
+                    Let&apos;s Connect
                     <svg
                       className="w-4 h-4"
                       fill="none"

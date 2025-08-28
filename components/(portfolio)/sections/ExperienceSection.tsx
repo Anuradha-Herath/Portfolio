@@ -258,12 +258,29 @@ export function ExperienceSection() {
   return (
     <section
       id="experience"
-      className="relative py-16 lg:py-20 overflow-hidden"
+      className="py-16 lg:py-20 relative overflow-hidden"
     >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-violet-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
+      {/* Unified Background - Matching Education Section */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Subtle animated dot grid pattern - Same as Education */}
+        <motion.div
+          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
+            backgroundSize: "40px 40px",
+          }}
+          animate={{
+            opacity: [0.15, 0.25, 0.15],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Soft gradient overlay for depth - Same as Education */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

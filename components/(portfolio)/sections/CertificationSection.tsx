@@ -318,13 +318,27 @@ export function CertificationSection() {
         viewport={{ once: true, amount: 0.2 }}
         variants={sectionVariants}
       >
-        {/* Dynamic Aurora Background */}
+        {/* Unified Background - Matching Projects Section */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-1/2 -left-1/2 w-full h-full opacity-30">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-radial from-blue-500/20 to-transparent rounded-full blur-3xl animate-pulse" />
-            <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-gradient-radial from-purple-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
-            <div className="absolute bottom-1/4 left-3/4 w-96 h-96 bg-gradient-radial from-green-500/20 to-transparent rounded-full blur-3xl animate-pulse delay-2000" />
-          </div>
+          {/* Subtle animated dot grid pattern - Same as Projects */}
+          <motion.div
+            className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+            style={{
+              backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
+              backgroundSize: "40px 40px",
+            }}
+            animate={{
+              opacity: [0.15, 0.25, 0.15],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
+          {/* Soft gradient overlay for depth - Same as Projects */}
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -456,7 +470,7 @@ export function CertificationSection() {
                         } opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
                       />
 
-                      <Card className="h-full relative bg-[var(--surface)]/80 backdrop-blur-sm border-[var(--border)] hover:border-[var(--accent)]/50 transition-all duration-300 overflow-hidden">
+                      <Card className="h-full relative bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border-white/20 dark:border-slate-700/20 hover:border-[var(--accent)]/40 transition-all duration-300 overflow-hidden">
                         <CardContent className="p-6 h-full flex flex-col">
                           {/* Certificate Image or Icon */}
                           {cert.image_url ? (
@@ -591,7 +605,7 @@ export function CertificationSection() {
             transition={{ duration: 0.7, ease }}
           >
             <motion.div
-              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
@@ -613,7 +627,7 @@ export function CertificationSection() {
             </motion.div>
 
             <motion.div
-              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
@@ -635,7 +649,7 @@ export function CertificationSection() {
             </motion.div>
 
             <motion.div
-              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
@@ -657,7 +671,7 @@ export function CertificationSection() {
             </motion.div>
 
             <motion.div
-              className="text-center p-6 bg-[var(--surface)]/50 backdrop-blur-sm rounded-xl border border-[var(--border)]"
+              className="text-center p-6 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-xl border-white/20 dark:border-slate-700/20"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
