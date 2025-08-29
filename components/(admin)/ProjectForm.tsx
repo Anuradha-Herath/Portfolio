@@ -5,7 +5,7 @@ import { Project } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent } from "@/components/ui/Card";
-import { XIcon, PlusIcon, UploadIcon } from "lucide-react";
+import { XIcon, PlusIcon, UploadIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 // For type-safe access to technologies_used
 const TECH_CATEGORIES = [
@@ -110,6 +110,10 @@ export function ProjectForm({
     string[]
   >([]);
   const additionalFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Gallery modal state
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
 
   useEffect(() => {
     if (project) {
@@ -295,6 +299,50 @@ export function ProjectForm({
     setAdditionalImagePreviews((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  // Gallery functions
+  const openGallery = (index: number) => {
+    setCurrentGalleryIndex(index);
+    setGalleryOpen(true);
+  };
+
+  const closeGallery = () => {
+    setGalleryOpen(false);
+  };
+
+  const nextImage = () => {
+    setCurrentGalleryIndex((prev) =>
+      prev === additionalImagePreviews.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentGalleryIndex((prev) =>
+      prev === 0 ? additionalImagePreviews.length - 1 : prev - 1
+    );
+  };
+
+  // Keyboard navigation for gallery
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!galleryOpen) return;
+
+      switch (e.key) {
+        case "Escape":
+          closeGallery();
+          break;
+        case "ArrowLeft":
+          prevImage();
+          break;
+        case "ArrowRight":
+          nextImage();
+          break;
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [galleryOpen]);
+
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -470,18 +518,19 @@ export function ProjectForm({
   };
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-            {project ? "Edit Project" : "Add New Project"}
-          </h2>
-          <Button variant="outline" onClick={onCancel} className="p-2">
-            <XIcon className="h-4 w-4" />
-          </Button>
-        </div>
+    <>
+      <Card className="max-w-2xl mx-auto">
+        <CardContent className="p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              {project ? "Edit Project" : "Add New Project"}
+            </h2>
+            <Button variant="outline" onClick={onCancel} className="p-2">
+              <XIcon className="h-4 w-4" />
+            </Button>
+          </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -867,17 +916,18 @@ export function ProjectForm({
             {/* Previews */}
             <div className="flex flex-wrap gap-3">
               {additionalImagePreviews.map((img, idx) => (
-                <div key={img + idx} className="relative">
+                <div key={img + idx} className="relative group">
                   <img
                     src={img}
                     alt={`Additional ${idx + 1}`}
-                    className="w-28 h-20 object-cover rounded border border-slate-300"
+                    className="w-28 h-20 object-cover rounded border border-slate-300 cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => openGallery(idx)}
                   />
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => removeAdditionalImage(idx)}
-                    className="absolute top-1 right-1 p-1 bg-white dark:bg-slate-800"
+                    className="absolute top-1 right-1 p-1 bg-white dark:bg-slate-800 opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <XIcon className="h-3 w-3" />
                   </Button>
@@ -975,5 +1025,80 @@ export function ProjectForm({
         </form>
       </CardContent>
     </Card>
+
+    {/* Gallery Modal */}
+    {galleryOpen && additionalImagePreviews.length > 0 && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+        <div className="relative max-w-4xl max-h-screen p-4">
+          {/* Close button */}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={closeGallery}
+            className="absolute top-4 right-4 z-10 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700"
+          >
+            <XIcon className="h-6 w-6" />
+          </Button>
+
+          {/* Main image */}
+          <div className="relative">
+            <img
+              src={additionalImagePreviews[currentGalleryIndex]}
+              alt={`Gallery image ${currentGalleryIndex + 1}`}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+            />
+
+            {/* Navigation buttons */}
+            {additionalImagePreviews.length > 1 && (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  <ChevronLeftIcon className="h-6 w-6" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  <ChevronRightIcon className="h-6 w-6" />
+                </Button>
+              </>
+            )}
+          </div>
+
+          {/* Image counter */}
+          <div className="text-center mt-4 text-white">
+            <span className="text-lg font-medium">
+              {currentGalleryIndex + 1} of {additionalImagePreviews.length}
+            </span>
+          </div>
+
+          {/* Thumbnail strip */}
+          {additionalImagePreviews.length > 1 && (
+            <div className="flex justify-center gap-2 mt-4 overflow-x-auto max-w-full">
+              {additionalImagePreviews.map((img, idx) => (
+                <img
+                  key={img + idx}
+                  src={img}
+                  alt={`Thumbnail ${idx + 1}`}
+                  className={`w-16 h-12 object-cover rounded cursor-pointer border-2 ${
+                    idx === currentGalleryIndex
+                      ? "border-blue-500"
+                      : "border-slate-400 hover:border-slate-300"
+                  }`}
+                  onClick={() => setCurrentGalleryIndex(idx)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+    </>
   );
 }
