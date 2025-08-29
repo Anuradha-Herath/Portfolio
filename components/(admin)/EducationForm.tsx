@@ -46,9 +46,6 @@ export function EducationForm({
     if (!formData.start_date) {
       newErrors.start_date = "Start date is required";
     }
-    if (!formData.end_date) {
-      newErrors.end_date = "End date is required";
-    }
     if (formData.start_date && formData.end_date && formData.start_date > formData.end_date) {
       newErrors.end_date = "End date must be after start date";
     }
@@ -64,10 +61,11 @@ export function EducationForm({
     e.preventDefault();
     if (validateForm()) {
       // Convert YYYY-MM format to YYYY-MM-01 for database compatibility
+      // Handle empty end_date for ongoing education
       const formattedData = {
         ...formData,
         start_date: formData.start_date + "-01",
-        end_date: formData.end_date + "-01",
+        end_date: formData.end_date ? formData.end_date + "-01" : null,
       };
       onSubmit(formattedData);
     }
@@ -83,6 +81,18 @@ export function EducationForm({
   return (
     <Card className="max-w-2xl mx-auto">
       <CardContent className="p-6">
+        {/* Style for white calendar icons */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            input[type="month"]::-webkit-calendar-picker-indicator {
+              filter: invert(1);
+            }
+            input[type="month"]::-moz-calendar-picker-indicator {
+              filter: invert(1);
+            }
+          `
+        }} />
+
         <h2 className="text-2xl font-bold mb-6 text-[var(--foreground)]">
           {education ? "Edit Education" : "Add New Education"}
         </h2>
@@ -156,7 +166,7 @@ export function EducationForm({
 
             <div>
               <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
-                End Date *
+                End Date (leave empty if ongoing)
               </label>
               <Input
                 type="month"

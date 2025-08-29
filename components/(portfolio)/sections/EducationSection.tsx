@@ -99,10 +99,10 @@ export function EducationSection() {
             degree: "Advanced Level",
             field: "Physical Science",
             start_date: "2017-01",
-            end_date: "2020-12",
+            end_date: null, // Ongoing education example
             description:
-              "Completed Advanced Level in Physical Science stream with excellent results in Mathematics, Physics, and Chemistry.",
-            grade: "3 A passes",
+              "Currently pursuing Advanced Level in Physical Science stream with excellent results in Mathematics, Physics, and Chemistry.",
+            grade: "Ongoing",
           },
         ]);
       } finally {
@@ -223,7 +223,7 @@ export function EducationSection() {
                     viewport={{ once: true }}
                   >
                     <div className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg whitespace-nowrap">
-                      {new Date(education.start_date).getFullYear()} - {new Date(education.end_date).getFullYear()}
+                      {new Date(education.start_date).getFullYear()} - {education.end_date ? new Date(education.end_date).getFullYear() : "Present"}
                     </div>
                   </motion.div>
 

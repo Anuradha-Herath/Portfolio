@@ -33,7 +33,7 @@ export interface Education {
   degree: string;
   field: string;
   start_date: string;
-  end_date: string;
+  end_date: string | null;
   description: string;
   grade?: string;
 }
