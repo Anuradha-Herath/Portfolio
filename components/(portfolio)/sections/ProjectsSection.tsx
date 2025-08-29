@@ -429,7 +429,7 @@ export function ProjectsSection() {
         )}
 
         {/* Enhanced Call-to-Action */}
-        {!loading && projects.length > 3 && (
+        {!loading && projects.length > 6 && (
           <motion.div
             className="text-center mt-16 lg:mt-20"
             initial={{ opacity: 0, y: 30 }}
@@ -437,7 +437,7 @@ export function ProjectsSection() {
             transition={{ delay: 0.8, duration: 0.6 }}
           >
             <motion.div
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
                 boxShadow: "0 20px 40px rgba(79, 70, 229, 0.2)"
               }}
@@ -445,17 +445,17 @@ export function ProjectsSection() {
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="inline-block"
             >
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="lg"
                 className="px-8 py-4 text-lg font-semibold border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300"
               >
                 <span className="flex items-center gap-3">
                   View All Projects
-                  <motion.svg 
-                    className="w-5 h-5" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <motion.svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                     animate={{ x: [0, 4, 0] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}

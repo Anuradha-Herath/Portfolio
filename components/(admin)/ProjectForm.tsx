@@ -69,6 +69,7 @@ export function ProjectForm({
     featured: false,
     status: "completed" as "completed" | "ongoing",
     type: "individual" as "individual" | "group",
+    order: 0, // Display order
     // Detailed info
     project_type_detail: "",
     role: "",
@@ -121,6 +122,7 @@ export function ProjectForm({
         featured: project.featured || false,
         status: project.status || "completed",
         type: project.type || "individual",
+        order: project.order || 0,
         project_type_detail: project.project_type_detail || "",
         role: project.role || "",
         duration: project.duration || "",
@@ -218,6 +220,7 @@ export function ProjectForm({
         featured: false,
         status: "completed",
         type: "individual",
+        order: 0,
         project_type_detail: "",
         role: "",
         duration: "",
@@ -497,19 +500,21 @@ export function ProjectForm({
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Project Type Detail
+                Display Order
               </label>
               <Input
-                type="text"
-                value={formData.project_type_detail}
+                type="number"
+                value={formData.order}
                 onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    project_type_detail: e.target.value,
-                  }))
+                  setFormData((prev) => ({ ...prev, order: parseInt(e.target.value) || 0 }))
                 }
-                placeholder="e.g., Solo Project, Team Project, Client Project"
+                min="0"
+                placeholder="0"
+                title="Lower numbers appear first in the portfolio"
               />
+              <p className="text-xs text-slate-500 mt-1">
+                Lower numbers appear first (0 = first, 1 = second, etc.)
+              </p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -5,6 +5,7 @@ import { Project } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { DataCard } from '@/components/(admin)/DataCard';
 import { ProjectForm } from '@/components/(admin)/ProjectForm';
+import { ProjectReorder } from '@/components/(admin)/ProjectReorder';
 import { PlusIcon, GithubIcon, ExternalLinkIcon } from 'lucide-react';
 
 export default function AdminProjectsPage() {
@@ -13,6 +14,7 @@ export default function AdminProjectsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReorder, setShowReorder] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -98,10 +100,31 @@ export default function AdminProjectsPage() {
     }
   };
 
+  const handleReorder = (reorderedProjects: Project[]) => {
+    setProjects(reorderedProjects);
+    setShowReorder(false);
+  };
+
+  const handleCancelReorder = () => {
+    setShowReorder(false);
+  };
+
   const handleCancel = () => {
     setShowForm(false);
     setEditingProject(null);
   };
+
+  if (showReorder) {
+    return (
+      <div className="space-y-8">
+        <ProjectReorder
+          projects={projects}
+          onReorder={handleReorder}
+          onCancel={handleCancelReorder}
+        />
+      </div>
+    );
+  }
 
   if (showForm) {
     return (
@@ -135,10 +158,24 @@ export default function AdminProjectsPage() {
             Manage your portfolio projects
           </p>
         </div>
-        <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
-          <PlusIcon className="h-4 w-4" />
-          Add Project
-        </Button>
+        <div className="flex gap-3">
+          <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
+            <PlusIcon className="h-4 w-4" />
+            Add Project
+          </Button>
+          {projects.length > 1 && (
+            <Button
+              variant="outline"
+              onClick={() => setShowReorder(true)}
+              className="flex items-center gap-2"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+              Reorder Projects
+            </Button>
+          )}
+        </div>
       </div>
 
       {projects.length === 0 ? (
