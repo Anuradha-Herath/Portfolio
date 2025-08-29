@@ -658,18 +658,26 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
             {/* Main Image Container */}
             <div className="h-full flex items-center justify-center p-6">
               <motion.div
-                className="relative max-w-7xl max-h-full"
+                className="relative max-w-7xl w-full h-full flex items-center justify-center"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 key={currentImageIndex}
               >
-                <img
-                  src={project.additional_images[currentImageIndex]}
-                  alt={`${project.title} screenshot ${currentImageIndex + 1}`}
-                  className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-                />
+                <div className="relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl">
+                  <img
+                    src={project.additional_images[currentImageIndex]}
+                    alt={`${project.title} screenshot ${currentImageIndex + 1}`}
+                    className="w-full h-full object-contain"
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: 'calc(100vh - 200px)', // Account for padding, overlay, and navigation
+                      width: 'auto',
+                      height: 'auto'
+                    }}
+                  />
+                </div>
 
                 {/* Image Info Overlay */}
                 <motion.div
