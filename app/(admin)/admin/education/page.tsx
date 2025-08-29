@@ -184,7 +184,7 @@ export default function AdminEducationPage() {
                   <div>
                     <span className="text-[var(--foreground-secondary)]">Duration: </span>
                     <span className="text-[var(--foreground)]">
-                      {formatDate(educationItem.start_date)} - {formatDate(educationItem.end_date)}
+                      {formatDate(educationItem.start_date)} - {educationItem.end_date ? formatDate(educationItem.end_date) : "Present"}
                     </span>
                   </div>
                   {educationItem.grade && (

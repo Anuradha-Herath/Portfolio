@@ -71,7 +71,8 @@ export const dbOperations = {
     const { data, error } = await supabase
       .from('projects')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('order', { ascending: true })
+      .order('created_at', { ascending: false }); // Fallback for projects without order
     
     if (error) throw error;
     return data as Project[];

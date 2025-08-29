@@ -8,6 +8,7 @@
   featured: boolean;
   status: 'completed' | 'ongoing'; // Project status
   type: 'individual' | 'group';   // Project type
+  order: number; // Display order (lower numbers appear first)
 
   // --- Detailed view fields (all optional) ---
   project_type_detail?: string; // e.g., Solo Project, Team Project, Client Project
@@ -32,7 +33,7 @@ export interface Education {
   degree: string;
   field: string;
   start_date: string;
-  end_date: string;
+  end_date: string | null;
   description: string;
   grade?: string;
 }

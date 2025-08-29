@@ -7,10 +7,9 @@ import { motion, useAnimation, Variants } from "framer-motion";
 
 // Typing effect roles - moved outside component to avoid re-creation on every render
 const roles = [
+  "IT Undergraduate",
   "Full Stack Developer",
-  "UI/UX Designer",
   "Problem Solver",
-  "Tech Innovator",
 ];
 
 export function HeroSection() {
@@ -140,7 +139,7 @@ export function HeroSection() {
                 transition={{
                   delay: 0.3,
                   duration: 1.2,
-                  ease: [0.25, 0.46, 0.45, 0.94]
+                  ease: [0.25, 0.46, 0.45, 0.94],
                 }}
               >
                 {/* Enhanced floating animation with multiple layers */}
@@ -149,13 +148,13 @@ export function HeroSection() {
                   animate={{
                     y: [0, -12, 0],
                     rotate: [0, 0.5, 0, -0.5, 0],
-                    scale: [1, 1.02, 1]
+                    scale: [1, 1.02, 1],
                   }}
                   transition={{
                     duration: 8,
                     repeat: Infinity,
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                    delay: 1
+                    ease: "easeInOut",
+                    delay: 1,
                   }}
                 >
                   {/* Primary glow effect with enhanced gradients */}
@@ -164,13 +163,13 @@ export function HeroSection() {
                     animate={{
                       scale: [1, 1.3, 1],
                       opacity: [0.4, 0.8, 0.4],
-                      rotate: [0, 180, 360]
+                      rotate: [0, 180, 360],
                     }}
                     transition={{
                       duration: 12,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: 0.5
+                      delay: 0.5,
                     }}
                   />
 
@@ -180,13 +179,13 @@ export function HeroSection() {
                     animate={{
                       scale: [1.2, 0.8, 1.2],
                       opacity: [0.3, 0.6, 0.3],
-                      rotate: [360, 180, 0]
+                      rotate: [360, 180, 0],
                     }}
                     transition={{
                       duration: 15,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: 2
+                      delay: 2,
                     }}
                   />
 
@@ -195,13 +194,13 @@ export function HeroSection() {
                     className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-400/20 to-fuchsia-400/20 blur-xl"
                     animate={{
                       scale: [0.9, 1.1, 0.9],
-                      opacity: [0.2, 0.5, 0.2]
+                      opacity: [0.2, 0.5, 0.2],
                     }}
                     transition={{
                       duration: 10,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: 3
+                      delay: 3,
                     }}
                   />
 
@@ -212,44 +211,46 @@ export function HeroSection() {
                       scale: 1.08,
                       rotateY: 8,
                       rotateX: 8,
-                      z: 50
+                      z: 50,
                     }}
                     whileTap={{ scale: 0.95 }}
                     transition={{
                       type: "spring",
                       stiffness: 300,
                       damping: 25,
-                      mass: 0.8
+                      mass: 0.8,
                     }}
                     style={{
-                      transformStyle: "preserve-3d"
+                      transformStyle: "preserve-3d",
                     }}
                   >
                     {/* Animated multi-layered border rings */}
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       style={{
-                        background: 'conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7), transparent)',
-                        padding: '4px'
+                        background:
+                          "conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7), transparent)",
+                        padding: "4px",
                       }}
                       animate={{ rotate: 360 }}
                       transition={{
                         duration: 6,
                         repeat: Infinity,
-                        ease: "linear"
+                        ease: "linear",
                       }}
                     >
                       <motion.div
                         className="w-full h-full rounded-full"
                         style={{
-                          background: 'conic-gradient(from 180deg, transparent, rgba(6, 182, 212, 0.6), rgba(236, 72, 153, 0.4), transparent)',
-                          padding: '2px'
+                          background:
+                            "conic-gradient(from 180deg, transparent, rgba(6, 182, 212, 0.6), rgba(236, 72, 153, 0.4), transparent)",
+                          padding: "2px",
                         }}
                         animate={{ rotate: -360 }}
                         transition={{
                           duration: 8,
                           repeat: Infinity,
-                          ease: "linear"
+                          ease: "linear",
                         }}
                       >
                         <div className="w-full h-full rounded-full bg-white dark:bg-slate-900" />
@@ -262,12 +263,12 @@ export function HeroSection() {
                       animate={{
                         scale: [1, 1.2, 1],
                         opacity: [0.6, 1, 0.6],
-                        rotate: [0, 90, 180, 270, 360]
+                        rotate: [0, 90, 180, 270, 360],
                       }}
                       transition={{
                         duration: 4,
                         repeat: Infinity,
-                        ease: "easeInOut"
+                        ease: "easeInOut",
                       }}
                     />
 
@@ -276,13 +277,13 @@ export function HeroSection() {
                       className="absolute -inset-4 rounded-full bg-gradient-to-br from-pink-400/20 to-cyan-400/20 blur-lg"
                       animate={{
                         scale: [1.1, 0.9, 1.1],
-                        opacity: [0.4, 0.7, 0.4]
+                        opacity: [0.4, 0.7, 0.4],
                       }}
                       transition={{
                         duration: 5,
                         repeat: Infinity,
                         ease: "easeInOut",
-                        delay: 1
+                        delay: 1,
                       }}
                     />
 
@@ -292,13 +293,13 @@ export function HeroSection() {
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                         animate={{
-                          x: ['-150%', '150%']
+                          x: ["-150%", "150%"],
                         }}
                         transition={{
                           duration: 3,
                           repeat: Infinity,
                           ease: "easeInOut",
-                          delay: 1.5
+                          delay: 1.5,
                         }}
                       />
 
@@ -306,13 +307,13 @@ export function HeroSection() {
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-200/20 to-transparent"
                         animate={{
-                          x: ['-150%', '150%']
+                          x: ["-150%", "150%"],
                         }}
                         transition={{
                           duration: 4,
                           repeat: Infinity,
                           ease: "easeInOut",
-                          delay: 2.5
+                          delay: 2.5,
                         }}
                       />
 
@@ -326,11 +327,11 @@ export function HeroSection() {
                         transition={{
                           delay: 0.8,
                           duration: 0.8,
-                          ease: [0.25, 0.46, 0.45, 0.94]
+                          ease: [0.25, 0.46, 0.45, 0.94],
                         }}
                         whileHover={{
                           scale: 1.05,
-                          filter: "brightness(1.1) contrast(1.05)"
+                          filter: "brightness(1.1) contrast(1.05)",
                         }}
                         onError={(e) => {
                           // Enhanced fallback with sophisticated animation
@@ -387,19 +388,19 @@ export function HeroSection() {
                           className="absolute w-1 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"
                           style={{
                             top: `${15 + (i % 3) * 25}%`,
-                            left: `${10 + (i % 4) * 20}%`
+                            left: `${10 + (i % 4) * 20}%`,
                           }}
                           animate={{
                             y: [0, -25, 0],
                             x: [0, Math.sin(i) * 10, 0],
                             opacity: [0, 1, 0],
-                            scale: [0, 1.2, 0]
+                            scale: [0, 1.2, 0],
                           }}
                           transition={{
                             duration: 2.5,
                             repeat: Infinity,
                             delay: i * 0.15,
-                            ease: [0.25, 0.46, 0.45, 0.94]
+                            ease: [0.25, 0.46, 0.45, 0.94],
                           }}
                         />
                       ))}
@@ -412,18 +413,18 @@ export function HeroSection() {
                         className="absolute w-2 h-2 bg-gradient-to-r from-indigo-300/60 to-purple-300/60 rounded-full blur-sm"
                         style={{
                           top: `${20 + i * 12}%`,
-                          right: `${-5 + i * 8}%`
+                          right: `${-5 + i * 8}%`,
                         }}
                         animate={{
                           y: [0, -15, 0],
                           opacity: [0.3, 0.8, 0.3],
-                          scale: [0.8, 1.2, 0.8]
+                          scale: [0.8, 1.2, 0.8],
                         }}
                         transition={{
                           duration: 4 + i * 0.5,
                           repeat: Infinity,
                           delay: i * 0.8,
-                          ease: "easeInOut"
+                          ease: "easeInOut",
                         }}
                       />
                     ))}
@@ -568,57 +569,158 @@ export function HeroSection() {
               </motion.div>
             </motion.div>
 
-            {/* Refined Social Links with consistent spacing */}
+            {/* Enhanced Social Links with Smooth Animations */}
             <motion.div className="flex space-x-5 pt-8" variants={itemVariants}>
               {[
                 {
-                  href: "https://github.com",
+                  href: "https://github.com/Anuradha-Herath",
                   label: "GitHub",
                   icon: "M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z",
                   hoverColor: "hover:bg-gray-900 hover:text-white",
+                  glowColor: "shadow-gray-900/50",
                 },
                 {
-                  href: "https://linkedin.com",
+                  href: "https://www.linkedin.com/in/herath-anuradha",
                   label: "LinkedIn",
                   icon: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z",
                   hoverColor: "hover:bg-blue-600 hover:text-white",
+                  glowColor: "shadow-blue-600/50",
                 },
                 {
-                  href: "mailto:anuradha.herath@email.com",
+                  href: "mailto:anuradhaherath2001@gmail.com",
                   label: "Email",
                   icon: "M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zm0 12H4V8.99l8 6.99 8-6.99V18z",
                   hoverColor: "hover:bg-red-500 hover:text-white",
+                  glowColor: "shadow-red-500/50",
                 },
               ].map((social, index) => (
-                <motion.a
+                <motion.div
                   key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`group relative w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-all duration-300 shadow-sm hover:shadow-lg ${social.hoverColor}`}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  className="relative group"
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{
-                    delay: 0.5 + index * 0.1,
-                    type: "spring",
-                    stiffness: 200,
+                    delay: 0.8 + index * 0.15,
+                    duration: 0.6,
+                    ease: [0.25, 0.46, 0.45, 0.94],
                   }}
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d={social.icon} />
-                  </svg>
+                  {/* Glow effect background */}
+                  <motion.div
+                    className={`absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${social.glowColor}`}
+                    animate={{
+                      scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
 
-                  {/* Tooltip */}
-                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+                  <motion.a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`relative w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-all duration-500 shadow-sm hover:shadow-xl ${social.hoverColor} overflow-hidden`}
+                    whileHover={{
+                      scale: 1.15,
+                      y: -3,
+                      rotate: [0, -2, 2, 0],
+                      transition: {
+                        duration: 0.4,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                      },
+                    }}
+                    whileTap={{
+                      scale: 0.9,
+                      transition: { duration: 0.1 },
+                    }}
+                  >
+                    {/* Animated background fill */}
+                    <motion.div
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background: social.label === 'GitHub'
+                          ? 'linear-gradient(135deg, #333, #666)'
+                          : social.label === 'LinkedIn'
+                          ? 'linear-gradient(135deg, #0077b5, #005885)'
+                          : 'linear-gradient(135deg, #ea4335, #b23121)',
+                      }}
+                    />
+
+                    {/* Icon with smooth animations */}
+                    <motion.svg
+                      className="relative w-5 h-5 z-10"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      whileHover={{
+                        scale: 1.1,
+                        rotate: social.label === 'GitHub' ? 360 : 0,
+                        transition: {
+                          duration: 0.5,
+                          ease: "easeInOut",
+                        },
+                      }}
+                    >
+                      <motion.path
+                        d={social.icon}
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{
+                          delay: 1 + index * 0.2,
+                          duration: 1.5,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    </motion.svg>
+
+                    {/* Ripple effect on click */}
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-white/20"
+                      initial={{ scale: 0, opacity: 1 }}
+                      whileTap={{
+                        scale: 2,
+                        opacity: 0,
+                        transition: { duration: 0.4 },
+                      }}
+                    />
+
+                    {/* Floating particles */}
+                    {[...Array(3)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-current rounded-full opacity-0 group-hover:opacity-60"
+                        style={{
+                          top: `${20 + i * 20}%`,
+                          right: `${-10 + i * 10}%`,
+                        }}
+                        animate={{
+                          y: [0, -15, 0],
+                          x: [0, Math.sin(i) * 8, 0],
+                          opacity: [0, 0.6, 0],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: i * 0.3,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    ))}
+                  </motion.a>
+
+                  {/* Enhanced tooltip with smooth animation */}
+                  <motion.div
+                    className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-lg"
+                    initial={{ y: 10, scale: 0.8 }}
+                    whileHover={{ y: 0, scale: 1 }}
+                  >
                     {social.label}
-                  </div>
-                </motion.a>
+                    {/* Tooltip arrow */}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-900 dark:border-t-slate-100"></div>
+                  </motion.div>
+                </motion.div>
               ))}
             </motion.div>
           </motion.div>
