@@ -24,7 +24,7 @@ export async function GET() {
     const missingBuckets = requiredBuckets.filter(bucket => !existingBuckets.includes(bucket));
 
     // Get file counts for existing buckets
-    const bucketStats = {};
+    const bucketStats: Record<string, { fileCount?: number; lastModified?: string | null; error?: string }> = {};
     for (const bucketName of existingBuckets) {
       try {
         const { data: files } = await supabaseAdmin.storage.from(bucketName).list();
@@ -33,7 +33,7 @@ export async function GET() {
           lastModified: files?.[0]?.updated_at || null
         };
       } catch (error) {
-        bucketStats[bucketName] = { error: error.message };
+        bucketStats[bucketName] = { error: error instanceof Error ? error.message : 'Unknown error' };
       }
     }
 
@@ -61,7 +61,7 @@ export async function GET() {
     return NextResponse.json({
       status: 'error',
       message: 'Unexpected error during health check',
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString()
     }, { status: 500 });
   }

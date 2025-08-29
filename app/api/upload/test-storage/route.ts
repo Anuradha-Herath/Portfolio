@@ -38,7 +38,7 @@ export async function GET() {
         return NextResponse.json({
           success: false,
           error: 'Failed to create project-images bucket',
-          details: createError.message,
+          details: createError instanceof Error ? createError.message : 'Unknown error',
           availableBuckets: buckets?.map(b => b.name)
         }, { status: 500 });
       }
@@ -75,7 +75,7 @@ export async function GET() {
     return NextResponse.json({
       success: false,
       error: 'Unexpected error during storage test',
-      details: error.message
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }
