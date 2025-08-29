@@ -16,6 +16,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageLoadingStates, setImageLoadingStates] = useState<Record<number, boolean>>({});
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+  const [lightboxZoom, setLightboxZoom] = useState(1);
+  const [lightboxPan, setLightboxPan] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [transitionDirection, setTransitionDirection] = useState<'left' | 'right' | null>(null);
   // Initialize loading states for gallery images
   useEffect(() => {
     if (project?.additional_images) {
@@ -34,24 +39,92 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
   const closeLightbox = () => {
     setLightboxOpen(false);
+    setLightboxZoom(1);
+    setLightboxPan({ x: 0, y: 0 });
+    setTransitionDirection(null);
     document.body.style.overflow = "unset";
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      handleZoomIn();
+    } else {
+      handleZoomOut();
+    }
   };
 
   const nextImage = useCallback(() => {
     if (project?.additional_images) {
+      setTransitionDirection('right');
       setCurrentImageIndex((prev) => 
         (prev + 1) % project.additional_images!.length
       );
+      // Reset zoom and pan when changing images
+      setLightboxZoom(1);
+      setLightboxPan({ x: 0, y: 0 });
     }
   }, [project?.additional_images]);
 
   const prevImage = useCallback(() => {
     if (project?.additional_images) {
+      setTransitionDirection('left');
       setCurrentImageIndex((prev) => 
         prev === 0 ? project.additional_images!.length - 1 : prev - 1
       );
+      // Reset zoom and pan when changing images
+      setLightboxZoom(1);
+      setLightboxPan({ x: 0, y: 0 });
     }
   }, [project?.additional_images]);
+
+  const goToImage = useCallback((index: number) => {
+    if (project?.additional_images && index !== currentImageIndex) {
+      setTransitionDirection(index > currentImageIndex ? 'right' : 'left');
+      setCurrentImageIndex(index);
+      // Reset zoom and pan when changing images
+      setLightboxZoom(1);
+      setLightboxPan({ x: 0, y: 0 });
+    }
+  }, [project?.additional_images, currentImageIndex]);
+
+  const handleZoomIn = () => {
+    setLightboxZoom(prev => Math.min(prev + 0.25, 3));
+  };
+
+  const handleZoomOut = () => {
+    setLightboxZoom(prev => Math.max(prev - 0.25, 0.5));
+  };
+
+  const handleZoomReset = () => {
+    setLightboxZoom(1);
+    setLightboxPan({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (lightboxZoom > 1) {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - lightboxPan.x, y: e.clientY - lightboxPan.y });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging && lightboxZoom > 1) {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      // Constrain pan to prevent image from going too far off-screen
+      const maxPanX = (lightboxZoom - 1) * 200;
+      const maxPanY = (lightboxZoom - 1) * 150;
+      setLightboxPan({
+        x: Math.max(-maxPanX, Math.min(maxPanX, newX)),
+        y: Math.max(-maxPanY, Math.min(maxPanY, newY))
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
   const handleImageLoad = (index: number) => {
     setImageLoadingStates(prev => ({ ...prev, [index]: false }));
@@ -86,28 +159,15 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
     };
   }, [isOpen, onClose, lightboxOpen, nextImage, prevImage]);
 
-  // Handle keyboard navigation for lightbox
+  // Reset transition direction after animation
   useEffect(() => {
-    const handleKeyNavigation = (e: KeyboardEvent) => {
-      if (!lightboxOpen || !project?.additional_images) return;
-
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        prevImage();
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        nextImage();
-      }
-    };
-
-    if (lightboxOpen) {
-      document.addEventListener("keydown", handleKeyNavigation);
+    if (transitionDirection) {
+      const timer = setTimeout(() => {
+        setTransitionDirection(null);
+      }, 300); // Match the slide transition duration
+      return () => clearTimeout(timer);
     }
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyNavigation);
-    };
-  }, [lightboxOpen, project?.additional_images]);
+  }, [transitionDirection]);
 
   const backdropVariants: Variants = {
     hidden: { opacity: 0 },
@@ -165,6 +225,31 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
         duration: 0.4
       }
     }
+  };
+
+  // Enhanced lightbox slide variants with direction awareness
+  const slideVariants: Variants = {
+    enter: (direction: 'left' | 'right' | null) => ({
+      x: direction === 'right' ? 1000 : direction === 'left' ? -1000 : 0,
+      opacity: 0,
+      scale: 0.8,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: 'left' | 'right' | null) => ({
+      x: direction === 'right' ? -1000 : direction === 'left' ? 1000 : 0,
+      opacity: 0,
+      scale: 0.8,
+    }),
+  };
+
+  const slideTransition = {
+    type: "spring" as const,
+    stiffness: 300,
+    damping: 30,
   };
 
   const getTechBadgeColor = (category: string) => {
@@ -606,7 +691,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
       )}
 
       {/* Enhanced Lightbox Gallery */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" custom={transitionDirection}>
         {lightboxOpen && project?.additional_images && (
           <motion.div
             key="lightbox-modal"
@@ -627,6 +712,47 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </motion.button>
+
+            {/* Zoom Controls */}
+            <motion.div
+              className="absolute top-6 left-6 z-20 flex gap-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <motion.button
+                onClick={handleZoomOut}
+                disabled={lightboxZoom <= 0.5}
+                className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                </svg>
+              </motion.button>
+
+              <motion.button
+                onClick={handleZoomReset}
+                className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="text-xs font-semibold">{Math.round(lightboxZoom * 100)}%</span>
+              </motion.button>
+
+              <motion.button
+                onClick={handleZoomIn}
+                disabled={lightboxZoom >= 3}
+                className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </motion.button>
+            </motion.div>
 
             {/* Navigation Buttons */}
             {project.additional_images.length > 1 && (
@@ -659,24 +785,67 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
             <div className="h-full flex items-center justify-center p-6">
               <motion.div
                 className="relative max-w-7xl w-full h-full flex items-center justify-center"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                custom={transitionDirection}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={slideTransition}
                 key={currentImageIndex}
               >
-                <div className="relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl">
+                <div
+                  className={`relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl ${
+                    lightboxZoom > 1 ? 'cursor-grab' : ''
+                  } ${isDragging ? 'cursor-grabbing' : ''}`}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  onWheel={handleWheel}
+                  style={{
+                    transform: `scale(${lightboxZoom}) translate(${lightboxPan.x}px, ${lightboxPan.y}px)`,
+                    transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                  }}
+                >
+                  {/* Loading State */}
+                  {imageLoadingStates[currentImageIndex] !== false && (
+                    <div className="absolute inset-0 bg-slate-800 flex items-center justify-center rounded-lg">
+                      <div className="text-center text-white">
+                        <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-sm">Loading image...</p>
+                      </div>
+                    </div>
+                  )}
+
                   <img
                     src={project.additional_images[currentImageIndex]}
                     alt={`${project.title} screenshot ${currentImageIndex + 1}`}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain select-none"
                     style={{
                       maxWidth: '100%',
-                      maxHeight: 'calc(100vh - 200px)', // Account for padding, overlay, and navigation
+                      maxHeight: 'calc(100vh - 200px)',
                       width: 'auto',
-                      height: 'auto'
+                      height: 'auto',
+                      userSelect: 'none',
+                      pointerEvents: 'none',
                     }}
+                    onLoad={() => handleImageLoad(currentImageIndex)}
+                    onError={() => handleImageError(currentImageIndex)}
+                    draggable={false}
                   />
+
+                  {/* Error State */}
+                  {imageErrors.has(currentImageIndex) && (
+                    <div className="absolute inset-0 bg-slate-800 flex items-center justify-center rounded-lg">
+                      <div className="text-center text-white">
+                        <svg className="w-16 h-16 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                        <p className="text-lg font-semibold mb-2">Failed to load image</p>
+                        <p className="text-sm text-white/70">Please try again later</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Image Info Overlay */}
@@ -697,14 +866,16 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     {/* Image Counter Dots */}
                     <div className="flex gap-2">
                       {project.additional_images.map((_, index) => (
-                        <button
+                        <motion.button
                           key={`lightbox-dot-${index}`}
-                          onClick={() => setCurrentImageIndex(index)}
+                          onClick={() => goToImage(index)}
                           className={`w-2 h-2 rounded-full transition-all duration-200 ${
                             index === currentImageIndex
                               ? 'bg-white scale-125'
                               : 'bg-white/40 hover:bg-white/60'
                           }`}
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
                         />
                       ))}
                     </div>
@@ -713,14 +884,20 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               </motion.div>
             </div>
 
-            {/* Keyboard Navigation Hint */}
+            {/* Enhanced Keyboard Navigation Hint */}
             <motion.div
               className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              Use ← → arrow keys or click to navigate • Press ESC to close
+              <div className="flex items-center gap-4">
+                <span>Use ← → arrow keys to navigate</span>
+                <span>•</span>
+                <span>Mouse wheel to zoom</span>
+                <span>•</span>
+                <span>Press ESC to close</span>
+              </div>
             </motion.div>
           </motion.div>
         )}

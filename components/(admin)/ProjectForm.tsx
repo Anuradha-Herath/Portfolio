@@ -744,38 +744,40 @@ export function ProjectForm({
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Key Features
             </label>
-            <Input
-              type="text"
-              value={formData.key_features.join(", ")}
+            <textarea
+              value={formData.key_features.join("\n")}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
                   key_features: e.target.value
-                    .split(",")
+                    .split("\n")
                     .map((s) => s.trim())
                     .filter(Boolean),
                 }))
               }
-              placeholder="Comma-separated list of features"
+              rows={4}
+              placeholder="Enter key features (one per line)"
+              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               My Contributions
             </label>
-            <Input
-              type="text"
-              value={formData.my_contributions.join(", ")}
+            <textarea
+              value={formData.my_contributions.join("\n")}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
                   my_contributions: e.target.value
-                    .split(",")
+                    .split("\n")
                     .map((s) => s.trim())
                     .filter(Boolean),
                 }))
               }
-              placeholder="Comma-separated list of your contributions"
+              rows={4}
+              placeholder="Enter your contributions (one per line)"
+              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
             />
           </div>
 
