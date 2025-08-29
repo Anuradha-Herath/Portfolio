@@ -4,7 +4,19 @@ import { storageOperations } from '@/lib/storage';
 export async function POST(request: NextRequest) {
   try {
     // Ensure project images bucket exists
-    await storageOperations.ensureBucketExists('project-images');
+    try {
+      await storageOperations.ensureBucketExists('project-images');
+    } catch (bucketError) {
+      console.error('Bucket creation/verification failed:', bucketError);
+      return NextResponse.json(
+        {
+          error: 'Storage bucket issue',
+          details: bucketError instanceof Error ? bucketError.message : 'Unknown error',
+          suggestion: 'Please check your Supabase dashboard and ensure the project-images bucket exists with proper permissions.'
+        },
+        { status: 400 }
+      );
+    }
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -17,11 +29,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file type
+    // Validate file type using MIME type
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
     if (!validTypes.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only JPG, PNG, WebP, and GIF are allowed.' },
+        { error: `Invalid file type: ${file.type}. Only JPG, PNG, WebP, and GIF images are allowed.` },
         { status: 400 }
       );
     }

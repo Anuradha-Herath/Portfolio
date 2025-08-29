@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Project } from "@/lib/types";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
@@ -10,6 +11,7 @@ import { ProjectModal } from "../ProjectModal";
 
 export function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,6 +21,7 @@ export function ProjectsSection() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
+        setLoading(true);
         const response = await fetch('/api/projects');
         if (response.ok) {
           const data = await response.json();
@@ -26,6 +29,8 @@ export function ProjectsSection() {
         }
       } catch (error) {
         console.error('Error fetching projects:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -198,10 +203,18 @@ export function ProjectsSection() {
         </motion.div>
 
         {/* Loading State */}
-        {/* Removed loading state */}
+        {loading && (
+          <div className="flex justify-center py-20">
+            <LoadingSpinner
+              size="lg"
+              text="Loading projects..."
+              showDots={true}
+            />
+          </div>
+        )}
 
         {/* No Projects State */}
-        {projects.length === 0 && (
+        {!loading && projects.length === 0 && (
           <div className="text-center py-20">
             <p className="text-slate-600 dark:text-slate-300 text-lg">
               No projects available at the moment.
@@ -210,7 +223,7 @@ export function ProjectsSection() {
         )}
 
         {/* Projects Grid */}
-        {projects.length > 0 && (
+        {!loading && projects.length > 0 && (
         <motion.div
           variants={gridVariants}
           initial="hidden"
@@ -416,7 +429,7 @@ export function ProjectsSection() {
         )}
 
         {/* Enhanced Call-to-Action */}
-        {projects.length > 3 && (
+        {!loading && projects.length > 3 && (
           <motion.div
             className="text-center mt-16 lg:mt-20"
             initial={{ opacity: 0, y: 30 }}

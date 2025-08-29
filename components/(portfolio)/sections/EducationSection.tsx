@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Heading } from "@/components/ui/Heading";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Education } from "@/lib/types";
 import { Award, CheckCircle } from "lucide-react";
 
@@ -66,10 +67,12 @@ const AuroraGlassCard: React.FC<{
 
 export function EducationSection() {
   const [educationData, setEducationData] = useState<Education[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEducation = async () => {
       try {
+        setLoading(true);
         const response = await fetch("/api/education");
         if (response.ok) {
           const data = await response.json();
@@ -102,6 +105,8 @@ export function EducationSection() {
             grade: "3 A passes",
           },
         ]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -164,7 +169,15 @@ export function EducationSection() {
           </p>
         </motion.div>
 
-        {educationData.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <LoadingSpinner
+              size="lg"
+              text="Loading education..."
+              showDots={true}
+            />
+          </div>
+        ) : educationData.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-[var(--foreground-secondary)]">No education data available.</p>
           </div>
