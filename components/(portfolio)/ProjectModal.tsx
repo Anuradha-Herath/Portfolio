@@ -263,27 +263,21 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                         Technologies Used
                       </h3>
-                      <div className="space-y-4">
+                      <div className="flex flex-wrap gap-2">
                         {Object.entries(project.technologies_used).map(([category, techs]) => (
-                          <div key={category}>
-                            <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 uppercase tracking-wide">
-                              {getCategoryLabel(category)}
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {(techs as string[]).map((tech, index) => (
-                                <motion.span
-                                  key={tech}
-                                  className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border ${getTechBadgeColor(category)}`}
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ delay: 0.5 + index * 0.05 }}
-                                  whileHover={{ scale: 1.05 }}
-                                >
-                                  {tech}
-                                </motion.span>
-                              ))}
-                            </div>
-                          </div>
+                          (techs as string[]).map((tech, index) => (
+                            <motion.span
+                              key={`${category}-${tech}`}
+                              className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border ${getTechBadgeColor(category)}`}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.5 + index * 0.02 }}
+                              whileHover={{ scale: 1.05 }}
+                              title={getCategoryLabel(category)}
+                            >
+                              {tech}
+                            </motion.span>
+                          ))
                         ))}
                       </div>
                     </motion.div>
