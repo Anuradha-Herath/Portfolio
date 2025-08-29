@@ -40,47 +40,105 @@ export const storageOperations = {
     }
   },
 
-  async uploadProjectImage(file: File, fileName: string): Promise<string> {
-    try {
-      // Validate file type (images only)
-      const validTypes = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
-      
-      if (!fileExtension || !validTypes.includes(fileExtension)) {
-        throw new Error('Only image files (JPG, PNG, WebP, GIF) are allowed');
+  async uploadProjectImage(file: File, fileName: string, maxRetries: number = 3): Promise<string> {
+    let lastError: Error | null = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Upload attempt ${attempt}/${maxRetries} for file: ${fileName}`);
+
+        // Validate file type (images only) - use MIME type for consistency
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        if (!validTypes.includes(file.type)) {
+          throw new Error(`Invalid file type: ${file.type}. Only JPG, PNG, WebP, and GIF images are allowed`);
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          throw new Error('File size must be less than 5MB');
+        }
+
+        // Generate unique filename with proper extension
+        const timestamp = Date.now();
+        const fileExtension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+        const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const uniqueFileName = `${timestamp}-${sanitizedFileName}`;
+
+        console.log('Attempting to upload to bucket:', PROJECT_IMAGES_BUCKET);
+        console.log('File details:', { name: uniqueFileName, type: file.type, size: file.size });
+
+        // Upload file to Supabase storage
+        const { data, error } = await supabaseAdmin.storage
+          .from(PROJECT_IMAGES_BUCKET)
+          .upload(uniqueFileName, file, {
+            contentType: file.type,
+            upsert: false
+          });
+
+        if (error) {
+          console.error(`Upload attempt ${attempt} failed:`, error);
+
+          // Check if this is a retryable error
+          const isRetryable = error.message.includes('network') ||
+                             error.message.includes('timeout') ||
+                             error.message.includes('fetch') ||
+                             error.message.includes('Unexpected token');
+
+          if (!isRetryable || attempt === maxRetries) {
+            // Provide more specific error messages
+            if (error.message.includes('Bucket not found')) {
+              throw new Error(`Storage bucket '${PROJECT_IMAGES_BUCKET}' does not exist. Please create it in your Supabase dashboard.`);
+            } else if (error.message.includes('Unauthorized')) {
+              throw new Error('Storage upload unauthorized. Please check your Supabase service role key and bucket permissions.');
+            } else if (error.message.includes('exceeded')) {
+              throw new Error('File size exceeds storage limits. Please try a smaller file.');
+            }
+
+            throw new Error(`Upload failed: ${error.message}`);
+          }
+
+          // Wait before retrying (exponential backoff)
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+          console.log(`Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
+
+        if (!data?.path) {
+          throw new Error('Upload succeeded but no file path returned');
+        }
+
+        console.log('Upload successful, file path:', data.path);
+
+        // Get public URL
+        const { data: urlData } = supabaseAdmin.storage
+          .from(PROJECT_IMAGES_BUCKET)
+          .getPublicUrl(data.path);
+
+        if (!urlData.publicUrl) {
+          throw new Error('Failed to generate public URL for uploaded file');
+        }
+
+        console.log('Public URL generated:', urlData.publicUrl);
+        return urlData.publicUrl;
+
+      } catch (error) {
+        lastError = error as Error;
+        console.error(`Error on attempt ${attempt}:`, error);
+
+        if (attempt === maxRetries) {
+          break;
+        }
+
+        // Wait before retrying for non-Supabase errors
+        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        throw new Error('File size must be less than 5MB');
-      }
-
-      // Generate unique filename
-      const timestamp = Date.now();
-      const uniqueFileName = `${timestamp}-${fileName.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-
-      // Upload file to Supabase storage
-      const { data, error } = await supabaseAdmin.storage
-        .from(PROJECT_IMAGES_BUCKET)
-        .upload(uniqueFileName, file, {
-          contentType: file.type,
-          upsert: false
-        });
-
-      if (error) {
-        throw error;
-      }
-
-      // Get public URL
-      const { data: urlData } = supabaseAdmin.storage
-        .from(PROJECT_IMAGES_BUCKET)
-        .getPublicUrl(data.path);
-
-      return urlData.publicUrl;
-    } catch (error) {
-      console.error('Error uploading project image:', error);
-      throw error;
     }
+
+    // If we get here, all retries failed
+    console.error('All upload attempts failed');
+    throw lastError || new Error('Upload failed after all retries');
   },
 
   async deleteProjectImage(imageUrl: string): Promise<void> {
@@ -195,18 +253,23 @@ export const storageOperations = {
 
   async ensureBucketExists(bucketName: string = SKILL_ICONS_BUCKET): Promise<void> {
     try {
+      console.log(`Checking if bucket '${bucketName}' exists...`);
+
       // Check if bucket exists
       const { data: buckets, error: listError } = await supabaseAdmin.storage.listBuckets();
-      
+
       if (listError) {
-        throw listError;
+        console.error('Error listing buckets:', listError);
+        throw new Error(`Failed to list storage buckets: ${listError.message}`);
       }
 
       const bucketExists = buckets?.some(bucket => bucket.name === bucketName);
 
       if (!bucketExists) {
+        console.log(`Bucket '${bucketName}' does not exist, attempting to create it...`);
+
         // Create bucket with basic configuration
-        const bucketConfig = bucketName === SKILL_ICONS_BUCKET 
+        const bucketConfig = bucketName === SKILL_ICONS_BUCKET
           ? {
               public: true,
               allowedMimeTypes: ['image/svg+xml'],
@@ -227,18 +290,20 @@ export const storageOperations = {
         const { error: createError } = await supabaseAdmin.storage.createBucket(bucketName, bucketConfig);
 
         if (createError) {
-          throw createError;
+          console.error('Error creating bucket:', createError);
+          throw new Error(`Failed to create bucket '${bucketName}': ${createError.message}`);
         }
 
-        console.log(`Created storage bucket: ${bucketName}`);
+        console.log(`Successfully created storage bucket: ${bucketName}`);
       } else {
-        console.log(`Storage bucket ${bucketName} already exists`);
+        console.log(`Storage bucket '${bucketName}' already exists`);
       }
     } catch (error) {
       console.error('Error ensuring bucket exists:', error);
       // Don't throw error - bucket creation might be restricted
       // The app should still work even if bucket creation fails
       console.warn('Bucket creation failed - you may need to create the bucket manually in Supabase Dashboard');
+      throw error; // Re-throw to let caller handle it
     }
   },
 

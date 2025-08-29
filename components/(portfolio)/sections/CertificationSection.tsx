@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, easeInOut } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Heading } from "@/components/ui/Heading";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Certification } from "@/lib/types";
 
 // Animated Counter Component for Statistics
@@ -523,11 +524,12 @@ export function CertificationSection() {
 
           {/* Loading State */}
           {isLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-[var(--foreground-secondary)]">
-                Loading certifications...
-              </p>
+            <div className="flex justify-center py-20">
+              <LoadingSpinner
+                size="lg"
+                text="Loading certifications..."
+                showDots={true}
+              />
             </div>
           ) : (
             <>

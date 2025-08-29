@@ -144,6 +144,10 @@ export function ProjectForm({
         apis_tools: newFormData.technologies_used.apis_tools.join(", "),
       };
       setTechInput(newTechInput);
+
+      // Synchronize ongoing checkbox with project status
+      setIsOngoing(project.status === "ongoing");
+
       // Set image preview if editing existing project
       if (project.image_url) {
         setImagePreview(project.image_url);
@@ -160,19 +164,47 @@ export function ProjectForm({
       // Parse duration for edit mode
       if (project.duration) {
         // e.g., "Mar 2024 - Jul 2025" or "Mar 2024 - Ongoing"
-        const match = project.duration.match(/(\w{3}) (\d{4}) - (\w{3}|Ongoing)(?: (\d{4}))?/);
+        const durationStr = project.duration.trim();
+
+        // More robust regex to handle various formats
+        const match = durationStr.match(/^(\w+)\s+(\d{4})\s*-\s*(.+)$/);
         if (match) {
-          setStartMonth(match[1]);
-          setStartYear(match[2]);
-          if (match[3] === "Ongoing") {
+          const startMonth = match[1];
+          const startYear = match[2];
+          const endPart = match[3].trim();
+
+          setStartMonth(startMonth);
+          setStartYear(startYear);
+
+          if (endPart.toLowerCase() === "ongoing") {
             setIsOngoing(true);
             setEndMonth("");
             setEndYear("");
+            setFormData((prev) => ({ ...prev, status: "ongoing" }));
           } else {
-            setIsOngoing(false);
-            setEndMonth(match[3]);
-            setEndYear(match[4] || "");
+            // Try to parse end date (e.g., "Jul 2025" or "Jul 2025")
+            const endMatch = endPart.match(/^(\w+)\s+(\d{4})$/);
+            if (endMatch) {
+              setIsOngoing(false);
+              setEndMonth(endMatch[1]);
+              setEndYear(endMatch[2]);
+              setFormData((prev) => ({ ...prev, status: "completed" }));
+            } else {
+              // Fallback: treat as completed but couldn't parse end date
+              setIsOngoing(false);
+              setEndMonth("");
+              setEndYear("");
+              setFormData((prev) => ({ ...prev, status: "completed" }));
+            }
           }
+        } else {
+          // If parsing fails, reset to empty state
+          setStartMonth("");
+          setStartYear("");
+          setEndMonth("");
+          setEndYear("");
+          setIsOngoing(false);
+          setFormData((prev) => ({ ...prev, status: "completed" }));
         }
       }
     } else {
@@ -214,6 +246,8 @@ export function ProjectForm({
       setEndMonth("");
       setEndYear("");
       setIsOngoing(false);
+      // Reset form status for new projects
+      setFormData((prev) => ({ ...prev, status: "completed" }));
     }
   }, [project]);
 
@@ -338,37 +372,80 @@ export function ProjectForm({
     }
 
     let imageUrl = formData.image_url;
-
-    // Upload new image if selected
-    if (selectedImage) {
-      const uploadedUrl = await uploadImage();
-      if (!uploadedUrl) {
-        return; // Upload failed
-      }
-      imageUrl = uploadedUrl;
-    }
-
-    // Upload additional images if any
     let additionalImageUrls: string[] = additionalImagePreviews.filter((url) =>
       url.startsWith("http")
     );
-    for (let i = 0; i < additionalImages.length; i++) {
-      const file = additionalImages[i];
-      const formDataImg = new FormData();
-      formDataImg.append("file", file);
-      formDataImg.append("fileName", file.name);
-      try {
-        const response = await fetch("/api/upload/project-image", {
-          method: "POST",
-          body: formDataImg,
-        });
-        if (!response.ok) throw new Error("Failed to upload image");
-        const { url } = await response.json();
-        additionalImageUrls.push(url);
-      } catch (error) {
-        alert("Failed to upload one or more additional images.");
-        return;
-      }
+
+    // Upload main image and additional images in parallel for better performance
+    const uploadPromises = [];
+
+    // Upload main image if selected
+    if (selectedImage) {
+      uploadPromises.push(
+        uploadImage().then(url => {
+          if (url) {
+            imageUrl = url;
+          } else {
+            throw new Error("Main image upload failed");
+          }
+        })
+      );
+    }
+
+    // Upload additional images if any
+    if (additionalImages.length > 0) {
+      uploadPromises.push(
+        (async () => {
+          try {
+            const batchFormData = new FormData();
+
+            // Add all files and their names to the form data
+            additionalImages.forEach((file, index) => {
+              batchFormData.append('files', file);
+              batchFormData.append('fileNames', file.name);
+            });
+
+            const response = await fetch("/api/upload/project-images", {
+              method: "POST",
+              body: batchFormData,
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.errors && result.errors.length > 0) {
+              console.error('Some uploads failed:', result.errors);
+              const errorMessage = `Some images failed to upload:\n${result.errors.map((error: string, index: number) => `${index + 1}. ${error}`).join('\n')}\n\nSuccessfully uploaded ${result.urls?.length || 0} of ${additionalImages.length} images.`;
+              alert(errorMessage);
+              // Still add successfully uploaded images
+              if (result.urls && result.urls.length > 0) {
+                additionalImageUrls.push(...result.urls);
+              }
+            } else {
+              // All uploads successful
+              additionalImageUrls.push(...result.urls);
+            }
+          } catch (error) {
+            console.error('Error uploading additional images:', error);
+            throw new Error("Additional images upload failed");
+          }
+        })()
+      );
+    }
+
+    // Wait for all uploads to complete
+    try {
+      setIsUploadingImage(true);
+      await Promise.all(uploadPromises);
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert("Failed to upload images. Please try again.");
+      return;
+    } finally {
+      setIsUploadingImage(false);
     }
 
     onSubmit({
@@ -516,11 +593,15 @@ export function ProjectForm({
                     type="checkbox"
                     checked={isOngoing}
                     onChange={(e) => {
-                      setIsOngoing(e.target.checked);
-                      if (e.target.checked) {
+                      const checked = e.target.checked;
+                      setIsOngoing(checked);
+                      if (checked) {
                         setEndMonth("");
                         setEndYear("");
                         setFormData((prev) => ({ ...prev, status: "ongoing" }));
+                      } else {
+                        // When unchecked, reset status to completed
+                        setFormData((prev) => ({ ...prev, status: "completed" }));
                       }
                     }}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"

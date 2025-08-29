@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Heading } from "@/components/ui/Heading";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Experience } from "@/lib/types";
 
 // Featured Experience Component for single experience showcase
@@ -240,10 +241,12 @@ const FeaturedExperience: React.FC<{
 
 export function ExperienceSection() {
   const [experienceData, setExperienceData] = useState<Experience[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
+        setLoading(true);
         const response = await fetch('/api/experiences');
         if (response.ok) {
           const data = await response.json();
@@ -251,6 +254,8 @@ export function ExperienceSection() {
         }
       } catch (error) {
         console.error('Error fetching experiences:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -353,10 +358,18 @@ export function ExperienceSection() {
         </motion.div>
 
         {/* Loading State */}
-        {/* Removed loading state */}
+        {loading && (
+          <div className="flex justify-center py-20">
+            <LoadingSpinner
+              size="lg"
+              text="Loading experience..."
+              showDots={true}
+            />
+          </div>
+        )}
 
         {/* No Experience State */}
-        {experienceData.length === 0 && (
+        {!loading && experienceData.length === 0 && (
           <div className="text-center py-20">
             <p className="text-slate-600 dark:text-slate-300 text-lg">
               No experience data available at the moment.
@@ -365,7 +378,7 @@ export function ExperienceSection() {
         )}
 
         {/* Featured Experience Display */}
-        {experienceData.length > 0 && (
+        {!loading && experienceData.length > 0 && (
           <div className="space-y-16">
             {experienceData.slice(0, 1).map((experience) => (
               <FeaturedExperience
