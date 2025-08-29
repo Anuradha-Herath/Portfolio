@@ -240,7 +240,6 @@ const FeaturedExperience: React.FC<{
 
 export function ExperienceSection() {
   const [experienceData, setExperienceData] = useState<Experience[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchExperiences = async () => {
@@ -252,8 +251,6 @@ export function ExperienceSection() {
         }
       } catch (error) {
         console.error('Error fetching experiences:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -356,14 +353,10 @@ export function ExperienceSection() {
         </motion.div>
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          </div>
-        )}
+        {/* Removed loading state */}
 
         {/* No Experience State */}
-        {!isLoading && experienceData.length === 0 && (
+        {experienceData.length === 0 && (
           <div className="text-center py-20">
             <p className="text-slate-600 dark:text-slate-300 text-lg">
               No experience data available at the moment.
@@ -372,7 +365,7 @@ export function ExperienceSection() {
         )}
 
         {/* Featured Experience Display */}
-        {!isLoading && experienceData.length > 0 && (
+        {experienceData.length > 0 && (
           <div className="space-y-16">
             {experienceData.slice(0, 1).map((experience) => (
               <FeaturedExperience

@@ -10,7 +10,6 @@ import { ProjectModal } from "../ProjectModal";
 
 export function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,8 +26,6 @@ export function ProjectsSection() {
         }
       } catch (error) {
         console.error('Error fetching projects:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -201,14 +198,10 @@ export function ProjectsSection() {
         </motion.div>
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          </div>
-        )}
+        {/* Removed loading state */}
 
         {/* No Projects State */}
-        {!isLoading && projects.length === 0 && (
+        {projects.length === 0 && (
           <div className="text-center py-20">
             <p className="text-slate-600 dark:text-slate-300 text-lg">
               No projects available at the moment.
@@ -217,7 +210,7 @@ export function ProjectsSection() {
         )}
 
         {/* Projects Grid */}
-        {!isLoading && projects.length > 0 && (
+        {projects.length > 0 && (
         <motion.div
           variants={gridVariants}
           initial="hidden"
@@ -414,25 +407,6 @@ export function ProjectsSection() {
                         </Button>
                       </motion.div>
                     )}
-                    <motion.div
-                      className="flex-shrink-0"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="px-3 text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleProjectClick(project);
-                        }}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </Button>
-                    </motion.div>
                   </div>
                 </CardFooter>
               </Card>
@@ -442,42 +416,44 @@ export function ProjectsSection() {
         )}
 
         {/* Enhanced Call-to-Action */}
-        <motion.div
-          className="text-center mt-16 lg:mt-20"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.8, duration: 0.6 }}
-        >
+        {projects.length > 3 && (
           <motion.div
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: "0 20px 40px rgba(79, 70, 229, 0.2)"
-            }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="inline-block"
+            className="text-center mt-16 lg:mt-20"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.8, duration: 0.6 }}
           >
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="px-8 py-4 text-lg font-semibold border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300"
+            <motion.div
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 20px 40px rgba(79, 70, 229, 0.2)"
+              }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              className="inline-block"
             >
-              <span className="flex items-center gap-3">
-                View All Projects
-                <motion.svg 
-                  className="w-5 h-5" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </motion.svg>
-              </span>
-            </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="px-8 py-4 text-lg font-semibold border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300"
+              >
+                <span className="flex items-center gap-3">
+                  View All Projects
+                  <motion.svg 
+                    className="w-5 h-5" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                    animate={{ x: [0, 4, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </motion.svg>
+                </span>
+              </Button>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
       </div>
 
       {/* Project Modal */}
