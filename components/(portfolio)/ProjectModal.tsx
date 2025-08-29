@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Project } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
@@ -11,11 +11,66 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
-  // Handle escape key press
+  // Gallery state management
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageLoadingStates, setImageLoadingStates] = useState<Record<number, boolean>>({});
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+  // Initialize loading states for gallery images
+  useEffect(() => {
+    if (project?.additional_images) {
+      const initialStates: Record<number, boolean> = {};
+      project.additional_images.forEach((_, index) => {
+        initialStates[index] = true; // Start with loading state
+      });
+      setImageLoadingStates(initialStates);
+    }
+  }, [project?.additional_images]);
+  const openLightbox = (index: number) => {
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    document.body.style.overflow = "unset";
+  };
+
+  const nextImage = useCallback(() => {
+    if (project?.additional_images) {
+      setCurrentImageIndex((prev) => 
+        (prev + 1) % project.additional_images!.length
+      );
+    }
+  }, [project?.additional_images]);
+
+  const prevImage = useCallback(() => {
+    if (project?.additional_images) {
+      setCurrentImageIndex((prev) => 
+        prev === 0 ? project.additional_images!.length - 1 : prev - 1
+      );
+    }
+  }, [project?.additional_images]);
+
+  const handleImageLoad = (index: number) => {
+    setImageLoadingStates(prev => ({ ...prev, [index]: false }));
+  };
+
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => new Set(prev).add(index));
+    setImageLoadingStates(prev => ({ ...prev, [index]: false }));
+  };
+
+  // Handle escape key for lightbox
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        if (lightboxOpen) {
+          closeLightbox();
+        } else {
+          onClose();
+        }
       }
     };
 
@@ -29,7 +84,30 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "unset";
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, lightboxOpen, nextImage, prevImage]);
+
+  // Handle keyboard navigation for lightbox
+  useEffect(() => {
+    const handleKeyNavigation = (e: KeyboardEvent) => {
+      if (!lightboxOpen || !project?.additional_images) return;
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prevImage();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        nextImage();
+      }
+    };
+
+    if (lightboxOpen) {
+      document.addEventListener("keydown", handleKeyNavigation);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyNavigation);
+    };
+  }, [lightboxOpen, project?.additional_images]);
 
   const backdropVariants: Variants = {
     hidden: { opacity: 0 },
@@ -114,9 +192,10 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   if (!project) return null;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
+          key="project-modal"
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           variants={backdropVariants}
           initial="hidden"
@@ -297,7 +376,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {project.key_features.map((feature, index) => (
                           <motion.div
-                            key={index}
+                            key={`feature-${index}`}
                             className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -325,7 +404,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       <div className="space-y-3">
                         {project.my_contributions.map((contribution, index) => (
                           <motion.div
-                            key={index}
+                            key={`contribution-${index}`}
                             className="flex items-start gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800/50"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -339,7 +418,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     </motion.div>
                   )}
 
-                  {/* Additional Images */}
+                  {/* Enhanced Project Gallery */}
                   {project.additional_images && project.additional_images.length > 0 && (
                     <motion.div
                       className="mb-8"
@@ -347,27 +426,118 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.7 }}
                     >
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-                        Project Gallery
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                          Project Gallery
+                        </h3>
+                        <motion.span
+                          className="text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 0.8 }}
+                        >
+                          {project.additional_images.length} {project.additional_images.length === 1 ? 'image' : 'images'}
+                        </motion.span>
+                      </div>
+
+                      {/* Gallery Grid with Masonry-like Layout */}
+                      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
                         {project.additional_images.map((imageUrl, index) => (
                           <motion.div
-                            key={index}
-                            className="relative rounded-lg overflow-hidden aspect-video bg-slate-100 dark:bg-slate-800"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.8 + index * 0.1 }}
-                            whileHover={{ scale: 1.05 }}
+                            key={`gallery-${index}`}
+                            className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 shadow-md hover:shadow-xl transition-all duration-300"
+                            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{
+                              delay: 0.8 + index * 0.1,
+                              type: "spring",
+                              stiffness: 100,
+                              damping: 15
+                            }}
+                            whileHover={{ y: -4 }}
+                            onClick={() => openLightbox(index)}
                           >
-                            <img
-                              src={imageUrl}
-                              alt={`${project.title} screenshot ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
+                            {/* Loading Skeleton */}
+                            {imageLoadingStates[index] !== false && (
+                              <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse rounded-xl">
+                                <div className="w-full h-48 flex items-center justify-center">
+                                  <div className="w-8 h-8 border-2 border-slate-400 dark:border-slate-500 border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Main Image */}
+                            <div className="relative overflow-hidden rounded-xl">
+                              <img
+                                src={imageUrl}
+                                alt={`${project.title} screenshot ${index + 1}`}
+                                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
+                                loading="lazy"
+                                onLoad={() => handleImageLoad(index)}
+                                onError={() => handleImageError(index)}
+                              />
+
+                              {/* Error State */}
+                              {imageErrors.has(index) && (
+                                <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 flex items-center justify-center rounded-xl">
+                                  <div className="text-center text-slate-500 dark:text-slate-400">
+                                    <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                    <p className="text-sm">Failed to load image</p>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Hover Overlay */}
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <motion.div
+                                  className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg"
+                                  initial={{ scale: 0.8, opacity: 0 }}
+                                  whileHover={{ scale: 1.1, opacity: 1 }}
+                                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                >
+                                  <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                  </svg>
+                                </motion.div>
+                              </div>
+
+                              {/* Image Number Badge */}
+                              <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                {index + 1}
+                              </div>
+                            </div>
+
+                            {/* Image Caption */}
+                            <div className="p-3 bg-white dark:bg-slate-800">
+                              <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+                                Screenshot {index + 1}
+                              </p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                Click to view full size
+                              </p>
+                            </div>
                           </motion.div>
                         ))}
                       </div>
+
+                      {/* Gallery Stats */}
+                      <motion.div
+                        className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/50"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.2 }}
+                      >
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-600 dark:text-slate-300">
+                            📸 {project.additional_images.length} high-quality screenshots
+                          </span>
+                          <span className="text-indigo-600 dark:text-indigo-400 font-medium">
+                            Interactive Gallery
+                          </span>
+                        </div>
+                      </motion.div>
                     </motion.div>
                   )}
 
@@ -434,6 +604,119 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           </motion.div>
         </motion.div>
       )}
+
+      {/* Enhanced Lightbox Gallery */}
+      <AnimatePresence mode="wait">
+        {lightboxOpen && project?.additional_images && (
+          <motion.div
+            key="lightbox-modal"
+            className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Close Button */}
+            <motion.button
+              onClick={closeLightbox}
+              className="absolute top-6 right-6 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200"
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </motion.button>
+
+            {/* Navigation Buttons */}
+            {project.additional_images.length > 1 && (
+              <>
+                <motion.button
+                  onClick={prevImage}
+                  className="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200"
+                  whileHover={{ scale: 1.1, x: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </motion.button>
+
+                <motion.button
+                  onClick={nextImage}
+                  className="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all duration-200"
+                  whileHover={{ scale: 1.1, x: 2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </motion.button>
+              </>
+            )}
+
+            {/* Main Image Container */}
+            <div className="h-full flex items-center justify-center p-6">
+              <motion.div
+                className="relative max-w-7xl max-h-full"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                key={currentImageIndex}
+              >
+                <img
+                  src={project.additional_images[currentImageIndex]}
+                  alt={`${project.title} screenshot ${currentImageIndex + 1}`}
+                  className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                />
+
+                {/* Image Info Overlay */}
+                <motion.div
+                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 rounded-b-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="flex items-center justify-between text-white">
+                    <div>
+                      <h4 className="text-lg font-semibold mb-1">{project.title}</h4>
+                      <p className="text-sm text-white/80">
+                        Screenshot {currentImageIndex + 1} of {project.additional_images.length}
+                      </p>
+                    </div>
+
+                    {/* Image Counter Dots */}
+                    <div className="flex gap-2">
+                      {project.additional_images.map((_, index) => (
+                        <button
+                          key={`lightbox-dot-${index}`}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                            index === currentImageIndex
+                              ? 'bg-white scale-125'
+                              : 'bg-white/40 hover:bg-white/60'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+
+            {/* Keyboard Navigation Hint */}
+            <motion.div
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              Use ← → arrow keys or click to navigate • Press ESC to close
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </AnimatePresence>
   );
 }
