@@ -362,73 +362,185 @@ export function CertificationSection() {
             </p>
           </motion.div>
 
-          {/* Tab Navigation - Enhanced */}
+          {/* Enhanced Tab Navigation */}
           <motion.div
-            className="flex justify-center mb-12"
+            className="flex justify-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, ease }}
           >
-            <div className="flex space-x-1 bg-[var(--background-tertiary)]/80 backdrop-blur-sm p-1 rounded-xl border border-[var(--border)] shadow-2xl">
-              <button
-                onClick={() => setActiveTab("course")}
-                className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
-                  transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-                  ${
-                    activeTab === "course"
-                      ? "text-blue-300 shadow-md scale-105 z-10"
-                      : "text-[var(--foreground-tertiary)] hover:text-blue-200"
-                  }
-                `}
-                style={{
-                  background:
-                    activeTab === "course"
-                      ? "linear-gradient(135deg, rgba(0,122,255,0.15) 0%, rgba(88,86,214,0.12) 100%)"
+            <div className="relative">
+              {/* Background glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-green-500/10 rounded-2xl blur-2xl opacity-50" />
+
+              {/* Main container */}
+              <div className="relative flex bg-white/5 dark:bg-slate-900/20 backdrop-blur-md p-2 rounded-2xl border border-white/10 dark:border-slate-700/30 shadow-2xl">
+                {/* Course Certifications Button */}
+                <motion.button
+                  onClick={() => setActiveTab("course")}
+                  className="relative flex-1 px-8 py-4 rounded-xl text-sm font-semibold focus:outline-none overflow-hidden group transition-all duration-500 ease-out"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  style={{
+                    background: activeTab === "course"
+                      ? "linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(147,51,234,0.15) 100%)"
                       : "transparent",
-                  boxShadow:
-                    activeTab === "course"
-                      ? "0 8px 32px 0 rgba(0,122,255,0.15)"
+                    boxShadow: activeTab === "course"
+                      ? "0 10px 40px rgba(59,130,246,0.3), inset 0 1px 0 rgba(255,255,255,0.1)"
                       : "none",
-                  border:
-                    activeTab === "course"
-                      ? "1.5px solid var(--accent)"
-                      : "1.5px solid transparent",
-                }}
-              >
-                <span className="relative z-10">
-                  Course Certifications ({courseCertifications.length})
-                </span>
-              </button>
-              <button
-                onClick={() => setActiveTab("competition")}
-                className={`relative px-7 py-3 rounded-lg text-sm font-semibold focus:outline-none overflow-hidden
-                  transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-                  ${
-                    activeTab === "competition"
-                      ? "text-green-300 shadow-md scale-105 z-10"
-                      : "text-[var(--foreground-tertiary)] hover:text-green-200"
-                  }
-                `}
-                style={{
-                  background:
-                    activeTab === "competition"
-                      ? "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(0,122,255,0.12) 100%)"
+                    border: activeTab === "course"
+                      ? "1px solid rgba(59,130,246,0.4)"
+                      : "1px solid transparent",
+                  }}
+                >
+                  {/* Animated background gradient */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={false}
+                    animate={{ opacity: activeTab === "course" ? 0.1 : 0 }}
+                  />
+
+                  {/* Content */}
+                  <div className="relative z-10 flex flex-col items-center space-y-2">
+                    {/* Icon */}
+                    <motion.div
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/20 group-hover:bg-blue-500/30 transition-colors duration-300"
+                      animate={{
+                        rotate: activeTab === "course" ? [0, -5, 5, 0] : 0,
+                        scale: activeTab === "course" ? 1.1 : 1
+                      }}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                    >
+                      <svg
+                        className={`w-5 h-5 transition-colors duration-300 ${
+                          activeTab === "course"
+                            ? "text-blue-300"
+                            : "text-blue-400/70 group-hover:text-blue-300"
+                        }`}
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12,2L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
+                        <path d="M9,5V7H15V5H9M9,9V11H15V9H9Z" opacity="0.3" />
+                      </svg>
+                    </motion.div>
+
+                    {/* Text */}
+                    <div className="text-center">
+                      <div
+                        className={`font-bold transition-colors duration-300 ${
+                          activeTab === "course"
+                            ? "text-blue-200"
+                            : "text-slate-300 group-hover:text-blue-200"
+                        }`}
+                      >
+                        Course Certifications
+                      </div>
+                      <div
+                        className={`text-xs font-medium transition-colors duration-300 ${
+                          activeTab === "course"
+                            ? "text-blue-300/80"
+                            : "text-slate-400 group-hover:text-blue-300/70"
+                        }`}
+                      >
+                        {courseCertifications.length} Available
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Active indicator */}
+                  {activeTab === "course" && (
+                    <motion.div
+                      className="absolute bottom-2 inset-x-0 mx-auto w-12 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"
+                      layoutId="activeTab"
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
+
+                {/* Competition Certificates Button */}
+                <motion.button
+                  onClick={() => setActiveTab("competition")}
+                  className="relative flex-1 px-8 py-4 rounded-xl text-sm font-semibold focus:outline-none overflow-hidden group transition-all duration-500 ease-out"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  style={{
+                    background: activeTab === "competition"
+                      ? "linear-gradient(135deg, rgba(34,197,94,0.2) 0%, rgba(59,130,246,0.15) 100%)"
                       : "transparent",
-                  boxShadow:
-                    activeTab === "competition"
-                      ? "0 8px 32px 0 rgba(34,197,94,0.15)"
+                    boxShadow: activeTab === "competition"
+                      ? "0 10px 40px rgba(34,197,94,0.3), inset 0 1px 0 rgba(255,255,255,0.1)"
                       : "none",
-                  border:
-                    activeTab === "competition"
-                      ? "1.5px solid #22c55e"
-                      : "1.5px solid transparent",
-                }}
-              >
-                <span className="relative z-10">
-                  Competition Certificates ({competitionCertifications.length})
-                </span>
-              </button>
+                    border: activeTab === "competition"
+                      ? "1px solid rgba(34,197,94,0.4)"
+                      : "1px solid transparent",
+                  }}
+                >
+                  {/* Animated background gradient */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={false}
+                    animate={{ opacity: activeTab === "competition" ? 0.1 : 0 }}
+                  />
+
+                  {/* Content */}
+                  <div className="relative z-10 flex flex-col items-center space-y-2">
+                    {/* Icon */}
+                    <motion.div
+                      className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/20 group-hover:bg-green-500/30 transition-colors duration-300"
+                      animate={{
+                        rotate: activeTab === "competition" ? [0, -5, 5, 0] : 0,
+                        scale: activeTab === "competition" ? 1.1 : 1
+                      }}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                    >
+                      <svg
+                        className={`w-5 h-5 transition-colors duration-300 ${
+                          activeTab === "competition"
+                            ? "text-green-300"
+                            : "text-green-400/70 group-hover:text-green-300"
+                        }`}
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M18,2A2,2 0 0,1 20,4V5L22,7V8H18V7H16V8H2V7L4,5V4A2,2 0 0,1 6,2H18M18,4H6V5.83L7.83,7H16.17L18,5.83V4M22,9V10H18V12.5L16,14.5V16A2,2 0 0,1 14,18H10A2,2 0 0,1 8,16V14.5L6,12.5V10H2V9H22M10,10V12.5L12,14.5L14,12.5V10H10Z" />
+                      </svg>
+                    </motion.div>
+
+                    {/* Text */}
+                    <div className="text-center">
+                      <div
+                        className={`font-bold transition-colors duration-300 ${
+                          activeTab === "competition"
+                            ? "text-green-200"
+                            : "text-slate-300 group-hover:text-green-200"
+                        }`}
+                      >
+                        Competition Certificates
+                      </div>
+                      <div
+                        className={`text-xs font-medium transition-colors duration-300 ${
+                          activeTab === "competition"
+                            ? "text-green-300/80"
+                            : "text-slate-400 group-hover:text-green-300/70"
+                        }`}
+                      >
+                        {competitionCertifications.length} Available
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Active indicator */}
+                  {activeTab === "competition" && (
+                    <motion.div
+                      className="absolute bottom-2 inset-x-0 mx-auto w-12 h-1 bg-gradient-to-r from-green-400 to-blue-400 rounded-full"
+                      layoutId="activeTab"
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
+              </div>
             </div>
           </motion.div>
 
@@ -596,218 +708,6 @@ export function CertificationSection() {
             </>
           )}
 
-          {/* Enhanced Animated Statistics */}
-          <motion.div
-            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, ease }}
-          >
-            <motion.div
-              className="group relative overflow-hidden"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              {/* Animated background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-blue-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-blue-400/40 transition-all duration-300">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  {/* Enhanced Icon with Animation */}
-                  <motion.div
-                    className="relative"
-                    whileHover={{ rotate: [0, -10, 10, 0] }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                  >
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-shadow duration-300">
-                      <svg
-                        className="w-8 h-8 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
-                      </svg>
-                    </div>
-                    {/* Floating particles */}
-                    <motion.div
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [-2, -8, -2] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.div
-                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-blue-300 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [2, 6, 2] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    />
-                  </motion.div>
-
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                      <AnimatedCounter value={courseCertifications.length} />
-                    </div>
-                    <div className="text-sm font-semibold text-blue-400 uppercase tracking-wide">
-                      Course Certifications
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="group relative overflow-hidden"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              {/* Animated background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-green-600/5 to-emerald-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-green-400/40 transition-all duration-300">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  {/* Enhanced Icon with Animation */}
-                  <motion.div
-                    className="relative"
-                    whileHover={{ rotate: [0, -10, 10, 0] }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                  >
-                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-green-500/25 transition-shadow duration-300">
-                      <svg
-                        className="w-8 h-8 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,6V8H13V6H11M11,10V18H13V10H11Z" />
-                      </svg>
-                    </div>
-                    {/* Floating particles */}
-                    <motion.div
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [-2, -8, -2] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.div
-                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-green-300 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [2, 6, 2] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    />
-                  </motion.div>
-
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
-                      <AnimatedCounter value={competitionCertifications.length} />
-                    </div>
-                    <div className="text-sm font-semibold text-green-400 uppercase tracking-wide">
-                      Competition Certificates
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="group relative overflow-hidden"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              {/* Animated background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-600/5 to-indigo-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-purple-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-purple-400/40 transition-all duration-300">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  {/* Enhanced Icon with Animation */}
-                  <motion.div
-                    className="relative"
-                    whileHover={{ rotate: [0, -10, 10, 0] }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                  >
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-shadow duration-300">
-                      <svg
-                        className="w-8 h-8 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12,2L13.09,8.26L22,9L16.91,13.74L18.18,21.02L12,17.77L5.82,21.02L7.09,13.74L2,9L10.91,8.26L12,2Z" />
-                      </svg>
-                    </div>
-                    {/* Floating particles */}
-                    <motion.div
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [-2, -8, -2] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.div
-                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-purple-300 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [2, 6, 2] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    />
-                  </motion.div>
-
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-                      <AnimatedCounter value={certifications.length} />
-                    </div>
-                    <div className="text-sm font-semibold text-purple-400 uppercase tracking-wide">
-                      Total Achievements
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="group relative overflow-hidden"
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              {/* Animated background gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-600/5 to-red-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400/20 to-orange-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-              <div className="relative p-8 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-slate-700/20 hover:border-orange-400/40 transition-all duration-300">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  {/* Enhanced Icon with Animation */}
-                  <motion.div
-                    className="relative"
-                    whileHover={{ rotate: [0, -10, 10, 0] }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                  >
-                    <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-orange-500/25 transition-shadow duration-300">
-                      <svg
-                        className="w-8 h-8 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M13,2.05V4.05C17.39,4.59 20.5,8.58 20.5,13C20.5,15.21 19.71,17.21 18.4,18.85L16.68,17.13C17.54,15.89 18,14.5 18,13C18,9.69 15.31,7 12,7V9.79L7.5,5.29L12,0.79V2.05C16.18,2.05 19.5,5.37 19.5,9.55C19.5,10.53 19.3,11.47 18.93,12.33L17.21,10.61C17.43,10.14 17.5,9.58 17.5,9C17.5,6.79 15.71,5 13,5V2.05M12,11C10.9,11 10,11.9 10,13C10,14.1 10.9,15 12,15C13.1,15 14,14.1 14,13C14,11.9 13.1,11 12,11M6.5,13C6.5,8.58 9.61,4.59 14,4.05V2.05C9.82,2.05 6.5,5.37 6.5,9.55C6.5,10.53 6.7,11.47 7.07,12.33L8.79,10.61C8.57,10.14 8.5,9.58 8.5,9C8.5,6.79 10.29,5 13,5V7C9.69,7 7,9.69 7,13C7,14.5 7.46,15.89 8.32,17.13L10.04,18.85C8.73,17.21 7.93,15.21 7.93,13H6.5Z" />
-                      </svg>
-                    </div>
-                    {/* Floating particles */}
-                    <motion.div
-                      className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [-2, -8, -2] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.div
-                      className="absolute -bottom-1 -left-1 w-2 h-2 bg-orange-300 rounded-full opacity-0 group-hover:opacity-100"
-                      animate={{ y: [2, 6, 2] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                    />
-                  </motion.div>
-
-                  <div className="space-y-2">
-                    <div className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
-                      <AnimatedCounter value={100} />%
-                    </div>
-                    <div className="text-sm font-semibold text-orange-400 uppercase tracking-wide">
-                      Commitment to Learning
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
         </div>
       </motion.section>
 
