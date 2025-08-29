@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Portfolio",
+  title: "Anuradha Herath - Portfolio",
   description: "Personal portfolio website",
+  icons: {
+    icon: "/logo/Copilot_20250829_191045.png",
+  },
 };
 
 export default function RootLayout({
