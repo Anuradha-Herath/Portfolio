@@ -33,7 +33,6 @@ const levelDots = {
 
 export function SkillsSection() {
   const [skillsData, setSkillsData] = useState<Skill[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("All");
 
   useEffect(() => {
@@ -46,8 +45,6 @@ export function SkillsSection() {
         }
       } catch (error) {
         console.error("Error fetching skills:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 

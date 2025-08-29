@@ -66,7 +66,6 @@ const AuroraGlassCard: React.FC<{
 
 export function EducationSection() {
   const [educationData, setEducationData] = useState<Education[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEducation = async () => {
@@ -103,25 +102,11 @@ export function EducationSection() {
             grade: "3 A passes",
           },
         ]);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchEducation();
   }, []);
-
-  if (loading) {
-    return (
-      <section id="education" className="py-24 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--accent)]"></div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <motion.section

@@ -10,7 +10,6 @@ import { ProjectModal } from "../ProjectModal";
 
 export function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,8 +26,6 @@ export function ProjectsSection() {
         }
       } catch (error) {
         console.error('Error fetching projects:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -201,14 +198,10 @@ export function ProjectsSection() {
         </motion.div>
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          </div>
-        )}
+        {/* Removed loading state */}
 
         {/* No Projects State */}
-        {!isLoading && projects.length === 0 && (
+        {projects.length === 0 && (
           <div className="text-center py-20">
             <p className="text-slate-600 dark:text-slate-300 text-lg">
               No projects available at the moment.
@@ -217,7 +210,7 @@ export function ProjectsSection() {
         )}
 
         {/* Projects Grid */}
-        {!isLoading && projects.length > 0 && (
+        {projects.length > 0 && (
         <motion.div
           variants={gridVariants}
           initial="hidden"
