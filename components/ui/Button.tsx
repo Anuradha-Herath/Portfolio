@@ -6,6 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
   glow?: boolean;
+  asChild?: boolean;
 }
 
 export function Button({ 
@@ -14,6 +15,7 @@ export function Button({
   className, 
   children, 
   glow = false,
+  asChild = false,
   ...props 
 }: ButtonProps) {
   const baseClasses = 'inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--background)] disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group';
@@ -32,15 +34,26 @@ export function Button({
     lg: 'px-8 py-3.5 text-lg'
   };
   
+  const combinedClasses = cn(
+    baseClasses, 
+    variants[variant], 
+    sizes[size], 
+    glow && 'shadow-[var(--shadow-glow)]',
+    className
+  );
+
+  if (asChild) {
+    // When asChild is true, we clone the child element and apply our classes
+    const child = React.Children.only(children) as React.ReactElement;
+    return React.cloneElement(child, {
+      className: cn(combinedClasses, child.props.className),
+      ...props
+    });
+  }
+  
   return (
     <button
-      className={cn(
-        baseClasses, 
-        variants[variant], 
-        sizes[size], 
-        glow && 'shadow-[var(--shadow-glow)]',
-        className
-      )}
+      className={combinedClasses}
       {...props}
     >
       {children}
