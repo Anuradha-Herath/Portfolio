@@ -267,7 +267,7 @@ export function Navbar() {
                 rotate: { duration: 0.6, ease: "linear" }
               }}
             >
-              <Button variant="premium" size="sm" glow>
+              <Button variant="premium" size="sm" glow asChild>
                 <a
                   href="/resume.pdf"
                   target="_blank"
@@ -512,7 +512,7 @@ export function Navbar() {
                       damping: 25
                     }}
                   >
-                    <Button variant="premium" size="sm" className="w-full">
+                    <Button variant="premium" size="sm" className="w-full" asChild>
                       <a
                         href="/resume.pdf"
                         target="_blank"
