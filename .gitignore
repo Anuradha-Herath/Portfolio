@@ -31,9 +31,6 @@ Thumbs.db
 *.log
 *.tsbuildinfo
 
-# Public files
-/public/resume.pdf
-
 # Optional: ignore coverage
 coverage/
 
