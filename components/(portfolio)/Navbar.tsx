@@ -37,9 +37,15 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [mounted, setMounted] = useState(false);
   
-  // Detect mobile devices
+  // Detect mobile devices - only after hydration
   const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  // Prevent hydration mismatch by ensuring consistent initial state
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const { scrollYProgress } = useScroll();
   
@@ -126,13 +132,13 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={isMobile ? { y: -50, opacity: 0 } : { y: -100, opacity: 0 }}
+        initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ 
           type: "spring",
-          stiffness: isMobile ? 200 : 100,
-          damping: isMobile ? 30 : 20,
-          duration: isMobile ? 0.5 : 0.8,
+          stiffness: 100,
+          damping: 20,
+          duration: 0.8,
           ease: "easeOut" 
         }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
@@ -146,7 +152,7 @@ export function Navbar() {
             {/* Logo */}
             <motion.div
               className="flex-shrink-0 relative"
-              whileHover={!isMobile ? { 
+              whileHover={mounted && !isMobile ? { 
                 scale: 1.08,
                 rotate: [0, -1, 1, 0],
               } : {}}
@@ -164,7 +170,7 @@ export function Navbar() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            {!isMobile && (
+            {mounted && !isMobile && (
               <div className="hidden md:flex flex-1 items-center justify-center">
                 <div className="flex items-center space-x-1">
                   {navigation.map((item, idx) => (
@@ -258,7 +264,7 @@ export function Navbar() {
             )}
 
             {/* Resume Button */}
-            {!isMobile && (
+            {mounted && !isMobile && (
               <motion.div 
                 className="hidden md:flex items-center ml-6"
                 initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
@@ -288,106 +294,108 @@ export function Navbar() {
             )}
 
             {/* Mobile Menu Button */}
-            <motion.div 
-              className="md:hidden"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                delay: 0.6,
-                type: "spring",
-                stiffness: 300,
-                damping: 20
-              }}
-            >
-              <motion.button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-white/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 p-3 rounded-lg hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
-                whileTap={{ scale: 0.85 }}
-                whileHover={{ 
-                  scale: 1.1,
-                  rotate: isMobileMenuOpen ? 0 : [0, -10, 10, 0],
-                }}
-                transition={{
+            {mounted && isMobile && (
+              <motion.div 
+                className="md:hidden"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  delay: 0.6,
                   type: "spring",
-                  stiffness: 400,
-                  damping: 17
+                  stiffness: 300,
+                  damping: 20
                 }}
-                style={{ minWidth: '44px', minHeight: '44px' }}
-                aria-label="Toggle menu"
               >
-                <motion.svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  animate={isMobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
-                  transition={{ 
+                <motion.button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="text-white/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 p-3 rounded-lg hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
+                  whileTap={{ scale: 0.85 }}
+                  whileHover={{ 
+                    scale: 1.1,
+                    rotate: isMobileMenuOpen ? 0 : [0, -10, 10, 0],
+                  }}
+                  transition={{
                     type: "spring",
-                    stiffness: 300,
-                    damping: 20
+                    stiffness: 400,
+                    damping: 17
                   }}
+                  style={{ minWidth: '44px', minHeight: '44px' }}
+                  aria-label="Toggle menu"
                 >
-                  {isMobileMenuOpen ? (
-                    <motion.path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  ) : (
-                    <motion.g>
+                  <motion.svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    animate={isMobileMenuOpen ? { rotate: 180 } : { rotate: 0 }}
+                    transition={{ 
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20
+                    }}
+                  >
+                    {isMobileMenuOpen ? (
                       <motion.path
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M4 6h16"
+                        d="M6 18L18 6M6 6l12 12"
                         initial={{ pathLength: 0 }}
                         animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.2, delay: 0 }}
+                        transition={{ duration: 0.3 }}
                       />
-                      <motion.path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 12h16"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.2, delay: 0.1 }}
-                      />
-                      <motion.path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 18h16"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.2, delay: 0.2 }}
-                      />
-                    </motion.g>
-                  )}
-                </motion.svg>
-                
-                {/* Ripple effect */}
-                <motion.div
-                  className="absolute inset-0 rounded-lg bg-white/20"
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileTap={{ 
-                    scale: [0, 1.5],
-                    opacity: [0.5, 0],
-                  }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.button>
-            </motion.div>
+                    ) : (
+                      <motion.g>
+                        <motion.path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 6h16"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.2, delay: 0 }}
+                        />
+                        <motion.path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 12h16"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.2, delay: 0.1 }}
+                        />
+                        <motion.path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 18h16"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.2, delay: 0.2 }}
+                        />
+                      </motion.g>
+                    )}
+                  </motion.svg>
+                  
+                  {/* Ripple effect */}
+                  <motion.div
+                    className="absolute inset-0 rounded-lg bg-white/20"
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileTap={{ 
+                      scale: [0, 1.5],
+                      opacity: [0.5, 0],
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </motion.button>
+              </motion.div>
+            )}
           </div>
         </div>
 
         {/* Mobile Navigation */}
         <AnimatePresence mode="wait">
-          {isMobileMenuOpen && (
+          {mounted && isMobile && isMobileMenuOpen && (
             <motion.div
               key="mobile-menu"
               initial={{ 

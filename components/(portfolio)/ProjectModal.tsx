@@ -24,7 +24,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   
   // Performance optimizations
   const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set());
-  const [preloadedImages, setPreloadedImages] = useState<Set<number>>(new Set());
+  const preloadedImagesRef = useRef<Set<number>>(new Set());
   const [isMobile, setIsMobile] = useState(false);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -43,7 +43,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
       
       // Reset visibility and preloading state
       setVisibleImages(new Set());
-      setPreloadedImages(new Set());
+      preloadedImagesRef.current = new Set();
     }
   }, [project?.additional_images]);
 
@@ -55,10 +55,10 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
     const prevIndex = currentIndex > 0 ? currentIndex - 1 : project.additional_images.length - 1;
     const nextIndex = currentIndex < project.additional_images.length - 1 ? currentIndex + 1 : 0;
 
-    if (!preloadedImages.has(prevIndex)) {
+    if (!preloadedImagesRef.current.has(prevIndex)) {
       imagesToPreload.push(prevIndex);
     }
-    if (!preloadedImages.has(nextIndex)) {
+    if (!preloadedImagesRef.current.has(nextIndex)) {
       imagesToPreload.push(nextIndex);
     }
 
@@ -67,11 +67,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
         const img = new Image();
         img.src = project.additional_images[index];
         img.onload = () => {
-          setPreloadedImages(prev => new Set(prev).add(index));
+          preloadedImagesRef.current.add(index);
         };
       }
     });
-  }, [project?.additional_images, preloadedImages]);
+  }, [project?.additional_images]);
 
   // Setup intersection observer for lazy loading
   useEffect(() => {
@@ -107,7 +107,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
         observerRef.current.disconnect();
       }
       // Cleanup preloaded images
-      setPreloadedImages(new Set());
+      preloadedImagesRef.current = new Set();
       setVisibleImages(new Set());
     };
   }, [project?.additional_images, isOpen, isMobile, preloadAdjacentImages]);

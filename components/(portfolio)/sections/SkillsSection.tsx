@@ -179,11 +179,18 @@ export function SkillsSection() {
           <div className="space-y-8">
             {/* Skeleton Filter Buttons */}
             <div className="flex flex-wrap justify-center gap-3 mb-12">
-              {Array.from({ length: 6 }).map((_, index) => (
+              {[
+                { width: "60px" },
+                { width: "80px" },
+                { width: "70px" },
+                { width: "90px" },
+                { width: "75px" },
+                { width: "85px" }
+              ].map((item, index) => (
                 <div
                   key={index}
                   className="px-6 py-3 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"
-                  style={{ width: `${80 + Math.random() * 40}px`, height: '40px' }}
+                  style={{ width: item.width, height: '40px' }}
                 />
               ))}
             </div>
@@ -267,7 +274,7 @@ export function SkillsSection() {
             className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4"
             layout
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               {filteredSkills.map((skill, index) => (
                 <motion.div
                   key={skill.id}

@@ -68,7 +68,7 @@ export function HeroSection() {
     }
 
     return () => clearTimeout(timeout);
-  }, [displayedText, isTyping, currentRoleIndex]);
+  }, [isTyping, currentRoleIndex, displayedText]);
 
   // Faster, more fluid animation variants
   const containerVariants: Variants = {
