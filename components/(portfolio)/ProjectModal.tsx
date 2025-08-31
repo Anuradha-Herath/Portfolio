@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Project } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
@@ -21,6 +21,17 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [transitionDirection, setTransitionDirection] = useState<'left' | 'right' | null>(null);
+  
+  // Performance optimizations
+  const [visibleImages, setVisibleImages] = useState<Set<number>>(new Set());
+  const [preloadedImages, setPreloadedImages] = useState<Set<number>>(new Set());
+  const [isMobile, setIsMobile] = useState(false);
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  
+  // Mobile-specific state for touch gestures
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   // Initialize loading states for gallery images
   useEffect(() => {
     if (project?.additional_images) {
@@ -29,8 +40,88 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
         initialStates[index] = true; // Start with loading state
       });
       setImageLoadingStates(initialStates);
+      
+      // Reset visibility and preloading state
+      setVisibleImages(new Set());
+      setPreloadedImages(new Set());
     }
   }, [project?.additional_images]);
+
+  // Setup intersection observer for lazy loading
+  useEffect(() => {
+    if (!project?.additional_images || !isOpen) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '50px',
+      threshold: 0.1
+    };
+
+    observerRef.current = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = parseInt(entry.target.getAttribute('data-image-index') || '0');
+          setVisibleImages(prev => new Set(prev).add(index));
+          
+          // Preload adjacent images for better performance
+          preloadAdjacentImages(index);
+        }
+      });
+    }, observerOptions);
+
+    // Observe all image containers
+    imageRefs.current.forEach((ref, index) => {
+      if (ref && observerRef.current) {
+        observerRef.current.observe(ref);
+      }
+    });
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+      // Cleanup preloaded images
+      setPreloadedImages(new Set());
+      setVisibleImages(new Set());
+    };
+  }, [project?.additional_images, isOpen, isMobile]);
+
+  // Preload adjacent images for smoother navigation
+  const preloadAdjacentImages = useCallback((currentIndex: number) => {
+    if (!project?.additional_images) return;
+
+    const imagesToPreload = [];
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : project.additional_images.length - 1;
+    const nextIndex = currentIndex < project.additional_images.length - 1 ? currentIndex + 1 : 0;
+
+    if (!preloadedImages.has(prevIndex)) {
+      imagesToPreload.push(prevIndex);
+    }
+    if (!preloadedImages.has(nextIndex)) {
+      imagesToPreload.push(nextIndex);
+    }
+
+    imagesToPreload.forEach(index => {
+      if (project.additional_images) {
+        const img = new Image();
+        img.src = project.additional_images[index];
+        img.onload = () => {
+          setPreloadedImages(prev => new Set(prev).add(index));
+        };
+      }
+    });
+  }, [project?.additional_images, preloadedImages]);
+
+  // Detect mobile device for performance optimizations
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   const openLightbox = (index: number) => {
     setCurrentImageIndex(index);
     setLightboxOpen(true);
@@ -135,6 +226,31 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
     setImageLoadingStates(prev => ({ ...prev, [index]: false }));
   };
 
+  // Touch gesture handlers for mobile swipe navigation
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && project?.additional_images) {
+      nextImage();
+    }
+    if (isRightSwipe && project?.additional_images) {
+      prevImage();
+    }
+  };
+
   // Handle escape key for lightbox
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -188,9 +304,9 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   const modalVariants: Variants = {
     hidden: { 
       opacity: 0, 
-      scale: 0.8, 
-      y: 50,
-      rotateX: -15
+      scale: isMobile ? 0.95 : 0.8, 
+      y: isMobile ? 20 : 50,
+      rotateX: isMobile ? 0 : -15
     },
     visible: { 
       opacity: 1, 
@@ -198,19 +314,20 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
       y: 0,
       rotateX: 0,
       transition: {
-        type: "spring",
-        stiffness: 200,
-        damping: 20,
-        mass: 1
+        type: isMobile ? "tween" : "spring",
+        stiffness: isMobile ? undefined : 200,
+        damping: isMobile ? undefined : 20,
+        mass: isMobile ? undefined : 1,
+        duration: isMobile ? 0.2 : undefined
       }
     },
     exit: { 
       opacity: 0, 
-      scale: 0.9, 
-      y: 30,
-      rotateX: 10,
+      scale: isMobile ? 0.95 : 0.9, 
+      y: isMobile ? 20 : 30,
+      rotateX: isMobile ? 0 : 10,
       transition: {
-        duration: 0.2
+        duration: isMobile ? 0.15 : 0.2
       }
     }
   };
@@ -247,9 +364,10 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   };
 
   const slideTransition = {
-    type: "spring" as const,
-    stiffness: 300,
-    damping: 30,
+    type: isMobile ? "tween" as const : "spring" as const,
+    stiffness: isMobile ? undefined : 300,
+    damping: isMobile ? undefined : 30,
+    duration: isMobile ? 0.3 : undefined
   };
 
   const getTechBadgeColor = (category: string) => {
@@ -296,7 +414,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           {/* Modal Content */}
           <motion.div
             variants={modalVariants}
-            className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-slate-200/50 dark:border-slate-700/50"
+            className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full mx-4 sm:mx-6 md:mx-auto md:max-w-4xl max-h-[90vh] overflow-hidden border border-slate-200/50 dark:border-slate-700/50"
             style={{ perspective: "1000px" }}
           >
             {/* Close Button */}
@@ -378,7 +496,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 </div>
 
                 {/* Content */}
-                <div className="p-8 lg:p-10">
+                <div className="p-4 sm:p-6 md:p-8 lg:p-10">
                   {/* Title and Basic Info */}
                   <motion.div
                     className="mb-8"
@@ -386,15 +504,15 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-4">
                       {project.title}
                     </h2>
-                    <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                       {project.description}
                     </p>
                     
                     {/* Additional Details */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-6">
                       {project.project_type_detail && (
                         <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
                           <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Project Type</h4>
@@ -435,7 +553,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                               className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border ${getTechBadgeColor(category)}`}
                               initial={{ opacity: 0, scale: 0.8 }}
                               animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: 0.5 + index * 0.02 }}
+                              transition={{ delay: 0.5 + index * (isMobile ? 0.01 : 0.02) }}
                               whileHover={{ scale: 1.05 }}
                               title={getCategoryLabel(category)}
                             >
@@ -458,7 +576,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                         Key Features
                       </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {project.key_features.map((feature, index) => (
                           <motion.div
                             key={`feature-${index}`}
@@ -526,15 +644,19 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       </div>
 
                       {/* Gallery Grid with Masonry-like Layout */}
-                      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
+                      <div className="columns-1 sm:columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
                         {project.additional_images.map((imageUrl, index) => (
                           <motion.div
                             key={`gallery-${index}`}
+                            ref={(el) => {
+                              imageRefs.current[index] = el;
+                            }}
+                            data-image-index={index}
                             className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 shadow-md hover:shadow-xl transition-all duration-300"
                             initial={{ opacity: 0, y: 20, scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{
-                              delay: 0.8 + index * 0.1,
+                              delay: isMobile ? 0.8 + index * 0.05 : 0.8 + index * 0.1,
                               type: "spring",
                               stiffness: 100,
                               damping: 15
@@ -551,48 +673,51 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                               </div>
                             )}
 
-                            {/* Main Image */}
-                            <div className="relative overflow-hidden rounded-xl">
-                              <img
-                                src={imageUrl}
-                                alt={`${project.title} screenshot ${index + 1}`}
-                                className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
-                                loading="lazy"
-                                onLoad={() => handleImageLoad(index)}
-                                onError={() => handleImageError(index)}
-                              />
+                            {/* Main Image - Only render if visible */}
+                            {visibleImages.has(index) && (
+                              <div className="relative overflow-hidden rounded-xl">
+                                <img
+                                  src={imageUrl}
+                                  alt={`${project.title} screenshot ${index + 1}`}
+                                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
+                                  loading="lazy"
+                                  decoding="async"
+                                  onLoad={() => handleImageLoad(index)}
+                                  onError={() => handleImageError(index)}
+                                />
 
-                              {/* Error State */}
-                              {imageErrors.has(index) && (
-                                <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 flex items-center justify-center rounded-xl">
-                                  <div className="text-center text-slate-500 dark:text-slate-400">
-                                    <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                    </svg>
-                                    <p className="text-sm">Failed to load image</p>
+                                {/* Error State */}
+                                {imageErrors.has(index) && (
+                                  <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 flex items-center justify-center rounded-xl">
+                                    <div className="text-center text-slate-500 dark:text-slate-400">
+                                      <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                      </svg>
+                                      <p className="text-sm">Failed to load image</p>
+                                    </div>
                                   </div>
+                                )}
+
+                                {/* Hover Overlay */}
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                  <motion.div
+                                    className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg"
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    whileHover={{ scale: 1.1, opacity: 1 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                  >
+                                    <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                  </motion.div>
                                 </div>
-                              )}
 
-                              {/* Hover Overlay */}
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <motion.div
-                                  className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg"
-                                  initial={{ scale: 0.8, opacity: 0 }}
-                                  whileHover={{ scale: 1.1, opacity: 1 }}
-                                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                >
-                                  <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                                  </svg>
-                                </motion.div>
+                                {/* Image Number Badge */}
+                                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                  {index + 1}
+                                </div>
                               </div>
-
-                              {/* Image Number Badge */}
-                              <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                {index + 1}
-                              </div>
-                            </div>
+                            )}
 
                             {/* Image Caption */}
                             <div className="p-3 bg-white dark:bg-slate-800">
@@ -628,7 +753,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
                   {/* Action Buttons */}
                   <motion.div
-                    className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-200 dark:border-slate-700"
+                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-slate-200 dark:border-slate-700"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 }}
@@ -794,14 +919,15 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 key={currentImageIndex}
               >
                 <div
-                  className={`relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl ${
-                    lightboxZoom > 1 ? 'cursor-grab' : ''
-                  } ${isDragging ? 'cursor-grabbing' : ''}`}
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseUp}
-                  onWheel={handleWheel}
+                  className={`relative max-w-full max-h-full overflow-hidden rounded-lg shadow-2xl ${isMobile ? 'cursor-grab' : lightboxZoom > 1 ? 'cursor-grab' : ''} ${isDragging ? 'cursor-grabbing' : ''}`}
+                  onMouseDown={!isMobile ? handleMouseDown : undefined}
+                  onMouseMove={!isMobile ? handleMouseMove : undefined}
+                  onMouseUp={!isMobile ? handleMouseUp : undefined}
+                  onMouseLeave={!isMobile ? handleMouseUp : undefined}
+                  onTouchStart={isMobile ? handleTouchStart : undefined}
+                  onTouchMove={isMobile ? handleTouchMove : undefined}
+                  onTouchEnd={isMobile ? handleTouchEnd : undefined}
+                  onWheel={!isMobile ? handleWheel : undefined}
                   style={{
                     transform: `scale(${lightboxZoom}) translate(${lightboxPan.x}px, ${lightboxPan.y}px)`,
                     transition: isDragging ? 'none' : 'transform 0.1s ease-out',
@@ -892,11 +1018,21 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               transition={{ delay: 0.5 }}
             >
               <div className="flex items-center gap-4">
-                <span>Use ← → arrow keys to navigate</span>
-                <span>•</span>
-                <span>Mouse wheel to zoom</span>
-                <span>•</span>
-                <span>Press ESC to close</span>
+                {isMobile ? (
+                  <>
+                    <span>Swipe to navigate</span>
+                    <span>•</span>
+                    <span>Pinch to zoom</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Use ← → arrow keys to navigate</span>
+                    <span>•</span>
+                    <span>Mouse wheel to zoom</span>
+                    <span>•</span>
+                    <span>Press ESC to close</span>
+                  </>
+                )}
               </div>
             </motion.div>
           </motion.div>

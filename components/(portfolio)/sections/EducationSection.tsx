@@ -7,12 +7,14 @@ import { Heading } from "@/components/ui/Heading";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { Education } from "@/lib/types";
 import { Award, CheckCircle } from "lucide-react";
+import { useMediaQuery } from 'react-responsive';
 
 // Aurora Glassmorphism Card Component
 const AuroraGlassCard: React.FC<{
   children: React.ReactNode;
   className?: string;
-}> = ({ children, className = "" }) => {
+  isMobile?: boolean;
+}> = ({ children, className = "", isMobile = false }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -22,7 +24,7 @@ const AuroraGlassCard: React.FC<{
   const y = useSpring(mouseY, springConfig);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || isMobile) return;
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -42,20 +44,22 @@ const AuroraGlassCard: React.FC<{
       className={`relative overflow-hidden ${className}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      whileHover={{ scale: 1.02 }}
+      whileHover={isMobile ? {} : { scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      {/* Aurora Glow Effect */}
-      <motion.div
-        className="absolute inset-0 rounded-xl opacity-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(600px circle at ${x}px ${y}px, rgba(120, 119, 198, 0.3), transparent 40%)`,
-          x,
-          y,
-        }}
-        animate={{ opacity: [0, 0.6, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-      />
+      {/* Aurora Glow Effect - Disabled on mobile */}
+      {!isMobile && (
+        <motion.div
+          className="absolute inset-0 rounded-xl opacity-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(600px circle at ${x}px ${y}px, rgba(120, 119, 198, 0.3), transparent 40%)`,
+            x,
+            y,
+          }}
+          animate={{ opacity: [0, 0.6, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+      )}
       
       {/* Glass Card */}
       <div className="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl">
@@ -68,6 +72,9 @@ const AuroraGlassCard: React.FC<{
 export function EducationSection() {
   const [educationData, setEducationData] = useState<Education[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Detect mobile devices
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     const fetchEducation = async () => {
@@ -116,7 +123,7 @@ export function EducationSection() {
   return (
     <motion.section
       id="education"
-      className="py-16 lg:py-20 relative overflow-hidden"
+      className="py-12 md:py-16 lg:py-20 relative overflow-hidden"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -124,7 +131,7 @@ export function EducationSection() {
         hidden: {},
         visible: {
           transition: {
-            staggerChildren: 0.2,
+            staggerChildren: isMobile ? 0.1 : 0.2, // Faster stagger on mobile
           },
         },
       }}
@@ -136,9 +143,9 @@ export function EducationSection() {
           className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
-            backgroundSize: "40px 40px",
+            backgroundSize: isMobile ? "60px 60px" : "40px 40px",
           }}
-          animate={{
+          animate={isMobile ? {} : {
             opacity: [0.15, 0.25, 0.15],
           }}
           transition={{
@@ -154,10 +161,10 @@ export function EducationSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          className="text-center mb-20"
+          className="text-center mb-12 md:mb-20"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          transition={{ duration: isMobile ? 0.5 : 0.7, ease: "easeOut" }}
           viewport={{ once: true }}
         >
           <Heading level={2} className="mb-6">
@@ -188,24 +195,24 @@ export function EducationSection() {
               className="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-[var(--accent)] via-[#5856d6] to-[var(--accent)] opacity-80"
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
+              transition={{ duration: isMobile ? 1 : 1.5, ease: "easeOut" }}
               style={{ transformOrigin: "top" }}
               viewport={{ once: true }}
             />
 
-            <div className="space-y-24">
+            <div className="space-y-16 md:space-y-24">
               {educationData.map((education, index) => (
                 <motion.div
                   key={education.id}
                   className={`relative flex items-center ${
                     index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                   }`}
-                  initial={{ opacity: 0, y: 80, rotateX: 15 }}
+                  initial={{ opacity: 0, y: isMobile ? 40 : 80, rotateX: isMobile ? 0 : 15 }}
                   whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
                   transition={{
-                    duration: 1,
+                    duration: isMobile ? 0.6 : 1,
                     ease: "easeOut",
-                    delay: index * 0.15,
+                    delay: index * (isMobile ? 0.1 : 0.15),
                   }}
                   viewport={{ once: true, amount: 0.2 }}
                 >
@@ -214,15 +221,15 @@ export function EducationSection() {
                     className={`absolute left-8 md:left-1/2 transform md:-translate-x-1/2 ${
                       index % 2 === 0 ? "md:-translate-x-32" : "md:translate-x-32"
                     } z-20`}
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: isMobile ? 0.9 : 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{
-                      duration: 0.6,
-                      delay: index * 0.1 + 0.3,
+                      duration: isMobile ? 0.4 : 0.6,
+                      delay: index * (isMobile ? 0.05 : 0.1) + 0.3,
                     }}
                     viewport={{ once: true }}
                   >
-                    <div className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg whitespace-nowrap">
+                    <div className="bg-gradient-to-r from-[var(--accent)] to-[#5856d6] text-white text-xs md:text-sm font-bold px-3 md:px-4 py-2 rounded-full shadow-lg whitespace-nowrap">
                       {new Date(education.start_date).getFullYear()} - {education.end_date ? new Date(education.end_date).getFullYear() : "Present"}
                     </div>
                   </motion.div>
@@ -235,7 +242,7 @@ export function EducationSection() {
                     }}
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
-                    animate={{ 
+                    animate={isMobile ? {} : { 
                       boxShadow: [
                         `0 0 0 0 ${index % 2 === 0 ? 'rgba(99, 102, 241, 0.4)' : 'rgba(88, 86, 214, 0.4)'}`,
                         `0 0 0 10px ${index % 2 === 0 ? 'rgba(99, 102, 241, 0)' : 'rgba(88, 86, 214, 0)'}`,
@@ -246,20 +253,20 @@ export function EducationSection() {
                       type: "spring",
                       stiffness: 400,
                       damping: 15,
-                      delay: index * 0.1 + 0.3,
-                      boxShadow: {
+                      delay: index * (isMobile ? 0.05 : 0.1) + 0.3,
+                      boxShadow: isMobile ? {} : {
                         duration: 2,
                         repeat: Infinity,
                         ease: "easeInOut"
                       }
                     }}
                     viewport={{ once: true }}
-                    whileHover={{ scale: 1.3 }}
+                    whileHover={isMobile ? {} : { scale: 1.3 }}
                   />
 
                   {/* Connector Line */}
                   <motion.div
-                    className={`absolute left-8 md:left-1/2 w-20 md:w-24 h-0.5 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] z-5 ${
+                    className={`absolute left-8 md:left-1/2 w-16 md:w-24 h-0.5 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] z-5 ${
                       index % 2 === 0
                         ? "md:ml-3"
                         : "md:-ml-24"
@@ -267,8 +274,8 @@ export function EducationSection() {
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     transition={{
-                      duration: 0.8,
-                      delay: index * 0.1 + 0.5,
+                      duration: isMobile ? 0.5 : 0.8,
+                      delay: index * (isMobile ? 0.05 : 0.1) + 0.5,
                       ease: "easeOut"
                     }}
                     style={{ 
@@ -280,7 +287,7 @@ export function EducationSection() {
 
                   {/* Content */}
                   <motion.div
-                    className={`w-full md:w-5/12 ml-20 md:ml-0 ${
+                    className={`w-full md:w-5/12 ml-16 md:ml-0 ${
                       index % 2 === 0
                         ? "md:mr-auto md:pr-16"
                         : "md:ml-auto md:pl-16"
@@ -288,39 +295,39 @@ export function EducationSection() {
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{
-                      duration: 0.8,
+                      duration: isMobile ? 0.6 : 0.8,
                       ease: "easeOut",
-                      delay: index * 0.15 + 0.6,
+                      delay: index * (isMobile ? 0.1 : 0.15) + 0.6,
                     }}
                     viewport={{ once: true }}
                   >
-                    <AuroraGlassCard className="h-full group">
-                      <CardContent className="p-8">
+                    <AuroraGlassCard className="h-full group" isMobile={isMobile}>
+                      <CardContent className="p-6 md:p-8">
                         {/* Enhanced Typography Hierarchy */}
-                        <div className="mb-6">
-                          <h3 className="text-3xl font-bold text-white mb-3 group-hover:text-[var(--accent)] transition-colors duration-300 leading-tight">
+                        <div className="mb-4 md:mb-6">
+                          <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3 group-hover:text-[var(--accent)] transition-colors duration-300 leading-tight">
                             {education.degree}
                           </h3>
-                          <p className="text-xl font-semibold mb-4 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">
+                          <p className="text-lg md:text-xl font-semibold mb-3 md:mb-4 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">
                             {education.institution}
                           </p>
-                          <p className="text-[var(--foreground-secondary)] font-medium text-lg mb-4">
+                          <p className="text-[var(--foreground-secondary)] font-medium text-base md:text-lg mb-3 md:mb-4">
                             {education.field}
                           </p>
                         </div>
                         
                         {/* Enhanced Grade Display with Icons */}
                         {education.grade && (
-                          <div className="mb-6">
+                          <div className="mb-4 md:mb-6">
                             <div className="flex items-center gap-2 text-emerald-400">
-                              <Award className="w-5 h-5" />
-                              <span className="font-semibold text-lg">{education.grade}</span>
+                              <Award className="w-4 h-4 md:w-5 md:h-5" />
+                              <span className="font-semibold text-base md:text-lg">{education.grade}</span>
                             </div>
                           </div>
                         )}
                         
                         {/* Enhanced Description */}
-                        <p className="text-[var(--foreground-tertiary)] leading-loose text-base">
+                        <p className="text-[var(--foreground-tertiary)] leading-relaxed md:leading-loose text-sm md:text-base">
                           {education.description}
                         </p>
                       </CardContent>
