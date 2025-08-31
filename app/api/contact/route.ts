@@ -20,6 +20,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, subject, message } = body;
 
+    // Rate limiting (simple implementation)
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown';
+    
+    // You could implement more sophisticated rate limiting here
+    // For now, we'll just log the IP for monitoring
+    console.log(`Contact form submission from IP: ${clientIP}`);
+
     // Basic validation
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
@@ -67,6 +76,19 @@ export async function POST(request: NextRequest) {
     if (isSpam) {
       return NextResponse.json(
         { error: 'Message contains suspicious content. Please revise and try again.' },
+        { status: 400 }
+      );
+    }
+
+    // Check for disposable email domains
+    const disposableDomains = [
+      '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+      'temp-mail.org', 'throwaway.email', 'yopmail.com'
+    ];
+    const emailDomain = sanitizedEmail.split('@')[1]?.toLowerCase();
+    if (disposableDomains.includes(emailDomain)) {
+      return NextResponse.json(
+        { error: 'Please use a permanent email address.' },
         { status: 400 }
       );
     }

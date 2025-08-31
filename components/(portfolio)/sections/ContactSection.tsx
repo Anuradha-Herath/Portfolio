@@ -15,16 +15,29 @@ interface FormData {
 }
 
 export const ContactSection = React.memo(() => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+  const [formData, setFormData] = useState<FormData>(() => {
+    // Load saved form data from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('contactFormDraft');
+      return saved ? JSON.parse(saved) : {
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      };
+    }
+    return {
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    };
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
 
   const shouldReduceMotion = useReducedMotion();
 
@@ -33,19 +46,43 @@ export const ContactSection = React.memo(() => {
     return emailRegex.test(email);
   };
 
+  // Auto-save form data to localStorage
+  const saveFormDraft = React.useCallback((data: FormData) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('contactFormDraft', JSON.stringify(data));
+    }
+  }, []);
+
+  // Clear saved draft
+  const clearFormDraft = React.useCallback(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('contactFormDraft');
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
+    const newFormData = {
+      ...formData,
       [name]: value
-    }));
+    };
+    
+    setFormData(newFormData);
+    saveFormDraft(newFormData);
 
+    // Field-specific validation
     if (name === 'email') {
       if (value && !validateEmail(value)) {
         setEmailError('Please enter a valid email address');
       } else {
         setEmailError('');
       }
+    }
+
+    // Clear any previous error messages when user starts typing
+    if (submitStatus === 'error') {
+      setSubmitStatus('idle');
+      setErrorMessage('');
     }
   };
 
@@ -55,6 +92,27 @@ export const ContactSection = React.memo(() => {
     // Validate email before submitting
     if (!validateEmail(formData.email)) {
       setEmailError('Please enter a valid email address');
+      return;
+    }
+
+    // Basic validation
+    if (!formData.name.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      setSubmitStatus('error');
+      setErrorMessage('Please fill in all required fields');
+      return;
+    }
+
+    // Validate subject length
+    if (formData.subject.trim().length < 5 || formData.subject.trim().length > 200) {
+      setSubmitStatus('error');
+      setErrorMessage('Subject must be between 5 and 200 characters');
+      return;
+    }
+
+    // Validate message length
+    if (formData.message.trim().length < 10 || formData.message.trim().length > 2000) {
+      setSubmitStatus('error');
+      setErrorMessage('Message must be between 10 and 2000 characters');
       return;
     }
 
@@ -75,30 +133,34 @@ export const ContactSection = React.memo(() => {
       const data = await response.json();
 
       if (response.ok) {
-        // Trigger SMS notification via TextBee
-        try {
-          await fetch('/api/send-sms', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              recipients: ['+94768952480'],
-              message: 'New contact form submission! Check admin page.'
-            })
-          });
-        } catch (smsError) {
-          // Optionally log or handle SMS error, but don't block form success
-          console.error('SMS notification failed', smsError);
-        }
+        // Success - clear draft and reset form
+        clearFormDraft();
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
         setEmailError('');
+        setRetryCount(0);
       } else {
-        setSubmitStatus('error');
-        setErrorMessage(data.error || 'Failed to send message');
+        throw new Error(data.error || 'Failed to send message');
       }
     } catch (error) {
+      console.error('Error submitting form:', error);
+      
+      // Retry logic for network errors
+      if (retryCount < 2 && (error as Error).message.includes('Network') || (error as Error).message.includes('fetch')) {
+        setRetryCount(prev => prev + 1);
+        setTimeout(() => {
+          handleSubmit(e);
+        }, 2000 * (retryCount + 1)); // Exponential backoff
+        return;
+      }
+
       setSubmitStatus('error');
-      setErrorMessage('Network error. Please try again.');
+      setErrorMessage(
+        retryCount > 0 
+          ? `Failed to send message after ${retryCount + 1} attempts. Please try again later.`
+          : 'Network error. Please check your connection and try again.'
+      );
+      setRetryCount(0);
     } finally {
       setIsSubmitting(false);
     }
@@ -447,7 +509,7 @@ export const ContactSection = React.memo(() => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                       >
-                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight">
+                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight" id="contact-form-title">
                           Send Me a Message
                         </h3>
                         <p className="text-white/90 text-base sm:text-lg leading-relaxed">
@@ -461,7 +523,12 @@ export const ContactSection = React.memo(() => {
               </div>
 
               <CardContent className="p-8 lg:p-10 bg-white/50 dark:bg-slate-900/50">
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form 
+                  onSubmit={handleSubmit} 
+                  className="space-y-8"
+                  role="form"
+                  aria-labelledby="contact-form-title"
+                >
                   {/* Success Message */}
                   <AnimatePresence>
                     {submitStatus === "success" && (
@@ -713,7 +780,9 @@ export const ContactSection = React.memo(() => {
                               }}
                               className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full"
                             />
-                            <span className="text-base sm:text-lg">Sending...</span>
+                            <span className="text-base sm:text-lg">
+                              {retryCount > 0 ? `Retrying... (${retryCount}/3)` : 'Sending...'}
+                            </span>
                           </div>
                         ) : (
                           <div className="flex items-center justify-center space-x-4">
