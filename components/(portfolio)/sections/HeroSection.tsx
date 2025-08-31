@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
 import { motion, useAnimation, Variants } from "framer-motion";
+import { useMediaQuery } from 'react-responsive';
 
 // Typing effect roles - moved outside component to avoid re-creation on every render
 const roles = [
@@ -15,6 +16,9 @@ const roles = [
 export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false);
   const controls = useAnimation();
+
+  // Detect mobile devices
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     setIsLoaded(true);
@@ -94,7 +98,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-16 md:pt-20"
     >
       {/* Sophisticated Background - Subtle Grid of Dots */}
       <div className="absolute inset-0 overflow-hidden">
@@ -103,9 +107,9 @@ export function HeroSection() {
           className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
-            backgroundSize: "40px 40px",
+            backgroundSize: isMobile ? "60px 60px" : "40px 40px",
           }}
-          animate={{
+          animate={isMobile ? {} : {
             opacity: [0.15, 0.25, 0.15],
           }}
           transition={{
@@ -121,7 +125,7 @@ export function HeroSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <motion.div
-          className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
           variants={containerVariants}
           initial="hidden"
           animate={controls}
@@ -133,12 +137,12 @@ export function HeroSection() {
           >
             <div className="relative lg:ml-12">
               <motion.div
-                className="relative w-72 h-72 lg:w-80 lg:h-80"
+                className={`relative ${isMobile ? 'w-64 h-64' : 'w-72 h-72 lg:w-80 lg:h-80'}`}
                 initial={{ scale: 0.8, opacity: 0, rotateY: -15 }}
                 animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                 transition={{
                   delay: 0.3,
-                  duration: 1.2,
+                  duration: isMobile ? 0.8 : 1.2,
                   ease: [0.25, 0.46, 0.45, 0.94],
                 }}
               >
@@ -158,62 +162,68 @@ export function HeroSection() {
                   }}
                 >
                   {/* Primary glow effect with enhanced gradients */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/40 via-purple-500/30 to-pink-500/40 blur-3xl"
-                    animate={{
-                      scale: [1, 1.3, 1],
-                      opacity: [0.4, 0.8, 0.4],
-                      rotate: [0, 180, 360],
-                    }}
-                    transition={{
-                      duration: 12,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.5,
-                    }}
-                  />
+                  {!isMobile && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/40 via-purple-500/30 to-pink-500/40 blur-3xl"
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.4, 0.8, 0.4],
+                        rotate: [0, 180, 360],
+                      }}
+                      transition={{
+                        duration: 12,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.5,
+                      }}
+                    />
+                  )}
 
                   {/* Secondary glow with complementary colors */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-tl from-cyan-400/25 to-blue-500/25 blur-2xl"
-                    animate={{
-                      scale: [1.2, 0.8, 1.2],
-                      opacity: [0.3, 0.6, 0.3],
-                      rotate: [360, 180, 0],
-                    }}
-                    transition={{
-                      duration: 15,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 2,
-                    }}
-                  />
+                  {!isMobile && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-gradient-to-tl from-cyan-400/25 to-blue-500/25 blur-2xl"
+                      animate={{
+                        scale: [1.2, 0.8, 1.2],
+                        opacity: [0.3, 0.6, 0.3],
+                        rotate: [360, 180, 0],
+                      }}
+                      transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 2,
+                      }}
+                    />
+                  )}
 
                   {/* Tertiary accent glow */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-400/20 to-fuchsia-400/20 blur-xl"
-                    animate={{
-                      scale: [0.9, 1.1, 0.9],
-                      opacity: [0.2, 0.5, 0.2],
-                    }}
-                    transition={{
-                      duration: 10,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 3,
-                    }}
-                  />
+                  {!isMobile && (
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-400/20 to-fuchsia-400/20 blur-xl"
+                      animate={{
+                        scale: [0.9, 1.1, 0.9],
+                        opacity: [0.2, 0.5, 0.2],
+                      }}
+                      transition={{
+                        duration: 10,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 3,
+                      }}
+                    />
+                  )}
 
                   {/* Main image container with enhanced interactions */}
                   <motion.div
                     className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
-                    whileHover={{
+                    whileHover={!isMobile ? {
                       scale: 1.08,
                       rotateY: 8,
                       rotateX: 8,
                       z: 50,
-                    }}
-                    whileTap={{ scale: 0.95 }}
+                    } : {}}
+                    whileTap={isMobile ? { scale: 0.95 } : {}}
                     transition={{
                       type: "spring",
                       stiffness: 300,
@@ -225,67 +235,73 @@ export function HeroSection() {
                     }}
                   >
                     {/* Animated multi-layered border rings */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background:
-                          "conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7), transparent)",
-                        padding: "4px",
-                      }}
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        duration: 6,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                    >
+                    {!isMobile && (
                       <motion.div
-                        className="w-full h-full rounded-full"
+                        className="absolute inset-0 rounded-full"
                         style={{
                           background:
-                            "conic-gradient(from 180deg, transparent, rgba(6, 182, 212, 0.6), rgba(236, 72, 153, 0.4), transparent)",
-                          padding: "2px",
+                            "conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.7), transparent)",
+                          padding: "4px",
                         }}
-                        animate={{ rotate: -360 }}
+                        animate={{ rotate: 360 }}
                         transition={{
-                          duration: 8,
+                          duration: 6,
                           repeat: Infinity,
                           ease: "linear",
                         }}
                       >
-                        <div className="w-full h-full rounded-full bg-white dark:bg-slate-900" />
+                        <motion.div
+                          className="w-full h-full rounded-full"
+                          style={{
+                            background:
+                              "conic-gradient(from 180deg, transparent, rgba(6, 182, 212, 0.6), rgba(236, 72, 153, 0.4), transparent)",
+                            padding: "2px",
+                          }}
+                          animate={{ rotate: -360 }}
+                          transition={{
+                            duration: 8,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        >
+                          <div className="w-full h-full rounded-full bg-white dark:bg-slate-900" />
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
+                    )}
 
                     {/* Dynamic shadow effects with multiple layers */}
-                    <motion.div
-                      className="absolute -inset-6 rounded-full bg-gradient-to-r from-indigo-500/30 to-purple-500/30 blur-xl"
-                      animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.6, 1, 0.6],
-                        rotate: [0, 90, 180, 270, 360],
-                      }}
-                      transition={{
-                        duration: 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
+                    {!isMobile && (
+                      <motion.div
+                        className="absolute -inset-6 rounded-full bg-gradient-to-r from-indigo-500/30 to-purple-500/30 blur-xl"
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          opacity: [0.6, 1, 0.6],
+                          rotate: [0, 90, 180, 270, 360],
+                        }}
+                        transition={{
+                          duration: 4,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    )}
 
                     {/* Secondary shadow layer */}
-                    <motion.div
-                      className="absolute -inset-4 rounded-full bg-gradient-to-br from-pink-400/20 to-cyan-400/20 blur-lg"
-                      animate={{
-                        scale: [1.1, 0.9, 1.1],
-                        opacity: [0.4, 0.7, 0.4],
-                      }}
-                      transition={{
-                        duration: 5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1,
-                      }}
-                    />
+                    {!isMobile && (
+                      <motion.div
+                        className="absolute -inset-4 rounded-full bg-gradient-to-br from-pink-400/20 to-cyan-400/20 blur-lg"
+                        animate={{
+                          scale: [1.1, 0.9, 1.1],
+                          opacity: [0.4, 0.7, 0.4],
+                        }}
+                        transition={{
+                          duration: 5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 1,
+                        }}
+                      />
+                    )}
 
                     {/* Main image container with enhanced styling */}
                     <div className="relative w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-2 border-white/50 dark:border-slate-700/50 rounded-full overflow-hidden">
@@ -325,14 +341,15 @@ export function HeroSection() {
                         initial={{ scale: 1.1, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{
-                          delay: 0.8,
-                          duration: 0.8,
+                          delay: isMobile ? 0.5 : 0.8,
+                          duration: isMobile ? 0.6 : 0.8,
                           ease: [0.25, 0.46, 0.45, 0.94],
                         }}
-                        whileHover={{
+                        whileHover={!isMobile ? {
                           scale: 1.05,
                           filter: "brightness(1.1) contrast(1.05)",
-                        }}
+                        } : {}}
+                        loading="lazy"
                         onError={(e) => {
                           // Enhanced fallback with sophisticated animation
                           e.currentTarget.style.display = "none";
@@ -368,46 +385,50 @@ export function HeroSection() {
                     </div>
 
                     {/* Enhanced hover overlay with multiple effects */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-indigo-500/15 to-indigo-600/25"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.4 }}
-                    />
+                    {!isMobile && (
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-indigo-500/15 to-indigo-600/25"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.4 }}
+                      />
+                    )}
 
                     {/* Sophisticated particle system */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {[...Array(12)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-1 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"
-                          style={{
-                            top: `${15 + (i % 3) * 25}%`,
-                            left: `${10 + (i % 4) * 20}%`,
-                          }}
-                          animate={{
-                            y: [0, -25, 0],
-                            x: [0, Math.sin(i) * 10, 0],
-                            opacity: [0, 1, 0],
-                            scale: [0, 1.2, 0],
-                          }}
-                          transition={{
-                            duration: 2.5,
-                            repeat: Infinity,
-                            delay: i * 0.15,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                          }}
-                        />
-                      ))}
-                    </motion.div>
+                    {!isMobile && (
+                      <motion.div
+                        className="absolute inset-0 rounded-full"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {[...Array(12)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute w-1 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"
+                            style={{
+                              top: `${15 + (i % 3) * 25}%`,
+                              left: `${10 + (i % 4) * 20}%`,
+                            }}
+                            animate={{
+                              y: [0, -25, 0],
+                              x: [0, Math.sin(i) * 10, 0],
+                              opacity: [0, 1, 0],
+                              scale: [0, 1.2, 0],
+                            }}
+                            transition={{
+                              duration: 2.5,
+                              repeat: Infinity,
+                              delay: i * 0.15,
+                              ease: [0.25, 0.46, 0.45, 0.94],
+                            }}
+                          />
+                        ))}
+                      </motion.div>
+                    )}
 
                     {/* Additional floating elements */}
-                    {[...Array(6)].map((_, i) => (
+                    {!isMobile && [...Array(6)].map((_, i) => (
                       <motion.div
                         key={`float-${i}`}
                         className="absolute w-2 h-2 bg-gradient-to-r from-indigo-300/60 to-purple-300/60 rounded-full blur-sm"
@@ -436,7 +457,7 @@ export function HeroSection() {
 
           {/* Content Section - Now on the Left with Left Alignment */}
           <motion.div
-            className="text-left space-y-8 order-1 lg:order-1"
+            className="text-left space-y-6 md:space-y-8 order-1 lg:order-1"
             variants={itemVariants}
           >
             {/* Elegant greeting introduction */}
@@ -505,7 +526,7 @@ export function HeroSection() {
 
             {/* Refined CTA Buttons with improved hierarchy */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 pt-4"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4"
               variants={itemVariants}
             >
               {/* Primary button - unchanged */}
@@ -570,7 +591,7 @@ export function HeroSection() {
             </motion.div>
 
             {/* Enhanced Social Links with Smooth Animations */}
-            <motion.div className="flex space-x-5 pt-8" variants={itemVariants}>
+            <motion.div className="flex flex-wrap justify-center sm:justify-start gap-4 pt-6" variants={itemVariants}>
               {[
                 {
                   href: "https://github.com/Anuradha-Herath",
