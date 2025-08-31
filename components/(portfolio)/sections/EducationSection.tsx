@@ -220,7 +220,7 @@ export function EducationSection() {
                   <motion.div
                     className={`absolute left-8 md:left-1/2 transform md:-translate-x-1/2 ${
                       index % 2 === 0 ? "md:-translate-x-32" : "md:translate-x-32"
-                    } z-20`}
+                    } z-20 ${isMobile ? "top-[-2.5rem]" : "md:top-auto"}`}
                     initial={{ opacity: 0, scale: isMobile ? 0.9 : 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{
