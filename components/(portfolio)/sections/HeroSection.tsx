@@ -120,7 +120,7 @@ export function HeroSection() {
         />
 
         {/* Soft gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
@@ -164,7 +164,7 @@ export function HeroSection() {
                   {/* Primary glow effect with enhanced gradients */}
                   {!isMobile && (
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/40 via-purple-500/30 to-pink-500/40 blur-3xl"
+                      className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/40 via-purple-400/30 to-rose-500/40 blur-3xl"
                       animate={{
                         scale: [1, 1.3, 1],
                         opacity: [0.4, 0.8, 0.4],
@@ -182,7 +182,7 @@ export function HeroSection() {
                   {/* Secondary glow with complementary colors */}
                   {!isMobile && (
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-tl from-cyan-400/25 to-blue-500/25 blur-2xl"
+                      className="absolute inset-0 rounded-full bg-gradient-to-tl from-teal-400/25 to-blue-500/25 blur-2xl"
                       animate={{
                         scale: [1.2, 0.8, 1.2],
                         opacity: [0.3, 0.6, 0.3],
@@ -200,7 +200,7 @@ export function HeroSection() {
                   {/* Tertiary accent glow */}
                   {!isMobile && (
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-400/20 to-fuchsia-400/20 blur-xl"
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400/20 to-rose-400/20 blur-xl"
                       animate={{
                         scale: [0.9, 1.1, 0.9],
                         opacity: [0.2, 0.5, 0.2],
@@ -272,7 +272,7 @@ export function HeroSection() {
                     {/* Dynamic shadow effects with multiple layers */}
                     {!isMobile && (
                       <motion.div
-                        className="absolute -inset-6 rounded-full bg-gradient-to-r from-indigo-500/30 to-purple-500/30 blur-xl"
+                        className="absolute -inset-6 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-400/30 blur-xl"
                         animate={{
                           scale: [1, 1.2, 1],
                           opacity: [0.6, 1, 0.6],
@@ -289,7 +289,7 @@ export function HeroSection() {
                     {/* Secondary shadow layer */}
                     {!isMobile && (
                       <motion.div
-                        className="absolute -inset-4 rounded-full bg-gradient-to-br from-pink-400/20 to-cyan-400/20 blur-lg"
+                        className="absolute -inset-4 rounded-full bg-gradient-to-br from-rose-400/20 to-teal-400/20 blur-lg"
                         animate={{
                           scale: [1.1, 0.9, 1.1],
                           opacity: [0.4, 0.7, 0.4],
@@ -321,7 +321,7 @@ export function HeroSection() {
 
                       {/* Secondary shimmer layer */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-200/20 to-transparent"
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-200/20 to-transparent"
                         animate={{
                           x: ["-150%", "150%"],
                         }}
@@ -357,13 +357,13 @@ export function HeroSection() {
                           if (parent) {
                             parent.innerHTML = `
                               <motion.div
-                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 dark:from-indigo-900/40 dark:via-purple-900/30 dark:to-pink-900/20"
+                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-50 to-rose-100 dark:from-blue-900/40 dark:via-purple-900/30 dark:to-rose-900/20"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
                               >
                                 <motion.div
-                                  class="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
+                                  class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
                                   animate={{
                                     scale: [1, 1.1, 1],
                                     rotate: [0, 2, -2, 0]
@@ -387,7 +387,7 @@ export function HeroSection() {
                     {/* Enhanced hover overlay with multiple effects */}
                     {!isMobile && (
                       <motion.div
-                        className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-indigo-500/15 to-indigo-600/25"
+                        className="absolute inset-0 rounded-full bg-gradient-to-t from-transparent via-blue-500/15 to-blue-600/25"
                         initial={{ opacity: 0 }}
                         whileHover={{ opacity: 1 }}
                         transition={{ duration: 0.4 }}
@@ -405,7 +405,7 @@ export function HeroSection() {
                         {[...Array(12)].map((_, i) => (
                           <motion.div
                             key={i}
-                            className="absolute w-1 h-1 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"
+                            className="absolute w-1 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"
                             style={{
                               top: `${15 + (i % 3) * 25}%`,
                               left: `${10 + (i % 4) * 20}%`,
@@ -431,7 +431,7 @@ export function HeroSection() {
                     {!isMobile && [...Array(6)].map((_, i) => (
                       <motion.div
                         key={`float-${i}`}
-                        className="absolute w-2 h-2 bg-gradient-to-r from-indigo-300/60 to-purple-300/60 rounded-full blur-sm"
+                        className="absolute w-2 h-2 bg-gradient-to-r from-blue-300/60 to-purple-300/60 rounded-full blur-sm"
                         style={{
                           top: `${20 + i * 12}%`,
                           right: `${-5 + i * 8}%`,
@@ -475,7 +475,7 @@ export function HeroSection() {
                 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-tight"
               >
                 <motion.span
-                  className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 dark:from-white dark:via-indigo-200 dark:to-white bg-clip-text text-transparent"
+                  className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent"
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   }}
@@ -501,7 +501,7 @@ export function HeroSection() {
               <span className="text-xl lg:text-2xl font-medium text-slate-500 dark:text-slate-500">
                 {displayedText}
                 <motion.span
-                  className="inline-block w-0.5 h-6 bg-indigo-500 ml-1"
+                  className="inline-block w-0.5 h-6 bg-blue-500 ml-1"
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ duration: 1.2, repeat: Infinity }}
                 />
@@ -538,7 +538,7 @@ export function HeroSection() {
                   variant="premium"
                   size="lg"
                   onClick={scrollToContact}
-                  className="px-8 py-4 text-base font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="px-8 py-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <span className="flex items-center gap-2">
                     Let&apos;s Connect

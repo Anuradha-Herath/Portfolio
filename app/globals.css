@@ -17,9 +17,9 @@
   --accent: #007aff;
   --accent-light: #3395ff;
   --accent-dark: #0056cc;
-  --gradient-primary: linear-gradient(135deg, #007aff 0%, #5856d6 100%);
-  --gradient-secondary: linear-gradient(135deg, #1e1e2e 0%, #2a2a3a 100%);
-  --gradient-premium: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+  --gradient-primary: linear-gradient(135deg, #007aff 0%, #4a4ac7 100%);
+  --gradient-secondary: linear-gradient(135deg, #2a2a3a 0%, #3a3a4a 100%);
+  --gradient-premium: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #2a2a3a 100%);
   --shadow-glow: 0 0 40px rgba(0, 122, 255, 0.3);
   --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);

@@ -142,11 +142,11 @@ export function ProjectsSection() {
 
   const getGradientColors = (index: number) => {
     const gradients = [
-      'from-blue-400 via-purple-500 to-indigo-600',
-      'from-emerald-400 via-teal-500 to-cyan-600',
+      'from-blue-400 via-purple-500 to-blue-600',
+      'from-emerald-400 via-teal-500 to-teal-600',
       'from-orange-400 via-pink-500 to-red-600',
-      'from-violet-400 via-purple-500 to-indigo-600',
-      'from-cyan-400 via-blue-500 to-indigo-600',
+      'from-purple-400 via-purple-500 to-blue-600',
+      'from-teal-400 via-blue-500 to-blue-600',
       'from-pink-400 via-rose-500 to-red-600',
     ];
     return gradients[index % gradients.length];
@@ -178,7 +178,7 @@ export function ProjectsSection() {
         />
 
         {/* Soft gradient overlay for depth - Same as Experience */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -192,7 +192,7 @@ export function ProjectsSection() {
         >
           <Heading level={2} className="mb-6 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
             Featured{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
               Projects
             </span>
           </Heading>
@@ -245,7 +245,7 @@ export function ProjectsSection() {
               }}
               onClick={() => handleProjectClick(project)}
             >
-              <Card className="h-full flex flex-col bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden group-hover:border-indigo-300/40 dark:group-hover:border-indigo-600/40">
+              <Card className="h-full flex flex-col bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden group-hover:border-blue-300/40 dark:group-hover:border-blue-600/40">
                 {/* Enhanced Project Image/Icon Section */}
                 <div className={`relative ${isMobile ? 'h-40' : 'h-48'} overflow-hidden ${!project.image_url || imageErrors.has(project.id) ? `bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center` : ''}`}>
                   {project.image_url && !imageErrors.has(project.id) ? (
@@ -326,7 +326,7 @@ export function ProjectsSection() {
                 <CardContent className={`flex-1 ${isMobile ? 'p-4' : 'p-6 lg:p-8'}`}>
                   {/* Project Title */}
                   <motion.h3 
-                    className={`${isMobile ? 'text-lg' : 'text-xl lg:text-2xl'} font-bold text-slate-900 dark:text-white mb-3 tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300`}
+                    className={`${isMobile ? 'text-lg' : 'text-xl lg:text-2xl'} font-bold text-slate-900 dark:text-white mb-3 tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 + index * (isMobile ? 0.03 : 0.05), duration: isMobile ? 0.4 : 0.5 }}
@@ -357,7 +357,7 @@ export function ProjectsSection() {
                         (techs as string[]).map((tech: string, techIndex: number) => (
                           <motion.span
                             key={cat + '-' + tech + '-' + techIndex}
-                            className="inline-flex items-center px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-full border border-indigo-200/50 dark:border-indigo-700/50 hover:bg-indigo-100 dark:hover:bg-indigo-800/40 transition-all duration-200"
+                            className="inline-flex items-center px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-full border border-blue-200/50 dark:border-blue-700/50 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-all duration-200"
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ 
@@ -387,7 +387,7 @@ export function ProjectsSection() {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="w-full border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-200"
+                          className="w-full border-slate-300 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             window.open(project.github_url, '_blank');
@@ -410,7 +410,7 @@ export function ProjectsSection() {
                       >
                         <Button 
                           size="sm" 
-                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200"
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             window.open(project.live_url, '_blank');
@@ -453,7 +453,7 @@ export function ProjectsSection() {
               <Button
                 variant="outline"
                 size={isMobile ? "sm" : "lg"}
-                className={`px-4 py-2 md:px-8 md:py-4 text-sm md:text-lg font-semibold border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300`}
+                className={`px-4 py-2 md:px-8 md:py-4 text-sm md:text-lg font-semibold border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300`}
               >
                 <span className="flex items-center gap-3">
                   View All Projects
