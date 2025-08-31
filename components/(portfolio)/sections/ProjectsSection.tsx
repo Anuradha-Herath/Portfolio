@@ -8,6 +8,7 @@ import { Project } from "@/lib/types";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { ProjectModal } from "../ProjectModal";
+import { useMediaQuery } from 'react-responsive';
 
 export function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -17,6 +18,9 @@ export function ProjectsSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+
+  // Detect mobile devices
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -58,8 +62,8 @@ export function ProjectsSection() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
+        staggerChildren: isMobile ? 0.08 : 0.1,
+        delayChildren: isMobile ? 0.1 : 0.2,
       },
     },
   };
@@ -77,8 +81,8 @@ export function ProjectsSection() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.3,
+        staggerChildren: isMobile ? 0.08 : 0.12,
+        delayChildren: isMobile ? 0.2 : 0.3,
       },
     },
   };
@@ -86,8 +90,8 @@ export function ProjectsSection() {
   const cardVariants = {
     hidden: { 
       opacity: 0, 
-      y: 40,
-      scale: 0.95,
+      y: isMobile ? 30 : 40,
+      scale: isMobile ? 0.98 : 0.95,
     },
     visible: {
       opacity: 1,
@@ -95,8 +99,8 @@ export function ProjectsSection() {
       scale: 1,
       transition: {
         type: "spring" as const,
-        stiffness: 100,
-        damping: 20,
+        stiffness: isMobile ? 150 : 100,
+        damping: isMobile ? 25 : 20,
         mass: 1,
       },
     },
@@ -152,7 +156,7 @@ export function ProjectsSection() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative py-16 lg:py-20 overflow-hidden"
+      className="relative py-12 md:py-16 lg:py-20 overflow-hidden"
     >
       {/* Unified Background - Matching Experience Section */}
       <div className="absolute inset-0 overflow-hidden">
@@ -161,9 +165,9 @@ export function ProjectsSection() {
           className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
-            backgroundSize: "40px 40px",
+            backgroundSize: isMobile ? "60px 60px" : "40px 40px",
           }}
-          animate={{
+          animate={isMobile ? {} : {
             opacity: [0.15, 0.25, 0.15],
           }}
           transition={{
@@ -184,7 +188,7 @@ export function ProjectsSection() {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-16 lg:mb-20"
+          className="text-center mb-12 md:mb-16 lg:mb-20"
         >
           <Heading level={2} className="mb-6 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
             Featured{" "}
@@ -228,14 +232,14 @@ export function ProjectsSection() {
           variants={gridVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8"
         >
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
               variants={cardVariants}
               className="group h-full cursor-pointer"
-              whileHover={{ 
+              whileHover={isMobile ? {} : { 
                 y: -8,
                 transition: { type: "spring", stiffness: 300, damping: 20 }
               }}
@@ -243,7 +247,7 @@ export function ProjectsSection() {
             >
               <Card className="h-full flex flex-col bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden group-hover:border-indigo-300/40 dark:group-hover:border-indigo-600/40">
                 {/* Enhanced Project Image/Icon Section */}
-                <div className={`relative h-48 overflow-hidden ${!project.image_url || imageErrors.has(project.id) ? `bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center` : ''}`}>
+                <div className={`relative ${isMobile ? 'h-40' : 'h-48'} overflow-hidden ${!project.image_url || imageErrors.has(project.id) ? `bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center` : ''}`}>
                   {project.image_url && !imageErrors.has(project.id) ? (
                     // Display actual project image
                     <img
@@ -251,6 +255,7 @@ export function ProjectsSection() {
                       alt={project.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       style={{ objectFit: 'cover' }}
+                      loading="lazy"
                       onError={() => handleImageError(project.id)}
                     />
                   ) : (
@@ -266,7 +271,7 @@ export function ProjectsSection() {
                       {/* Floating animation container */}
                       <motion.div
                         className="relative z-10 text-white/90"
-                        animate={{
+                        animate={isMobile ? {} : {
                           y: [-5, 5, -5],
                         }}
                         transition={{
@@ -303,11 +308,11 @@ export function ProjectsSection() {
                   )}
 
                   {/* Hover overlay effect */}
-                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                  <div className={`absolute inset-0 bg-black/20 opacity-0 ${isMobile ? '' : 'group-hover:opacity-100'} transition-opacity duration-300 z-10`}>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <motion.div
                         className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        whileHover={{ scale: 1.1 }}
+                        whileHover={isMobile ? {} : { scale: 1.1 }}
                       >
                         <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -318,13 +323,13 @@ export function ProjectsSection() {
                   </div>
                 </div>
 
-                <CardContent className="flex-1 p-6 lg:p-8">
+                <CardContent className={`flex-1 ${isMobile ? 'p-4' : 'p-6 lg:p-8'}`}>
                   {/* Project Title */}
                   <motion.h3 
-                    className="text-xl lg:text-2xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300"
+                    className={`${isMobile ? 'text-lg' : 'text-xl lg:text-2xl'} font-bold text-slate-900 dark:text-white mb-3 tracking-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + index * 0.05, duration: 0.5 }}
+                    transition={{ delay: 0.2 + index * (isMobile ? 0.03 : 0.05), duration: isMobile ? 0.4 : 0.5 }}
                   >
                     {project.title}
                   </motion.h3>
@@ -334,7 +339,7 @@ export function ProjectsSection() {
                     className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-sm lg:text-base"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 + index * 0.05, duration: 0.6 }}
+                    transition={{ delay: 0.3 + index * (isMobile ? 0.03 : 0.05), duration: isMobile ? 0.5 : 0.6 }}
                   >
                     {project.description}
                   </motion.p>
@@ -344,7 +349,7 @@ export function ProjectsSection() {
                     className="flex flex-wrap gap-2"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.05, duration: 0.6 }}
+                    transition={{ delay: 0.4 + index * (isMobile ? 0.03 : 0.05), duration: isMobile ? 0.5 : 0.6 }}
                   >
                     {/* Render all technology tags from all categories in technologies_used */}
                     {project.technologies_used && Object.entries(project.technologies_used).flatMap(
@@ -356,12 +361,12 @@ export function ProjectsSection() {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ 
-                              delay: 0.5 + index * 0.05 + techIndex * 0.03, 
-                              duration: 0.3,
+                              delay: 0.5 + index * (isMobile ? 0.03 : 0.05) + techIndex * (isMobile ? 0.02 : 0.03), 
+                              duration: isMobile ? 0.25 : 0.3,
                               type: "spring",
                               stiffness: 200 
                             }}
-                            whileHover={{ scale: 1.05 }}
+                            whileHover={isMobile ? {} : { scale: 1.05 }}
                           >
                             {tech}
                           </motion.span>
@@ -371,13 +376,13 @@ export function ProjectsSection() {
                 </CardContent>
 
                 {/* Enhanced Card Footer */}
-                <CardFooter className="p-6 lg:p-8 pt-0">
+                <CardFooter className={`${isMobile ? 'p-4' : 'p-6 lg:p-8'} pt-0`}>
                   <div className="flex gap-3 w-full">
                     {project.github_url && (
                       <motion.div
                         className="flex-1"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={isMobile ? {} : { scale: 1.02 }}
+                        whileTap={isMobile ? {} : { scale: 0.98 }}
                       >
                         <Button 
                           variant="outline" 
@@ -400,8 +405,8 @@ export function ProjectsSection() {
                     {project.live_url && (
                       <motion.div
                         className="flex-1"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={isMobile ? {} : { scale: 1.02 }}
+                        whileTap={isMobile ? {} : { scale: 0.98 }}
                       >
                         <Button 
                           size="sm" 
@@ -431,33 +436,33 @@ export function ProjectsSection() {
         {/* Enhanced Call-to-Action */}
         {!loading && projects.length > 6 && (
           <motion.div
-            className="text-center mt-16 lg:mt-20"
+            className="text-center mt-12 md:mt-16 lg:mt-20"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.8, duration: 0.6 }}
+            transition={{ delay: isMobile ? 0.5 : 0.8, duration: isMobile ? 0.5 : 0.6 }}
           >
             <motion.div
-              whileHover={{
+              whileHover={isMobile ? {} : {
                 scale: 1.05,
                 boxShadow: "0 20px 40px rgba(79, 70, 229, 0.2)"
               }}
-              whileTap={{ scale: 0.98 }}
+              whileTap={isMobile ? {} : { scale: 0.98 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="inline-block"
             >
               <Button
                 variant="outline"
-                size="lg"
-                className="px-8 py-4 text-lg font-semibold border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300"
+                size={isMobile ? "sm" : "lg"}
+                className={`px-4 py-2 md:px-8 md:py-4 text-sm md:text-lg font-semibold border-2 border-indigo-200 dark:border-indigo-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300`}
               >
                 <span className="flex items-center gap-3">
                   View All Projects
                   <motion.svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 md:w-5 md:h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    animate={{ x: [0, 4, 0] }}
+                    animate={isMobile ? {} : { x: [0, 4, 0] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
@@ -14,7 +14,7 @@ interface FormData {
   message: string;
 }
 
-export function ContactSection() {
+export const ContactSection = React.memo(() => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -24,6 +24,8 @@ export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const shouldReduceMotion = useReducedMotion();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -199,10 +201,10 @@ export function ContactSection() {
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: "40px 40px",
           }}
-          animate={{
+          animate={shouldReduceMotion ? {} : {
             opacity: [0.15, 0.25, 0.15],
           }}
-          transition={{
+          transition={shouldReduceMotion ? {} : {
             duration: 8,
             repeat: Infinity,
             ease: "easeInOut",
@@ -230,7 +232,7 @@ export function ContactSection() {
             </Heading>
           </motion.div>
           <motion.p
-            className="text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium"
+            className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium"
             variants={itemVariants}
           >
             I&apos;m always open to discussing new opportunities, interesting
@@ -248,10 +250,10 @@ export function ContactSection() {
           {/* Contact Information */}
           <motion.div variants={itemVariants} className="space-y-8">
             <div>
-              <h3 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
                 Let&apos;s Connect
               </h3>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-lg">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-base sm:text-lg">
                 Whether you have a project in mind, want to collaborate, or just
                 want to say hello, I&apos;d love to hear from you. Feel free to
                 reach out through any of the channels below.
@@ -263,7 +265,7 @@ export function ContactSection() {
                 <motion.div
                   key={index}
                   variants={cardVariants}
-                  whileHover={{
+                  whileHover={shouldReduceMotion ? {} : {
                     scale: 1.02,
                     x: 8,
                     transition: { type: "spring", stiffness: 300, damping: 20 },
@@ -275,8 +277,8 @@ export function ContactSection() {
                       <div className="flex items-center space-x-4">
                         <motion.div
                           className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-[var(--accent)] to-[#5856d6] rounded-xl flex items-center justify-center text-white shadow-lg group-hover:shadow-[var(--accent)]/25 transition-all duration-300"
-                          whileHover={{ rotate: 360, scale: 1.1 }}
-                          transition={{ duration: 0.6, ease: "easeInOut" }}
+                          whileHover={shouldReduceMotion ? {} : { rotate: 360, scale: 1.1 }}
+                          transition={shouldReduceMotion ? {} : { duration: 0.6, ease: "easeInOut" }}
                         >
                           {info.icon}
                         </motion.div>
@@ -287,12 +289,12 @@ export function ContactSection() {
                           {info.href !== "#" ? (
                             <a
                               href={info.href}
-                              className="text-lg lg:text-xl font-semibold text-slate-900 dark:text-white hover:text-[var(--accent)] dark:hover:text-[#5856d6] transition-colors duration-300 group-hover:translate-x-1 transform"
+                              className="text-base sm:text-lg lg:text-xl font-semibold text-slate-900 dark:text-white hover:text-[var(--accent)] dark:hover:text-[#5856d6] transition-colors duration-300 group-hover:translate-x-1 transform"
                             >
                               {info.value}
                             </a>
                           ) : (
-                            <p className="text-lg lg:text-xl font-semibold text-slate-900 dark:text-white">
+                            <p className="text-base sm:text-lg lg:text-xl font-semibold text-slate-900 dark:text-white">
                               {info.value}
                             </p>
                           )}
@@ -309,7 +311,7 @@ export function ContactSection() {
               <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-6">
                 Follow me on
               </p>
-              <div className="flex space-x-4">
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
                 {[
                   {
                     href: "https://github.com/Anuradha-Herath",
@@ -370,7 +372,7 @@ export function ContactSection() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-12 h-12 rounded-xl bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-all duration-300 shadow-lg hover:shadow-xl ${social.hoverColor} hover:text-white hover:scale-110`}
-                    whileHover={{
+                    whileHover={shouldReduceMotion ? {} : {
                       scale: 1.1,
                       y: -2,
                       rotate: [0, -5, 5, 0],
@@ -400,8 +402,8 @@ export function ContactSection() {
                   <div className="flex items-center space-x-4">
                     <motion.div
                       className="flex-shrink-0 w-16 h-16 bg-white/20 dark:bg-slate-800/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
-                      whileHover={{ rotate: 360, scale: 1.05 }}
-                      transition={{ duration: 0.6, ease: "easeInOut" }}
+                      whileHover={shouldReduceMotion ? {} : { rotate: 360, scale: 1.05 }}
+                      transition={shouldReduceMotion ? {} : { duration: 0.6, ease: "easeInOut" }}
                     >
                       <svg
                         className="w-8 h-8 text-white"
@@ -423,10 +425,10 @@ export function ContactSection() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                       >
-                        <h3 className="text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight">
+                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight">
                           Send Me a Message
                         </h3>
-                        <p className="text-white/90 text-lg leading-relaxed">
+                        <p className="text-white/90 text-base sm:text-lg leading-relaxed">
                           Fill out the form below and I&apos;ll get back to you
                           as soon as possible.
                         </p>
@@ -549,7 +551,7 @@ export function ContactSection() {
                             />
                           </svg>
                         </div>
-                        <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
+                        <h4 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white">
                           Personal Information
                         </h4>
                       </div>
@@ -607,7 +609,7 @@ export function ContactSection() {
                             />
                           </svg>
                         </div>
-                        <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
+                        <h4 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white">
                           Your Message
                         </h4>
                       </div>
@@ -655,7 +657,7 @@ export function ContactSection() {
                     className="pt-6"
                   >
                     <motion.div
-                      whileHover={{ scale: 1.02, y: -2 }}
+                      whileHover={shouldReduceMotion ? {} : { scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <Button
@@ -667,26 +669,26 @@ export function ContactSection() {
                         {isSubmitting ? (
                           <div className="flex items-center justify-center space-x-4">
                             <motion.div
-                              animate={{ rotate: 360 }}
-                              transition={{
+                              animate={shouldReduceMotion ? {} : { rotate: 360 }}
+                              transition={shouldReduceMotion ? {} : {
                                 duration: 1,
                                 repeat: Infinity,
                                 ease: "linear",
                               }}
                               className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full"
                             />
-                            <span className="text-lg">Sending...</span>
+                            <span className="text-base sm:text-lg">Sending...</span>
                           </div>
                         ) : (
                           <div className="flex items-center justify-center space-x-4">
-                            <span className="text-lg">Send Message</span>
+                            <span className="text-base sm:text-lg">Send Message</span>
                             <motion.svg
                               className="w-6 h-6"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
-                              animate={{ x: [0, 5, 0] }}
-                              transition={{
+                              animate={shouldReduceMotion ? {} : { x: [0, 5, 0] }}
+                              transition={shouldReduceMotion ? {} : {
                                 duration: 2,
                                 repeat: Infinity,
                                 ease: "easeInOut",
@@ -712,4 +714,6 @@ export function ContactSection() {
       </div>
     </section>
   );
-}
+});
+
+ContactSection.displayName = 'ContactSection';

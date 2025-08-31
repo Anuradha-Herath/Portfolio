@@ -21,6 +21,7 @@ import {
   Mail,
   Award,
 } from "lucide-react";
+import { useMediaQuery } from 'react-responsive';
 
 const navigation = [
   { name: "Introduction", href: "#hero", icon: <Home size={16} /> },
@@ -36,6 +37,9 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  
+  // Detect mobile devices
+  const isMobile = useMediaQuery({ maxWidth: 768 });
   
   const { scrollYProgress } = useScroll();
   
@@ -122,13 +126,13 @@ export function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100, opacity: 0 }}
+        initial={isMobile ? { y: -50, opacity: 0 } : { y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ 
           type: "spring",
-          stiffness: 100,
-          damping: 20,
-          duration: 0.8,
+          stiffness: isMobile ? 200 : 100,
+          damping: isMobile ? 30 : 20,
+          duration: isMobile ? 0.5 : 0.8,
           ease: "easeOut" 
         }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
@@ -138,14 +142,14 @@ export function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex justify-between items-center h-16 md:h-20">
             {/* Logo */}
             <motion.div
               className="flex-shrink-0 relative"
-              whileHover={{ 
+              whileHover={!isMobile ? { 
                 scale: 1.08,
                 rotate: [0, -1, 1, 0],
-              }}
+              } : {}}
               transition={{ 
                 scale: { type: "spring", stiffness: 400, damping: 15 },
                 rotate: { duration: 0.6, ease: "linear" }
@@ -160,124 +164,128 @@ export function Navbar() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex flex-1 items-center justify-center">
-              <div className="flex items-center space-x-1">
-                {navigation.map((item, idx) => (
-                  <motion.button
-                    key={item.name}
-                    onClick={() => scrollToSection(item.href)}
-                    className="flex items-center gap-2 text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/10 relative group overflow-hidden"
-                    whileHover={{ 
-                      scale: 1.08,
-                      y: -2,
-                    }}
-                    whileTap={{ 
-                      scale: 0.95,
-                      y: 0,
-                    }}
-                    initial={{ opacity: 0, y: -20, rotateX: -15 }}
-                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                    transition={{ 
-                      delay: 0.2 + idx * 0.08,
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 15,
-                      duration: 0.6
-                    }}
-                  >
-                    <motion.div
-                      whileHover={{ rotate: 360, scale: 1.2 }}
-                      transition={{ 
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 20
-                      }}
-                    >
-                      {item.icon}
-                    </motion.div>
-                    {item.name}
-                    
-                    {/* Enhanced gradient underline with animation */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-[length:200%_200%] origin-center"
-                      initial={{ scaleX: 0, backgroundPosition: "0% 50%" }}
+            {!isMobile && (
+              <div className="hidden md:flex flex-1 items-center justify-center">
+                <div className="flex items-center space-x-1">
+                  {navigation.map((item, idx) => (
+                    <motion.button
+                      key={item.name}
+                      onClick={() => scrollToSection(item.href)}
+                      className="flex items-center gap-2 text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/10 relative group overflow-hidden"
                       whileHover={{ 
-                        scaleX: 1,
-                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                        scale: 1.08,
+                        y: -2,
                       }}
+                      whileTap={{ 
+                        scale: 0.95,
+                        y: 0,
+                      }}
+                      initial={{ opacity: 0, y: -20, rotateX: -15 }}
+                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
                       transition={{ 
-                        scaleX: { type: "spring", stiffness: 400, damping: 30 },
-                        backgroundPosition: { 
-                          duration: 2,
-                          ease: "linear",
-                          repeat: Infinity
-                        }
+                        delay: 0.2 + idx * 0.08,
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 15,
+                        duration: 0.6
                       }}
-                    />
-                    
-                    {/* Floating particles effect on hover */}
-                    <motion.div
-                      className="absolute inset-0 pointer-events-none"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
                     >
-                      {[...Array(3)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-1 h-1 bg-gradient-to-r from-pink-400 to-blue-400 rounded-full"
-                          initial={{ 
-                            x: "50%", 
-                            y: "50%", 
-                            scale: 0,
-                            opacity: 0 
-                          }}
-                          whileHover={{
-                            x: `${50 + (i - 1) * 30}%`,
-                            y: `${30 + i * 20}%`,
-                            scale: [0, 1, 0],
-                            opacity: [0, 1, 0],
-                          }}
-                          transition={{
-                            duration: 1.5,
-                            delay: i * 0.1,
-                            repeat: Infinity,
-                            repeatDelay: 0.5,
-                          }}
-                        />
-                      ))}
-                    </motion.div>
-                  </motion.button>
-                ))}
+                      <motion.div
+                        whileHover={{ rotate: 360, scale: 1.2 }}
+                        transition={{ 
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 20
+                        }}
+                      >
+                        {item.icon}
+                      </motion.div>
+                      {item.name}
+                      
+                      {/* Enhanced gradient underline with animation */}
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-[length:200%_200%] origin-center"
+                        initial={{ scaleX: 0, backgroundPosition: "0% 50%" }}
+                        whileHover={{ 
+                          scaleX: 1,
+                          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                        }}
+                        transition={{ 
+                          scaleX: { type: "spring", stiffness: 400, damping: 30 },
+                          backgroundPosition: { 
+                            duration: 2,
+                            ease: "linear",
+                            repeat: Infinity
+                          }
+                        }}
+                      />
+                      
+                      {/* Floating particles effect on hover */}
+                      <motion.div
+                        className="absolute inset-0 pointer-events-none"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                      >
+                        {[...Array(3)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute w-1 h-1 bg-gradient-to-r from-pink-400 to-blue-400 rounded-full"
+                            initial={{ 
+                              x: "50%", 
+                              y: "50%", 
+                              scale: 0,
+                              opacity: 0 
+                            }}
+                            whileHover={{
+                              x: `${50 + (i - 1) * 30}%`,
+                              y: `${30 + i * 20}%`,
+                              scale: [0, 1, 0],
+                              opacity: [0, 1, 0],
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              delay: i * 0.1,
+                              repeat: Infinity,
+                              repeatDelay: 0.5,
+                            }}
+                          />
+                        ))}
+                      </motion.div>
+                    </motion.button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Resume Button */}
-            <motion.div 
-              className="hidden md:flex items-center ml-6"
-              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              whileHover={{ 
-                scale: 1.05,
-                rotate: [0, -2, 2, 0],
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{
-                delay: 0.8,
-                scale: { type: "spring", stiffness: 200, damping: 15 },
-                rotate: { duration: 0.6, ease: "linear" }
-              }}
-            >
-              <Button variant="premium" size="sm" glow asChild>
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2"
-                >
-                  <span>Download Resume</span>
-                </a>
-              </Button>
-            </motion.div>
+            {!isMobile && (
+              <motion.div 
+                className="hidden md:flex items-center ml-6"
+                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  rotate: [0, -2, 2, 0],
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{
+                  delay: 0.8,
+                  scale: { type: "spring", stiffness: 200, damping: 15 },
+                  rotate: { duration: 0.6, ease: "linear" }
+                }}
+              >
+                <Button variant="premium" size="sm" glow asChild>
+                  <a
+                    href="/resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-2"
+                  >
+                    <span>Download Resume</span>
+                  </a>
+                </Button>
+              </motion.div>
+            )}
 
             {/* Mobile Menu Button */}
             <motion.div 
@@ -293,7 +301,7 @@ export function Navbar() {
             >
               <motion.button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-white/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 p-2 rounded-lg hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
+                className="text-white/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 p-3 rounded-lg hover:bg-white/10 transition-all duration-300 relative overflow-hidden"
                 whileTap={{ scale: 0.85 }}
                 whileHover={{ 
                   scale: 1.1,
@@ -304,6 +312,7 @@ export function Navbar() {
                   stiffness: 400,
                   damping: 17
                 }}
+                style={{ minWidth: '44px', minHeight: '44px' }}
                 aria-label="Toggle menu"
               >
                 <motion.svg
@@ -383,26 +392,23 @@ export function Navbar() {
               key="mobile-menu"
               initial={{ 
                 opacity: 0, 
-                y: -50, 
-                scale: 0.95,
-                rotateX: -15
+                y: -30,
+                scale: 0.95
               }}
               animate={{ 
                 opacity: 1, 
-                y: 0, 
-                scale: 1,
-                rotateX: 0
+                y: 0,
+                scale: 1
               }}
               exit={{ 
                 opacity: 0, 
-                y: -30, 
-                scale: 0.98,
-                rotateX: -10
+                y: -30,
+                scale: 0.98
               }}
               transition={{ 
                 type: "spring",
                 stiffness: 300,
-                damping: 25,
+                damping: 30,
                 mass: 0.8
               }}
               className="md:hidden bg-white/10 backdrop-blur-xl border-t border-white/20 shadow-2xl overflow-hidden"

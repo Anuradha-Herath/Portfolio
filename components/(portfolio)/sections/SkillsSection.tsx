@@ -36,6 +36,19 @@ export function SkillsSection() {
   const [skillsData, setSkillsData] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [visibleSkills, setVisibleSkills] = useState(12);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -56,12 +69,29 @@ export function SkillsSection() {
     fetchSkills();
   }, []);
 
+  // Reset visible skills when filter changes
+  useEffect(() => {
+    setVisibleSkills(12);
+  }, [activeFilter]);
+
+  const loadMoreSkills = () => {
+    if (isLoadingMore) return;
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setVisibleSkills(prev => prev + 12);
+      setIsLoadingMore(false);
+    }, 300); // Small delay for smooth UX
+  };
+
   const levelOrder = ["Expert", "Advanced", "Intermediate", "Beginner"];
-  const filteredSkills =
+  const allFilteredSkills =
     (activeFilter === "All"
       ? skillsData
       : skillsData.filter((skill) => skill.category === activeFilter)
     ).slice().sort((a, b) => levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level));
+
+  const filteredSkills = allFilteredSkills.slice(0, visibleSkills);
+  const hasMoreSkills = allFilteredSkills.length > visibleSkills;
 
   const renderProficiencyDots = (level: string) => {
     const totalDots = 4;
@@ -95,7 +125,7 @@ export function SkillsSection() {
   return (
     <motion.section
       id="skills"
-      className="relative py-16 lg:py-20 overflow-hidden"
+      className="relative py-12 sm:py-16 lg:py-20 overflow-hidden"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -126,7 +156,7 @@ export function SkillsSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="text-center mb-20"
+          className="text-center mb-12 sm:mb-16 lg:mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
@@ -138,7 +168,7 @@ export function SkillsSection() {
               Skills
             </span>
           </Heading>
-          <p className="text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-[var(--foreground-secondary)] max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
             Here are the technologies and tools I work with to bring ideas to
             life.
           </p>
@@ -146,19 +176,45 @@ export function SkillsSection() {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex justify-center py-20">
-            <LoadingSpinner
-              size="lg"
-              text="Loading skills..."
-              showDots={true}
-            />
+          <div className="space-y-8">
+            {/* Skeleton Filter Buttons */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="px-6 py-3 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"
+                  style={{ width: `${80 + Math.random() * 40}px`, height: '40px' }}
+                />
+              ))}
+            </div>
+
+            {/* Skeleton Skills Grid */}
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+              {Array.from({ length: 12 }).map((_, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-white/10 dark:bg-slate-800/10 border border-white/20 dark:border-slate-700/20 rounded-2xl p-4 h-32 flex flex-col items-center justify-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mb-3 animate-pulse" />
+                  <div className="w-20 h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 animate-pulse" />
+                  <div className="flex gap-1">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="w-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Filter Controls */}
         {!loading && (
           <motion.div
-            className="flex flex-wrap justify-center gap-3 mb-12"
+            className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 px-2 sm:px-0"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -174,7 +230,7 @@ export function SkillsSection() {
                 <motion.button
                   key={category.name}
                   onClick={() => setActiveFilter(category.name)}
-                  className={`relative px-6 py-3 rounded-full font-semibold text-sm transition-all duration-300 border-2 ${
+                  className={`relative px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border-2 ${
                     activeFilter === category.name
                       ? "bg-[var(--accent)] text-white border-[var(--accent)] shadow-lg"
                       : "bg-[var(--surface)] text-[var(--foreground-secondary)] border-[var(--border)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
@@ -186,7 +242,7 @@ export function SkillsSection() {
                     type: "spring",
                     stiffness: 300,
                   }}
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={isMobile ? {} : { scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <span className="mr-2">{category.icon}</span>
@@ -208,7 +264,7 @@ export function SkillsSection() {
         {/* Skills Grid */}
         {!loading && (
           <motion.div
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4"
+            className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4"
             layout
           >
             <AnimatePresence mode="wait">
@@ -220,17 +276,17 @@ export function SkillsSection() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.8, y: -20 }}
                   transition={{
-                    duration: 0.3,
-                    delay: index * 0.02,
+                    duration: isMobile ? 0.2 : 0.3,
+                    delay: isMobile ? index * 0.01 : index * 0.02,
                     type: "spring",
-                    stiffness: 300,
+                    stiffness: isMobile ? 400 : 300,
                     damping: 25,
                   }}
                   className="group"
                 >
                   <motion.div
-                    className="relative bg-white/10 dark:bg-slate-800/10 border border-white/20 dark:border-slate-700/20 rounded-2xl p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)]/40 transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl min-w-0"
-                    whileHover={{
+                    className="relative bg-white/10 dark:bg-slate-800/10 border border-white/20 dark:border-slate-700/20 rounded-2xl p-3 sm:p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)]/40 transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl min-w-0"
+                    whileHover={isMobile ? {} : {
                       scale: 1.05,
                       y: -8,
                       boxShadow: "0 20px 40px -8px rgba(0, 122, 255, 0.3)",
@@ -239,18 +295,18 @@ export function SkillsSection() {
                   >
                     {/* Skill Icon */}
                     <motion.div
-                      className="w-20 h-20 mb-2 flex items-center justify-center relative transition-all duration-300"
-                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      className="w-16 sm:w-20 h-16 sm:h-20 mb-2 flex items-center justify-center relative transition-all duration-300"
+                      whileHover={isMobile ? {} : { rotate: 360, scale: 1.1 }}
                       transition={{ duration: 0.6, ease: "easeInOut" }}
                     >
                       {/* Subtle highlight behind icon */}
                       <span
-                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-[var(--accent)]/60 blur-3xl z-0"
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 sm:w-32 h-24 sm:h-32 rounded-full bg-[var(--accent)]/60 blur-3xl z-0"
                         aria-hidden="true"
                       />
                       {/* White background for icon visibility */}
                       <span
-                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md z-10"
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md z-10"
                         aria-hidden="true"
                       />
                       {skill.icon &&
@@ -258,15 +314,15 @@ export function SkillsSection() {
                           <img
                             src={skill.icon}
                             alt={`${skill.name} icon`}
-                            className="w-12 h-12 object-contain relative z-20"
+                            className="w-10 sm:w-12 h-10 sm:h-12 object-contain relative z-20"
                           />
                         ) : (
-                          <span className="text-4xl relative z-20">{skill.icon}</span>
+                          <span className="text-3xl sm:text-4xl relative z-20">{skill.icon}</span>
                         ))}
                     </motion.div>
 
                     {/* Skill Name */}
-                    <h3 className="font-semibold text-[var(--foreground)] text-base mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">
+                    <h3 className="font-semibold text-[var(--foreground)] text-sm sm:text-base mb-1 group-hover:text-[var(--accent)] transition-colors duration-300">
                       {skill.name}
                     </h3>
 
@@ -293,6 +349,33 @@ export function SkillsSection() {
           </motion.div>
         )}
 
+        {/* Load More Button */}
+        {!loading && hasMoreSkills && (
+          <motion.div
+            className="flex justify-center mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <motion.button
+              onClick={loadMoreSkills}
+              disabled={isLoadingMore}
+              className="px-6 py-3 bg-[var(--accent)] text-white rounded-full font-semibold text-sm hover:bg-[var(--accent)]/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isLoadingMore ? (
+                <div className="flex items-center gap-2">
+                  <LoadingSpinner size="sm" />
+                  Loading...
+                </div>
+              ) : (
+                `Load More Skills (${allFilteredSkills.length - visibleSkills} remaining)`
+              )}
+            </motion.button>
+          </motion.div>
+        )}
+
         {/* Skills Count Display */}
         {!loading && (
           <motion.div
@@ -302,7 +385,7 @@ export function SkillsSection() {
             transition={{ delay: 0.3 }}
           >
             <span className="text-sm text-[var(--foreground-secondary)]">
-              Showing {filteredSkills.length}{" "}
+              Showing {filteredSkills.length} of {allFilteredSkills.length}{" "}
               {activeFilter === "All"
                 ? "skills"
                 : `${activeFilter.toLowerCase()} skills`}
