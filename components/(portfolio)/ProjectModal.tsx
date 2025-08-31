@@ -47,6 +47,32 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
     }
   }, [project?.additional_images]);
 
+  // Preload adjacent images for smoother navigation
+  const preloadAdjacentImages = useCallback((currentIndex: number) => {
+    if (!project?.additional_images) return;
+
+    const imagesToPreload = [];
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : project.additional_images.length - 1;
+    const nextIndex = currentIndex < project.additional_images.length - 1 ? currentIndex + 1 : 0;
+
+    if (!preloadedImages.has(prevIndex)) {
+      imagesToPreload.push(prevIndex);
+    }
+    if (!preloadedImages.has(nextIndex)) {
+      imagesToPreload.push(nextIndex);
+    }
+
+    imagesToPreload.forEach(index => {
+      if (project.additional_images) {
+        const img = new Image();
+        img.src = project.additional_images[index];
+        img.onload = () => {
+          setPreloadedImages(prev => new Set(prev).add(index));
+        };
+      }
+    });
+  }, [project?.additional_images, preloadedImages]);
+
   // Setup intersection observer for lazy loading
   useEffect(() => {
     if (!project?.additional_images || !isOpen) return;
@@ -84,33 +110,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
       setPreloadedImages(new Set());
       setVisibleImages(new Set());
     };
-  }, [project?.additional_images, isOpen, isMobile]);
-
-  // Preload adjacent images for smoother navigation
-  const preloadAdjacentImages = useCallback((currentIndex: number) => {
-    if (!project?.additional_images) return;
-
-    const imagesToPreload = [];
-    const prevIndex = currentIndex > 0 ? currentIndex - 1 : project.additional_images.length - 1;
-    const nextIndex = currentIndex < project.additional_images.length - 1 ? currentIndex + 1 : 0;
-
-    if (!preloadedImages.has(prevIndex)) {
-      imagesToPreload.push(prevIndex);
-    }
-    if (!preloadedImages.has(nextIndex)) {
-      imagesToPreload.push(nextIndex);
-    }
-
-    imagesToPreload.forEach(index => {
-      if (project.additional_images) {
-        const img = new Image();
-        img.src = project.additional_images[index];
-        img.onload = () => {
-          setPreloadedImages(prev => new Set(prev).add(index));
-        };
-      }
-    });
-  }, [project?.additional_images, preloadedImages]);
+  }, [project?.additional_images, isOpen, isMobile, preloadAdjacentImages]);
 
   // Detect mobile device for performance optimizations
   useEffect(() => {

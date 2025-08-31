@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Project } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -309,17 +309,17 @@ export function ProjectForm({
     setGalleryOpen(false);
   };
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     setCurrentGalleryIndex((prev) =>
       prev === additionalImagePreviews.length - 1 ? 0 : prev + 1
     );
-  };
+  }, [additionalImagePreviews.length]);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     setCurrentGalleryIndex((prev) =>
       prev === 0 ? additionalImagePreviews.length - 1 : prev - 1
     );
-  };
+  }, [additionalImagePreviews.length]);
 
   // Keyboard navigation for gallery
   useEffect(() => {
@@ -341,7 +341,7 @@ export function ProjectForm({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [galleryOpen]);
+  }, [galleryOpen, nextImage, prevImage]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
