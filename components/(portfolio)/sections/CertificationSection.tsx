@@ -343,7 +343,7 @@ export function CertificationSection() {
           />
 
           {/* Soft gradient overlay for depth - Same as Projects */}
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-indigo-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
