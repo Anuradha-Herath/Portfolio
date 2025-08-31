@@ -367,18 +367,38 @@ export function SkillsSection() {
             <motion.button
               onClick={loadMoreSkills}
               disabled={isLoadingMore}
-              className="px-6 py-3 bg-[var(--accent)] text-white rounded-full font-semibold text-sm hover:bg-[var(--accent)]/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="relative px-6 py-3 bg-[var(--accent)] text-white rounded-full font-semibold text-sm hover:bg-[var(--accent)]/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden min-w-[200px]"
+              whileHover={!isLoadingMore ? { scale: 1.05 } : {}}
+              whileTap={!isLoadingMore ? { scale: 0.95 } : {}}
+              animate={isLoadingMore ? { scale: [1, 1.02, 1] } : {}}
+              transition={isLoadingMore ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : {}}
             >
-              {isLoadingMore ? (
-                <div className="flex items-center gap-2">
-                  <LoadingSpinner size="sm" />
-                  Loading...
-                </div>
-              ) : (
-                `Load More Skills (${allFilteredSkills.length - visibleSkills} remaining)`
-              )}
+              <AnimatePresence mode="wait">
+                {isLoadingMore ? (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center justify-center gap-2"
+                  >
+                    <LoadingSpinner size="sm" />
+                    Loading...
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="loadmore"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-center"
+                  >
+                    Load More Skills ({allFilteredSkills.length - visibleSkills} remaining)
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.button>
           </motion.div>
         )}
