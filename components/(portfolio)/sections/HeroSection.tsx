@@ -513,15 +513,7 @@ export function HeroSection() {
               className="text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl"
               variants={itemVariants}
             >
-              Passionate about crafting{" "}
-              <span className="font-semibold text-slate-900 dark:text-slate-200">
-                exceptional digital experiences
-              </span>{" "}
-              through innovative web technologies. I transform ideas into{" "}
-              <span className="font-semibold text-slate-900 dark:text-slate-200">
-                scalable solutions
-              </span>{" "}
-              that make a real impact.
+              Hi, I&apos;m Anuradha Herath 👋. I&apos;m an IT undergrad who loves building web apps and exploring AI. I enjoy turning ideas into simple, useful digital solutions.
             </motion.p>
 
             {/* Refined CTA Buttons with improved hierarchy */}
