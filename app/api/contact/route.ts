@@ -20,6 +20,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, subject, message } = body;
 
+    // Rate limiting (simple implementation)
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown';
+    
+    // You could implement more sophisticated rate limiting here
+    // For now, we'll just log the IP for monitoring
+    console.log(`Contact form submission from IP: ${clientIP}`);
+
     // Basic validation
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
@@ -28,9 +37,65 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Sanitize and validate input lengths
+    const sanitizedName = name.trim();
+    const sanitizedEmail = email.trim().toLowerCase();
+    const sanitizedSubject = subject.trim();
+    const sanitizedMessage = message.trim();
+
+    if (sanitizedName.length < 2 || sanitizedName.length > 100) {
+      return NextResponse.json(
+        { error: 'Name must be between 2 and 100 characters' },
+        { status: 400 }
+      );
+    }
+
+    if (sanitizedSubject.length < 5 || sanitizedSubject.length > 200) {
+      return NextResponse.json(
+        { error: 'Subject must be between 5 and 200 characters' },
+        { status: 400 }
+      );
+    }
+
+    if (sanitizedMessage.length < 10 || sanitizedMessage.length > 2000) {
+      return NextResponse.json(
+        { error: 'Message must be between 10 and 2000 characters' },
+        { status: 400 }
+      );
+    }
+
+    // Basic spam detection
+    const spamPatterns = [
+      /\b(?:viagra|casino|lottery|winner|prize)\b/i,
+      /\b(?:http|https|www\.)\S+/i, // URLs
+      /\b\d{10,}\b/, // Long numbers (potentially phone numbers)
+      /(.)\1{10,}/, // Repeated characters
+    ];
+
+    const isSpam = spamPatterns.some(pattern => pattern.test(sanitizedMessage));
+    if (isSpam) {
+      return NextResponse.json(
+        { error: 'Message contains suspicious content. Please revise and try again.' },
+        { status: 400 }
+      );
+    }
+
+    // Check for disposable email domains
+    const disposableDomains = [
+      '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+      'temp-mail.org', 'throwaway.email', 'yopmail.com'
+    ];
+    const emailDomain = sanitizedEmail.split('@')[1]?.toLowerCase();
+    if (disposableDomains.includes(emailDomain)) {
+      return NextResponse.json(
+        { error: 'Please use a permanent email address.' },
+        { status: 400 }
+      );
+    }
+
+    // Enhanced email validation (RFC 5322 compliant)
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    if (!emailRegex.test(sanitizedEmail)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
@@ -39,10 +104,10 @@ export async function POST(request: NextRequest) {
 
     // Create contact message
     const contact = await dbOperations.createContactMessage({
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      subject: subject.trim(),
-      message: message.trim(),
+      name: sanitizedName,
+      email: sanitizedEmail,
+      subject: sanitizedSubject,
+      message: sanitizedMessage,
       status: 'unread'
     });
 
@@ -58,20 +123,20 @@ export async function POST(request: NextRequest) {
       const mailOptions = {
         from: process.env.GMAIL_USER,
         to: process.env.GMAIL_USER, // send to yourself
-        subject: `Portfolio Contact: ${subject}`,
-        text: `You received a new contact message from your portfolio website.\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nMessage: ${message}`,
+        subject: `Portfolio Contact: ${sanitizedSubject}`,
+        text: `You received a new contact message from your portfolio website.\n\nName: ${sanitizedName}\nEmail: ${sanitizedEmail}\nSubject: ${sanitizedSubject}\nMessage: ${sanitizedMessage}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;">
             <div style="background: #5856d6; color: #fff; padding: 24px 32px;">
               <h2 style="margin: 0;">New Contact Message</h2>
             </div>
             <div style="padding: 24px 32px;">
-              <p style="font-size: 16px; color: #333;"><strong>Name:</strong> ${name}</p>
-              <p style="font-size: 16px; color: #333;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #5856d6;">${email}</a></p>
-              <p style="font-size: 16px; color: #333;"><strong>Subject:</strong> ${subject}</p>
+              <p style="font-size: 16px; color: #333;"><strong>Name:</strong> ${sanitizedName}</p>
+              <p style="font-size: 16px; color: #333;"><strong>Email:</strong> <a href="mailto:${sanitizedEmail}" style="color: #5856d6;">${sanitizedEmail}</a></p>
+              <p style="font-size: 16px; color: #333;"><strong>Subject:</strong> ${sanitizedSubject}</p>
               <div style="margin-top: 20px; padding: 16px; background: #fff; border-left: 4px solid #5856d6;">
                 <strong>Message:</strong>
-                <div style="margin-top: 8px; color: #444;">${message.replace(/\n/g, '<br>')}</div>
+                <div style="margin-top: 8px; color: #444;">${sanitizedMessage.replace(/\n/g, '<br>')}</div>
               </div>
             </div>
             <div style="background: #f1f1f1; color: #888; padding: 16px 32px; font-size: 12px;">
@@ -79,7 +144,7 @@ export async function POST(request: NextRequest) {
             </div>
           </div>
         `,
-        replyTo: email,
+        replyTo: sanitizedEmail,
       };
 
     try {

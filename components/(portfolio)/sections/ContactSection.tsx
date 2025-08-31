@@ -15,28 +15,107 @@ interface FormData {
 }
 
 export const ContactSection = React.memo(() => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+  const [formData, setFormData] = useState<FormData>(() => {
+    // Load saved form data from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('contactFormDraft');
+      return saved ? JSON.parse(saved) : {
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      };
+    }
+    return {
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    };
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [retryCount, setRetryCount] = useState(0);
 
   const shouldReduceMotion = useReducedMotion();
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    return emailRegex.test(email);
+  };
+
+  // Auto-save form data to localStorage
+  const saveFormDraft = React.useCallback((data: FormData) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('contactFormDraft', JSON.stringify(data));
+    }
+  }, []);
+
+  // Clear saved draft
+  const clearFormDraft = React.useCallback(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('contactFormDraft');
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
+    const newFormData = {
+      ...formData,
       [name]: value
-    }));
+    };
+    
+    setFormData(newFormData);
+    saveFormDraft(newFormData);
+
+    // Field-specific validation
+    if (name === 'email') {
+      if (value && !validateEmail(value)) {
+        setEmailError('Please enter a valid email address');
+      } else {
+        setEmailError('');
+      }
+    }
+
+    // Clear any previous error messages when user starts typing
+    if (submitStatus === 'error') {
+      setSubmitStatus('idle');
+      setErrorMessage('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate email before submitting
+    if (!validateEmail(formData.email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+
+    // Basic validation
+    if (!formData.name.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      setSubmitStatus('error');
+      setErrorMessage('Please fill in all required fields');
+      return;
+    }
+
+    // Validate subject length
+    if (formData.subject.trim().length < 5 || formData.subject.trim().length > 200) {
+      setSubmitStatus('error');
+      setErrorMessage('Subject must be between 5 and 200 characters');
+      return;
+    }
+
+    // Validate message length
+    if (formData.message.trim().length < 10 || formData.message.trim().length > 2000) {
+      setSubmitStatus('error');
+      setErrorMessage('Message must be between 10 and 2000 characters');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setErrorMessage('');
@@ -54,29 +133,34 @@ export const ContactSection = React.memo(() => {
       const data = await response.json();
 
       if (response.ok) {
-        // Trigger SMS notification via TextBee
-        try {
-          await fetch('/api/send-sms', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              recipients: ['+94768952480'],
-              message: 'New contact form submission! Check admin page.'
-            })
-          });
-        } catch (smsError) {
-          // Optionally log or handle SMS error, but don't block form success
-          console.error('SMS notification failed', smsError);
-        }
+        // Success - clear draft and reset form
+        clearFormDraft();
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
+        setEmailError('');
+        setRetryCount(0);
       } else {
-        setSubmitStatus('error');
-        setErrorMessage(data.error || 'Failed to send message');
+        throw new Error(data.error || 'Failed to send message');
       }
     } catch (error) {
+      console.error('Error submitting form:', error);
+      
+      // Retry logic for network errors
+      if (retryCount < 2 && (error as Error).message.includes('Network') || (error as Error).message.includes('fetch')) {
+        setRetryCount(prev => prev + 1);
+        setTimeout(() => {
+          handleSubmit(e);
+        }, 2000 * (retryCount + 1)); // Exponential backoff
+        return;
+      }
+
       setSubmitStatus('error');
-      setErrorMessage('Network error. Please try again.');
+      setErrorMessage(
+        retryCount > 0 
+          ? `Failed to send message after ${retryCount + 1} attempts. Please try again later.`
+          : 'Network error. Please check your connection and try again.'
+      );
+      setRetryCount(0);
     } finally {
       setIsSubmitting(false);
     }
@@ -425,7 +509,7 @@ export const ContactSection = React.memo(() => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                       >
-                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight">
+                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight" id="contact-form-title">
                           Send Me a Message
                         </h3>
                         <p className="text-white/90 text-base sm:text-lg leading-relaxed">
@@ -439,7 +523,12 @@ export const ContactSection = React.memo(() => {
               </div>
 
               <CardContent className="p-8 lg:p-10 bg-white/50 dark:bg-slate-900/50">
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form 
+                  onSubmit={handleSubmit} 
+                  className="space-y-8"
+                  role="form"
+                  aria-labelledby="contact-form-title"
+                >
                   {/* Success Message */}
                   <AnimatePresence>
                     {submitStatus === "success" && (
@@ -569,7 +658,7 @@ export const ContactSection = React.memo(() => {
                             onChange={handleChange}
                             required
                             placeholder="Your full name"
-                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
                           />
                         </motion.div>
                         <motion.div
@@ -585,10 +674,24 @@ export const ContactSection = React.memo(() => {
                             onChange={handleChange}
                             required
                             placeholder="your.email@example.com"
-                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
                           />
                         </motion.div>
                       </div>
+
+                      {/* Email Error Message */}
+                      <AnimatePresence>
+                        {emailError && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="text-red-600 dark:text-red-400 text-sm font-medium mt-2"
+                          >
+                            {emailError}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
 
                     {/* Message Section */}
@@ -626,7 +729,7 @@ export const ContactSection = React.memo(() => {
                           onChange={handleChange}
                           required
                           placeholder="What's this about?"
-                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
                         />
                       </motion.div>
 
@@ -643,7 +746,7 @@ export const ContactSection = React.memo(() => {
                           required
                           rows={6}
                           placeholder="Tell me about your project or just say hello!"
-                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300 resize-none"
+                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300 resize-none"
                         />
                       </motion.div>
                     </div>
@@ -663,8 +766,8 @@ export const ContactSection = React.memo(() => {
                       <Button
                         type="submit"
                         size="lg"
-                        className="w-full bg-gradient-to-r from-[var(--accent)] via-[#5856d6] to-purple-600 hover:from-[var(--accent)]/90 hover:via-[#5856d6]/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all duration-300 text-white text-lg font-bold py-5 rounded-2xl border-2 border-white/20"
-                        disabled={isSubmitting}
+                        className="w-full bg-gradient-to-r from-[var(--accent)] via-[#5856d6] to-purple-600 hover:from-[var(--accent)]/90 hover:via-[#5856d6]/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all duration-300 text-white text-lg font-bold py-5 rounded-2xl border-2 border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSubmitting || !!emailError}
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center space-x-4">
@@ -677,7 +780,9 @@ export const ContactSection = React.memo(() => {
                               }}
                               className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full"
                             />
-                            <span className="text-base sm:text-lg">Sending...</span>
+                            <span className="text-base sm:text-lg">
+                              {retryCount > 0 ? `Retrying... (${retryCount}/3)` : 'Sending...'}
+                            </span>
                           </div>
                         ) : (
                           <div className="flex items-center justify-center space-x-4">
