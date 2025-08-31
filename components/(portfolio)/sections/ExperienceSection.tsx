@@ -71,7 +71,7 @@ const FeaturedExperience: React.FC<{
       {!isMobile && (
         <>
           <motion.div
-            className="absolute -top-10 -left-10 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-indigo-500/20 rounded-full blur-xl"
+            className="absolute -top-10 -left-10 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-blue-500/20 rounded-full blur-xl"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.3, 0.6, 0.3],
@@ -102,18 +102,18 @@ const FeaturedExperience: React.FC<{
         <Card className="group relative overflow-hidden bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/60 dark:border-slate-700/60 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl sm:rounded-3xl">
           {/* Animated gradient overlay - simplified for mobile */}
           {!isMobile && (
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-indigo-500/8 to-purple-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-blue-500/8 to-purple-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           )}
 
           {/* Subtle animated border - hidden on mobile */}
           {!isMobile && (
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/25 via-indigo-500/25 to-purple-500/25 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/25 via-blue-500/25 to-purple-500/25 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
           )}
 
           <CardContent className={`relative ${isMobile ? 'p-4 sm:p-6' : 'p-6 sm:p-8 lg:p-10'}`}>
             {/* Header with enhanced visual hierarchy */}
             <motion.div variants={itemVariants} className={`text-center ${isMobile ? 'mb-4' : 'mb-6 sm:mb-8'}`}>
-              <div className={`inline-flex items-center justify-center ${isMobile ? 'w-12 h-12' : 'w-14 sm:w-16 h-14 sm:h-16'} bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl shadow-lg ${isMobile ? 'mb-4' : 'mb-4 sm:mb-6'}`}>
+              <div className={`inline-flex items-center justify-center ${isMobile ? 'w-12 h-12' : 'w-14 sm:w-16 h-14 sm:h-16'} bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl sm:rounded-2xl shadow-lg ${isMobile ? 'mb-4' : 'mb-4 sm:mb-6'}`}>
                 <svg
                   className={`${isMobile ? 'w-6 h-6' : 'w-7 sm:w-8 h-7 sm:h-8'} text-white`}
                   fill="none"
@@ -137,7 +137,7 @@ const FeaturedExperience: React.FC<{
               </motion.h3>
 
               <motion.div
-                className={`flex items-center justify-center gap-2 ${isMobile ? 'text-base' : 'text-base sm:text-lg'} font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent ${isMobile ? 'mb-3' : 'mb-4'}`}
+                className={`flex items-center justify-center gap-2 ${isMobile ? 'text-base' : 'text-base sm:text-lg'} font-semibold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent ${isMobile ? 'mb-3' : 'mb-4'}`}
                 variants={itemVariants}
               >
                 <svg className={`${isMobile ? 'w-4 h-4' : 'w-4 sm:w-5 h-4 sm:h-5'}`} fill="currentColor" viewBox="0 0 20 20">
@@ -173,7 +173,7 @@ const FeaturedExperience: React.FC<{
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className={`inline-flex items-center px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 text-blue-700 dark:text-blue-300 ${isMobile ? 'text-xs' : 'text-sm'} font-semibold rounded-full border border-blue-200/50 dark:border-blue-700/50`}>
+                  <span className={`inline-flex items-center px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-900/30 dark:to-blue-900/30 text-blue-700 dark:text-blue-300 ${isMobile ? 'text-xs' : 'text-sm'} font-semibold rounded-full border border-blue-200/50 dark:border-blue-700/50`}>
                     {formatDate(experience.start_date)} -{" "}
                     {experience.end_date ? formatDate(experience.end_date) : "Present"}
                   </span>
@@ -188,7 +188,7 @@ const FeaturedExperience: React.FC<{
             >
               <div className="relative">
                 {!isMobile && (
-                  <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full opacity-30" />
+                  <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full opacity-30" />
                 )}
                 <p className={`text-slate-700 dark:text-slate-300 leading-relaxed ${isMobile ? 'text-base pl-0' : 'text-base sm:text-lg pl-6'} italic`}>
                   &quot;{experience.description}&quot;
@@ -214,7 +214,7 @@ const FeaturedExperience: React.FC<{
                     key={tech}
                     custom={techIndex}
                     variants={techVariants}
-                    className={`inline-flex items-center ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-3 sm:px-4 py-2 text-sm'} bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-700 dark:text-slate-300 font-medium rounded-full border border-slate-200 dark:border-slate-600 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-800/50 dark:hover:to-indigo-800/50 hover:border-blue-400 dark:hover:border-indigo-400 hover:text-blue-800 dark:hover:text-indigo-200 transition-all duration-300 shadow-sm hover:shadow-md`}
+                    className={`inline-flex items-center ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-3 sm:px-4 py-2 text-sm'} bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-700 dark:text-slate-300 font-medium rounded-full border border-slate-200 dark:border-slate-600 hover:from-blue-100 hover:to-blue-100 dark:hover:from-blue-800/50 dark:hover:to-blue-800/50 hover:border-blue-400 dark:hover:border-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-all duration-300 shadow-sm hover:shadow-md`}
                     whileHover={!isMobile ? {
                       scale: 1.05,
                       y: -2,
@@ -222,7 +222,7 @@ const FeaturedExperience: React.FC<{
                     } : {}}
                     whileTap={!isMobile ? { scale: 0.95 } : {}}
                   >
-                    <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mr-2 animate-pulse`} />
+                    <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mr-2 animate-pulse`} />
                     {tech}
                   </motion.span>
                 ))}
@@ -331,7 +331,7 @@ export function ExperienceSection() {
               }}
             />
             <motion.div
-              className="absolute bottom-32 right-16 w-3 h-3 bg-indigo-500/20 rounded-full"
+              className="absolute bottom-32 right-16 w-3 h-3 bg-blue-500/20 rounded-full"
               animate={{
                 y: [0, 25, 0],
                 opacity: [0.2, 0.5, 0.2],
@@ -347,7 +347,7 @@ export function ExperienceSection() {
         )}
 
         {/* Soft gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 sm:via-white/20 to-indigo-50/5 sm:to-indigo-50/10 dark:from-transparent dark:via-slate-900/20 sm:dark:via-slate-900/30 dark:to-purple-950/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 sm:via-white/20 to-blue-50/5 sm:to-blue-50/10 dark:from-transparent dark:via-slate-900/20 sm:dark:via-slate-900/30 dark:to-purple-950/5" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -368,7 +368,7 @@ export function ExperienceSection() {
             className={`mb-4 sm:mb-6 ${isMobile ? 'text-2xl' : 'text-3xl sm:text-4xl lg:text-5xl'} font-bold tracking-tight`}
           >
             Professional{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
               Experience
             </span>
           </Heading>

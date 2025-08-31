@@ -433,7 +433,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
             <div className="max-h-[90vh] overflow-y-auto">
               <motion.div variants={contentVariants}>
                 {/* Header Image */}
-                <div className="relative h-64 lg:h-80 overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+                <div className="relative h-64 lg:h-80 overflow-hidden bg-gradient-to-br from-blue-500 via-purple-500 to-rose-500">
                   {project.image_url ? (
                     <img
                       src={project.image_url}
@@ -585,7 +585,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 + index * 0.1 }}
                           >
-                            <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0" />
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                             <p className="text-slate-700 dark:text-slate-300 text-sm">{feature}</p>
                           </motion.div>
                         ))}
@@ -608,12 +608,12 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                         {project.my_contributions.map((contribution, index) => (
                           <motion.div
                             key={`contribution-${index}`}
-                            className="flex items-start gap-3 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800/50"
+                            className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800/50"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.7 + index * 0.1 }}
                           >
-                            <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0" />
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                             <p className="text-slate-700 dark:text-slate-300 text-sm">{contribution}</p>
                           </motion.div>
                         ))}
@@ -734,7 +734,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
                       {/* Gallery Stats */}
                       <motion.div
-                        className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl border border-indigo-100 dark:border-indigo-800/50"
+                        className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-100 dark:border-blue-800/50"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.2 }}
@@ -743,7 +743,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                           <span className="text-slate-600 dark:text-slate-300">
                             📸 {project.additional_images.length} high-quality screenshots
                           </span>
-                          <span className="text-indigo-600 dark:text-indigo-400 font-medium">
+                          <span className="text-blue-600 dark:text-blue-400 font-medium">
                             Interactive Gallery
                           </span>
                         </div>
@@ -767,7 +767,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                         <Button
                           variant="outline"
                           size="lg"
-                          className="w-full border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
+                          className="w-full border-slate-300 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                         >
                           <a
                             href={project.github_url}
@@ -791,7 +791,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       >
                         <Button
                           size="lg"
-                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl"
                         >
                           <a
                             href={project.live_url}

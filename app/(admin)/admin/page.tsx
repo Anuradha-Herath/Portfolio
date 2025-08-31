@@ -71,7 +71,7 @@ export default function AdminPage() {
     { title: 'Projects', value: stats.projects, icon: FolderIcon, color: 'text-blue-600', bg: 'bg-blue-50' },
     { title: 'Skills', value: stats.skills, icon: CogIcon, color: 'text-green-600', bg: 'bg-green-50' },
     { title: 'Experiences', value: stats.experiences, icon: BriefcaseIcon, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { title: 'Education', value: stats.education, icon: GraduationCap, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { title: 'Education', value: stats.education, icon: GraduationCap, color: 'text-blue-600', bg: 'bg-blue-50' },
     { title: 'Certifications', value: stats.certifications, icon: StarIcon, color: 'text-yellow-600', bg: 'bg-yellow-50' },
     { title: 'Testimonials', value: stats.testimonials, icon: UserIcon, color: 'text-pink-600', bg: 'bg-pink-50' },
     { title: 'Blog Posts', value: stats.blogs, icon: FileTextIcon, color: 'text-teal-600', bg: 'bg-teal-50' },
