@@ -163,7 +163,7 @@ export const ContactSection = React.memo(() => {
       } else if (response.status === 403) {
         // IP blocked - show specific error
         setSubmitStatus('error');
-        setErrorMessage('🚫 Nice try, troll! 😄 Your IP has been banished to the naughty list. Try again when you\'ve learned your lesson! 🎭');
+        setErrorMessage('🚫 Whoa there, comedian! � Your hilarious "joke" has earned you a timeout. No fake messages allowed - keep it real or keep it moving! 🎭');
         setIsBlocked(true);
         setRetryCount(0);
       } else if (response.status === 429) {
@@ -647,7 +647,7 @@ export const ContactSection = React.memo(() => {
                           </motion.div>
                           <div className="flex-1">
                             <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
-                              {retryAfter ? 'Rate Limit Exceeded' : submitStatus === 'error' && errorMessage.includes('troll') ? 'Troll Detected! 🎭' : 'Failed to Send Message'}
+                              {retryAfter ? 'Rate Limit Exceeded' : submitStatus === 'error' && errorMessage.includes('comedian') ? 'Fake News Alert! 🚨' : 'Failed to Send Message'}
                             </h4>
                             <p className="text-red-600 dark:text-red-300 text-base leading-relaxed">
                               {errorMessage}
@@ -858,11 +858,11 @@ export const ContactSection = React.memo(() => {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth={2}
-                                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
                               />
                             </svg>
                             <span className="text-base sm:text-lg">
-                              Troll Mode Activated! 🎪
+                              Joke's on You! 🤡
                             </span>
                           </div>
                         ) : (
