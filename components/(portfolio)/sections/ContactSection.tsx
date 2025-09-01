@@ -39,6 +39,7 @@ export const ContactSection = React.memo(() => {
   const [emailError, setEmailError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
+  const [isBlocked, setIsBlocked] = useState(false);
 
   const shouldReduceMotion = useReducedMotion();
 
@@ -159,6 +160,12 @@ export const ContactSection = React.memo(() => {
         setEmailError('');
         setRetryCount(0);
         setRetryAfter(null);
+      } else if (response.status === 403) {
+        // IP blocked - show specific error
+        setSubmitStatus('error');
+        setErrorMessage('🚫 Nice try, troll! 😄 Your IP has been banished to the naughty list. Try again when you\'ve learned your lesson! 🎭');
+        setIsBlocked(true);
+        setRetryCount(0);
       } else if (response.status === 429) {
         // Rate limiting - show specific error with retry info
         const retryAfterSeconds = parseInt(response.headers.get('Retry-After') || '900');
@@ -640,7 +647,7 @@ export const ContactSection = React.memo(() => {
                           </motion.div>
                           <div className="flex-1">
                             <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
-                              {retryAfter ? 'Rate Limit Exceeded' : 'Failed to Send Message'}
+                              {retryAfter ? 'Rate Limit Exceeded' : submitStatus === 'error' && errorMessage.includes('troll') ? 'Troll Detected! 🎭' : 'Failed to Send Message'}
                             </h4>
                             <p className="text-red-600 dark:text-red-300 text-base leading-relaxed">
                               {errorMessage}
@@ -803,7 +810,7 @@ export const ContactSection = React.memo(() => {
                         type="submit"
                         size="lg"
                         className="w-full bg-gradient-to-r from-[var(--accent)] via-[#5856d6] to-purple-600 hover:from-[var(--accent)]/90 hover:via-[#5856d6]/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all duration-300 text-white text-lg font-bold py-5 rounded-2xl border-2 border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isSubmitting || !!emailError || !!retryAfter}
+                        disabled={isSubmitting || !!emailError || !!retryAfter || isBlocked}
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center space-x-4">
@@ -837,6 +844,25 @@ export const ContactSection = React.memo(() => {
                             </svg>
                             <span className="text-base sm:text-lg">
                               Try again in {Math.floor(retryAfter / 60)}:{(retryAfter % 60).toString().padStart(2, '0')}
+                            </span>
+                          </div>
+                        ) : isBlocked ? (
+                          <div className="flex items-center justify-center space-x-4">
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            <span className="text-base sm:text-lg">
+                              Troll Mode Activated! 🎪
                             </span>
                           </div>
                         ) : (
