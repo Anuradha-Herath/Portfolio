@@ -20,6 +20,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, subject, message } = body;
 
+    // Get client IP address
+    const forwarded = request.headers.get('x-forwarded-for');
+    const realIP = request.headers.get('x-real-ip');
+    const clientIP = forwarded ? forwarded.split(',')[0].trim() : realIP || 'unknown';
+
+    // Check if IP is blocked
+    const isBlocked = await dbOperations.isIPBlocked(clientIP);
+    if (isBlocked) {
+      return NextResponse.json(
+        { error: 'Your IP address has been blocked from sending messages.' },
+        { status: 403 }
+      );
+    }
+
     // Basic validation
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
@@ -43,7 +57,8 @@ export async function POST(request: NextRequest) {
       email: email.trim().toLowerCase(),
       subject: subject.trim(),
       message: message.trim(),
-      status: 'unread'
+      status: 'unread',
+      ip: clientIP
     });
 
     // Send email notification using Nodemailer
