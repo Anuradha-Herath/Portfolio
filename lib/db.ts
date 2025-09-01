@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { Project, Skill, Experience, Education, Certification, Testimonial, BlogPost, ContactMessage } from './types';
+import { Project, Skill, Experience, Education, Certification, Testimonial, BlogPost, ContactMessage, BlockedIP } from './types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -59,6 +59,11 @@ export interface Database {
         Row: ContactMessage;
         Insert: Omit<ContactMessage, 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Omit<ContactMessage, 'id' | 'created_at' | 'updated_at'>>;
+      };
+      blocked_ips: {
+        Row: BlockedIP;
+        Insert: Omit<BlockedIP, 'id' | 'blocked_at'>;
+        Update: Partial<Omit<BlockedIP, 'id' | 'blocked_at'>>;
       };
     };
   };
@@ -417,5 +422,47 @@ export const dbOperations = {
 
   async markContactAsReplied(id: string) {
     return this.updateContactMessage(id, { status: 'replied' });
+  },
+
+  // Blocked IPs
+  async getBlockedIPs() {
+    const { data, error } = await supabaseAdmin
+      .from('blocked_ips')
+      .select('*')
+      .order('blocked_at', { ascending: false });
+    
+    if (error) throw error;
+    return data as BlockedIP[];
+  },
+
+  async createBlockedIP(blockedIP: Omit<BlockedIP, 'id' | 'blocked_at'>) {
+    const { data, error } = await supabaseAdmin
+      .from('blocked_ips')
+      .insert(blockedIP)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data as BlockedIP;
+  },
+
+  async deleteBlockedIP(id: string) {
+    const { error } = await supabaseAdmin
+      .from('blocked_ips')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+  },
+
+  async isIPBlocked(ip: string): Promise<boolean> {
+    const { data, error } = await supabaseAdmin
+      .from('blocked_ips')
+      .select('id')
+      .eq('ip', ip)
+      .single();
+    
+    if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "not found"
+    return !!data;
   }
 };

@@ -93,7 +93,20 @@ export async function POST(request: NextRequest) {
     // Sophisticated IP-based rate limiting
     const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
                      request.headers.get('x-real-ip') || 
+                     request.headers.get('x-client-ip') ||
                      'unknown';
+
+    // Check if IP is blocked
+    if (clientIP !== 'unknown') {
+      const isBlocked = await dbOperations.isIPBlocked(clientIP);
+      if (isBlocked) {
+        console.log(`Blocked IP attempted to send message: ${clientIP}`);
+        return NextResponse.json(
+          { error: 'Your IP address has been blocked from sending messages.' },
+          { status: 403 }
+        );
+      }
+    }
 
     // Skip rate limiting for unknown IPs (though this is rare)
     if (clientIP !== 'unknown') {
@@ -210,7 +223,8 @@ export async function POST(request: NextRequest) {
       email: sanitizedEmail,
       subject: sanitizedSubject,
       message: sanitizedMessage,
-      status: 'unread'
+      status: 'unread',
+      ip: clientIP !== 'unknown' ? clientIP : undefined
     });
 
     // Send email notification using Nodemailer

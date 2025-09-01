@@ -225,6 +225,52 @@ export default function MessagesPage() {
                     </p>
                   </div>
 
+                  {/* IP Address and Block Button */}
+                  {selectedMessage.ip && (
+                    <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-blue-800">
+                            <strong>IP Address:</strong> {selectedMessage.ip}
+                          </p>
+                        </div>
+                        <Button
+                          onClick={async () => {
+                            if (!confirm(`Are you sure you want to block IP ${selectedMessage.ip}? This will prevent them from sending future messages.`)) return;
+
+                            try {
+                              const response = await fetch('/api/blocked-ips', {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                  ip: selectedMessage.ip,
+                                  reason: `Blocked from admin panel - Message: ${selectedMessage.subject}`
+                                }),
+                              });
+
+                              if (response.ok) {
+                                alert('IP address blocked successfully');
+                              } else {
+                                const error = await response.json();
+                                alert(`Failed to block IP: ${error.error}`);
+                              }
+                            } catch (error) {
+                              console.error('Error blocking IP:', error);
+                              alert('Failed to block IP address');
+                            }
+                          }}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
+                        >
+                          Block IP
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Actions */}
                   <div className="flex items-center space-x-3 pt-4 border-t border-gray-200">
                     <Button
