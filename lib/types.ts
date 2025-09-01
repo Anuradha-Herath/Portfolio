@@ -109,4 +109,13 @@ export interface ContactMessage {
   status: 'unread' | 'read' | 'replied';
   created_at: string;
   updated_at: string;
+  ip?: string; // IP address of the sender
+}
+
+export interface BlockedIP {
+  id: string;
+  ip: string;
+  reason?: string;
+  blocked_at: string;
+  blocked_by: string;
 }
