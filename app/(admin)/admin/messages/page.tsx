@@ -5,18 +5,16 @@ import { ContactMessage } from '@/lib/types';
 import { Heading } from '@/components/ui/Heading';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { MailIcon, MailOpenIcon, ReplyIcon, TrashIcon, ClockIcon, BanIcon, CheckCircleIcon } from 'lucide-react';
+import { MailIcon, MailOpenIcon, ReplyIcon, TrashIcon, ClockIcon } from 'lucide-react';
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
   const [filter, setFilter] = useState<'all' | 'unread' | 'read' | 'replied'>('all');
-  const [blockedIPs, setBlockedIPs] = useState<string[]>([]);
 
   useEffect(() => {
     fetchMessages();
-    fetchBlockedIPs();
   }, []);
 
   const fetchMessages = async () => {
@@ -30,18 +28,6 @@ export default function MessagesPage() {
       console.error('Error fetching messages:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchBlockedIPs = async () => {
-    try {
-      const response = await fetch('/api/blocked-ips');
-      if (response.ok) {
-        const data = await response.json();
-        setBlockedIPs(data.map((item: any) => item.ip));
-      }
-    } catch (error) {
-      console.error('Error fetching blocked IPs:', error);
     }
   };
 
@@ -84,42 +70,6 @@ export default function MessagesPage() {
       }
     } catch (error) {
       console.error('Error deleting message:', error);
-    }
-  };
-
-  const blockIP = async (ip: string) => {
-    if (!confirm(`Are you sure you want to block IP ${ip}?`)) return;
-
-    try {
-      const response = await fetch('/api/blocked-ips', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ip, reason: 'Blocked from admin panel' }),
-      });
-
-      if (response.ok) {
-        setBlockedIPs([...blockedIPs, ip]);
-      }
-    } catch (error) {
-      console.error('Error blocking IP:', error);
-    }
-  };
-
-  const unblockIP = async (ip: string) => {
-    if (!confirm(`Are you sure you want to unblock IP ${ip}?`)) return;
-
-    try {
-      const response = await fetch(`/api/blocked-ips/${ip}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        setBlockedIPs(blockedIPs.filter(blockedIP => blockedIP !== ip));
-      }
-    } catch (error) {
-      console.error('Error unblocking IP:', error);
     }
   };
 
@@ -320,31 +270,6 @@ export default function MessagesPage() {
                       <ReplyIcon className="w-4 h-4 mr-2" />
                       Reply via Email
                     </Button>
-                    {selectedMessage.ip && (
-                      <>
-                        {blockedIPs.includes(selectedMessage.ip) ? (
-                          <Button
-                            onClick={() => unblockIP(selectedMessage.ip!)}
-                            variant="outline"
-                            size="sm"
-                            className="text-green-600 hover:text-green-700 border-green-300 hover:border-green-400"
-                          >
-                            <CheckCircleIcon className="w-4 h-4 mr-2" />
-                            Unblock IP
-                          </Button>
-                        ) : (
-                          <Button
-                            onClick={() => blockIP(selectedMessage.ip!)}
-                            variant="outline"
-                            size="sm"
-                            className="text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
-                          >
-                            <BanIcon className="w-4 h-4 mr-2" />
-                            Block IP
-                          </Button>
-                        )}
-                      </>
-                    )}
                     <Button
                       onClick={() => deleteMessage(selectedMessage.id)}
                       variant="outline"
