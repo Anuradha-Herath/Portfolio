@@ -125,8 +125,9 @@ export function Footer() {
                   className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-lg"
                   variants={itemVariants}
                 >
-                  Crafting exceptional digital experiences through innovative web technologies.
-                  Passionate about transforming ideas into scalable solutions that make a real impact.
+                  Crafting exceptional digital experiences through innovative
+                  web technologies. Passionate about transforming ideas into
+                  scalable solutions that make a real impact.
                 </motion.p>
               </div>
 
@@ -155,18 +156,19 @@ export function Footer() {
                       delay: 0.3 + index * 0.1,
                       type: "spring",
                       stiffness: 200,
-                      damping: 15
+                      damping: 15,
                     }}
                   >
                     {/* Simplified glow effect */}
                     <motion.div
                       className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 blur-lg"
                       style={{
-                        background: social.name === 'GitHub'
-                          ? 'radial-gradient(circle, #6366f1 0%, transparent 70%)'
-                          : social.name === 'LinkedIn'
-                          ? 'radial-gradient(circle, #0077b5 0%, transparent 70%)'
-                          : 'radial-gradient(circle, #ea4335 0%, transparent 70%)'
+                        background:
+                          social.name === "GitHub"
+                            ? "radial-gradient(circle, #6366f1 0%, transparent 70%)"
+                            : social.name === "LinkedIn"
+                            ? "radial-gradient(circle, #0077b5 0%, transparent 70%)"
+                            : "radial-gradient(circle, #ea4335 0%, transparent 70%)",
                       }}
                     />
 
@@ -200,7 +202,9 @@ export function Footer() {
               className="sm:col-span-1 lg:col-span-3 space-y-4 sm:space-y-6"
               variants={itemVariants}
             >
-              <h4 className="text-lg sm:text-xl font-semibold text-white">Quick Links</h4>
+              <h4 className="text-lg sm:text-xl font-semibold text-white">
+                Quick Links
+              </h4>
               <ul className="space-y-2 sm:space-y-3">
                 {navigationLinks.map((link, index) => (
                   <motion.li
@@ -228,31 +232,59 @@ export function Footer() {
               variants={itemVariants}
             >
               <div>
-                <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">Let&apos;s Connect</h4>
+                <h4 className="text-lg sm:text-xl font-semibold text-white mb-3 sm:mb-4">
+                  Let&apos;s Connect
+                </h4>
                 <div className="space-y-2 sm:space-y-3 text-slate-400">
                   <div className="flex items-center space-x-2 sm:space-x-3">
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <svg
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--accent)] flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
                     </svg>
-                    <span className="text-sm sm:text-base break-all">anuradha.herath@email.com</span>
+                    <span className="text-sm sm:text-base break-all">
+                      anuradhaherath2001@gmail.com
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2 sm:space-x-3">
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--accent)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--accent)] flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
-                    <span className="text-sm sm:text-base">Colombo, Sri Lanka</span>
+                    <span className="text-sm sm:text-base">
+                      Colombo, Sri Lanka
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Call to Action */}
-              <motion.div
-                className="pt-2 sm:pt-4"
-                variants={itemVariants}
-              >
+              <motion.div className="pt-2 sm:pt-4" variants={itemVariants}>
                 <motion.button
-                  onClick={() => scrollToSection('#contact')}
+                  onClick={() => scrollToSection("#contact")}
                   className="group relative w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] hover:from-[var(--accent)]/90 hover:to-[#5856d6]/90 text-white font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 overflow-hidden text-sm sm:text-base"
                   whileHover={{
                     scale: 1.02,
@@ -288,7 +320,8 @@ export function Footer() {
           >
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
               <p className="text-slate-400 text-xs sm:text-sm text-center sm:text-left">
-                © {new Date().getFullYear()} Anuradha Herath. Crafted with passion and precision.
+                © {new Date().getFullYear()} Anuradha Herath. Crafted with
+                passion and precision.
               </p>
 
               <div className="flex items-center space-x-4 sm:space-x-6 text-xs sm:text-sm text-slate-400">
