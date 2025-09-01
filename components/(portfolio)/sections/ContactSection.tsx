@@ -38,8 +38,26 @@ export const ContactSection = React.memo(() => {
   const [errorMessage, setErrorMessage] = useState('');
   const [emailError, setEmailError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
+  const [retryAfter, setRetryAfter] = useState<number | null>(null);
 
   const shouldReduceMotion = useReducedMotion();
+
+  // Countdown timer for rate limiting
+  React.useEffect(() => {
+    if (retryAfter && retryAfter > 0) {
+      const timer = setInterval(() => {
+        setRetryAfter(prev => {
+          if (prev && prev > 1) {
+            return prev - 1;
+          } else {
+            return null; // Clear when countdown reaches 0
+          }
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [retryAfter]);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -83,6 +101,7 @@ export const ContactSection = React.memo(() => {
     if (submitStatus === 'error') {
       setSubmitStatus('idle');
       setErrorMessage('');
+      setRetryAfter(null);
     }
   };
 
@@ -138,6 +157,16 @@ export const ContactSection = React.memo(() => {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
         setEmailError('');
+        setRetryCount(0);
+        setRetryAfter(null);
+      } else if (response.status === 429) {
+        // Rate limiting - show specific error with retry info
+        const retryAfterSeconds = parseInt(response.headers.get('Retry-After') || '900');
+        setRetryAfter(retryAfterSeconds);
+        setSubmitStatus('error');
+        setErrorMessage(
+          `Too many requests. Please wait ${Math.ceil(retryAfterSeconds / 60)} minutes before trying again.`
+        );
         setRetryCount(0);
       } else {
         throw new Error(data.error || 'Failed to send message');
@@ -529,6 +558,8 @@ export const ContactSection = React.memo(() => {
                   role="form"
                   aria-labelledby="contact-form-title"
                 >
+                  {/* Honeypot field for spam prevention */}
+                  <input type="text" name="website" style={{display: 'none'}} autoComplete="off" />
                   {/* Success Message */}
                   <AnimatePresence>
                     {submitStatus === "success" && (
@@ -609,10 +640,15 @@ export const ContactSection = React.memo(() => {
                           </motion.div>
                           <div className="flex-1">
                             <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
-                              Failed to Send Message
+                              {retryAfter ? 'Rate Limit Exceeded' : 'Failed to Send Message'}
                             </h4>
                             <p className="text-red-600 dark:text-red-300 text-base leading-relaxed">
                               {errorMessage}
+                              {retryAfter && (
+                                <span className="block mt-2 text-sm">
+                                  You can try again in {Math.floor(retryAfter / 60)}:{(retryAfter % 60).toString().padStart(2, '0')}.
+                                </span>
+                              )}
                             </p>
                           </div>
                         </div>
@@ -767,7 +803,7 @@ export const ContactSection = React.memo(() => {
                         type="submit"
                         size="lg"
                         className="w-full bg-gradient-to-r from-[var(--accent)] via-[#5856d6] to-purple-600 hover:from-[var(--accent)]/90 hover:via-[#5856d6]/90 hover:to-purple-600/90 shadow-xl hover:shadow-2xl transition-all duration-300 text-white text-lg font-bold py-5 rounded-2xl border-2 border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isSubmitting || !!emailError}
+                        disabled={isSubmitting || !!emailError || !!retryAfter}
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center space-x-4">
@@ -782,6 +818,25 @@ export const ContactSection = React.memo(() => {
                             />
                             <span className="text-base sm:text-lg">
                               {retryCount > 0 ? `Retrying... (${retryCount}/3)` : 'Sending...'}
+                            </span>
+                          </div>
+                        ) : retryAfter ? (
+                          <div className="flex items-center justify-center space-x-4">
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            <span className="text-base sm:text-lg">
+                              Try again in {Math.floor(retryAfter / 60)}:{(retryAfter % 60).toString().padStart(2, '0')}
                             </span>
                           </div>
                         ) : (

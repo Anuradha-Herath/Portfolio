@@ -2,6 +2,76 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbOperations } from '@/lib/db';
 import nodemailer from 'nodemailer';
 
+// Rate limiting configuration
+const RATE_LIMITS = {
+  WINDOW_MS: 15 * 60 * 1000, // 15 minutes
+  MAX_REQUESTS_PER_WINDOW: 5, // 5 requests per 15 minutes
+  CLEANUP_INTERVAL_MS: 5 * 60 * 1000, // Clean up every 5 minutes
+};
+
+// In-memory store for rate limiting
+interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+  lastRequest: number;
+}
+
+const rateLimitStore = new Map<string, RateLimitEntry>();
+
+// Clean up old entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitStore.entries()) {
+    if (now > entry.resetTime) {
+      rateLimitStore.delete(ip);
+    }
+  }
+}, RATE_LIMITS.CLEANUP_INTERVAL_MS);
+
+// Rate limiting function
+function checkRateLimit(ip: string): { allowed: boolean; remaining: number; resetTime: number; retryAfter?: number } {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMITS.WINDOW_MS;
+
+  let entry = rateLimitStore.get(ip);
+
+  if (!entry || now > entry.resetTime) {
+    // Create new entry or reset expired one
+    entry = {
+      count: 0,
+      resetTime: now + RATE_LIMITS.WINDOW_MS,
+      lastRequest: now,
+    };
+    rateLimitStore.set(ip, entry);
+  }
+
+  // Clean up very old entries (older than 2x window)
+  if (entry.lastRequest < windowStart - RATE_LIMITS.WINDOW_MS) {
+    entry.count = 0;
+  }
+
+  entry.lastRequest = now;
+
+  if (entry.count >= RATE_LIMITS.MAX_REQUESTS_PER_WINDOW) {
+    const retryAfter = Math.ceil((entry.resetTime - now) / 1000);
+    return {
+      allowed: false,
+      remaining: 0,
+      resetTime: entry.resetTime,
+      retryAfter,
+    };
+  }
+
+  entry.count++;
+  const remaining = Math.max(0, RATE_LIMITS.MAX_REQUESTS_PER_WINDOW - entry.count);
+
+  return {
+    allowed: true,
+    remaining,
+    resetTime: entry.resetTime,
+  };
+}
+
 export async function GET() {
   try {
     const contacts = await dbOperations.getContactMessages();
@@ -18,16 +88,46 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, subject, message } = body;
+    const { name, email, subject, message, website } = body;
 
-    // Rate limiting (simple implementation)
-    const clientIP = request.headers.get('x-forwarded-for') || 
+    // Sophisticated IP-based rate limiting
+    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
                      request.headers.get('x-real-ip') || 
                      'unknown';
-    
-    // You could implement more sophisticated rate limiting here
-    // For now, we'll just log the IP for monitoring
+
+    // Skip rate limiting for unknown IPs (though this is rare)
+    if (clientIP !== 'unknown') {
+      const rateLimitResult = checkRateLimit(clientIP);
+
+      if (!rateLimitResult.allowed) {
+        console.log(`Rate limit exceeded for IP: ${clientIP}`);
+        return NextResponse.json(
+          {
+            error: 'Too many requests. Please try again later.',
+            retryAfter: rateLimitResult.retryAfter,
+          },
+          {
+            status: 429,
+            headers: {
+              'Retry-After': rateLimitResult.retryAfter?.toString() || '900',
+              'X-RateLimit-Limit': RATE_LIMITS.MAX_REQUESTS_PER_WINDOW.toString(),
+              'X-RateLimit-Remaining': '0',
+              'X-RateLimit-Reset': Math.ceil(rateLimitResult.resetTime / 1000).toString(),
+            },
+          }
+        );
+      }
+    }
+
     console.log(`Contact form submission from IP: ${clientIP}`);
+
+    // Honeypot check for spam prevention
+    if (website) {
+      return NextResponse.json(
+        { error: 'Spam detected' },
+        { status: 400 }
+      );
+    }
 
     // Basic validation
     if (!name || !email || !subject || !message) {
@@ -64,18 +164,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Basic spam detection
+    // Enhanced spam detection - less aggressive patterns
     const spamPatterns = [
-      /\b(?:viagra|casino|lottery|winner|prize)\b/i,
+      /\b(?:viagra|casino|lottery|winner|prize|bullshit|nonsense)\b/i,
       /\b(?:http|https|www\.)\S+/i, // URLs
-      /\b\d{10,}\b/, // Long numbers (potentially phone numbers)
-      /(.)\1{10,}/, // Repeated characters
+      /\b\d{15,}\b/, // Very long numbers (15+ digits, more specific)
+      /(.)\1{20,}/, // Excessive repeated characters (20+ instead of 10)
+      /\b(?:asdf|qwerty|aaaaa|bbbbb)\b/i, // Common test or random inputs
+      /[A-Z]{15,}/, // Excessive uppercase (15+ characters instead of 5)
     ];
 
-    const isSpam = spamPatterns.some(pattern => pattern.test(sanitizedMessage));
+    const isSpam = spamPatterns.some(pattern => pattern.test(sanitizedMessage) || pattern.test(sanitizedSubject));
     if (isSpam) {
       return NextResponse.json(
-        { error: 'Message contains suspicious content. Please revise and try again.' },
+        { error: 'Message contains suspicious or inappropriate content. Please revise and try again.' },
         { status: 400 }
       );
     }
@@ -155,13 +257,24 @@ export async function POST(request: NextRequest) {
       // Log the error but don't fail the request - the contact message is still saved
     }
 
-    return NextResponse.json(
+    // Create response with rate limit headers
+    const response = NextResponse.json(
       {
         message: 'Contact message sent successfully',
         id: contact.id,
       },
       { status: 201 }
     );
+
+    // Add rate limit headers if we have rate limit info
+    if (clientIP !== 'unknown') {
+      const rateLimitResult = checkRateLimit(clientIP);
+      response.headers.set('X-RateLimit-Limit', RATE_LIMITS.MAX_REQUESTS_PER_WINDOW.toString());
+      response.headers.set('X-RateLimit-Remaining', rateLimitResult.remaining.toString());
+      response.headers.set('X-RateLimit-Reset', Math.ceil(rateLimitResult.resetTime / 1000).toString());
+    }
+
+    return response;
   } catch (error) {
     console.error('Error creating contact:', error);
     return NextResponse.json(
