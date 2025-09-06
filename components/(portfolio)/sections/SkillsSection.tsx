@@ -42,7 +42,14 @@ export function SkillsSection() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // Set initial visible skills based on device type
+      if (!mobile) {
+        setVisibleSkills(999); // Show all skills on desktop
+      } else {
+        setVisibleSkills(8); // Show fewer skills on mobile
+      }
     };
 
     checkMobile();
@@ -71,14 +78,18 @@ export function SkillsSection() {
 
   // Reset visible skills when filter changes
   useEffect(() => {
-    setVisibleSkills(12);
-  }, [activeFilter]);
+    if (!isMobile) {
+      setVisibleSkills(999); // Show all skills on desktop
+    } else {
+      setVisibleSkills(8); // Show fewer skills on mobile
+    }
+  }, [activeFilter, isMobile]);
 
   const loadMoreSkills = () => {
-    if (isLoadingMore) return;
+    if (isLoadingMore || !isMobile) return; // Only allow load more on mobile
     setIsLoadingMore(true);
     setTimeout(() => {
-      setVisibleSkills(prev => prev + 12);
+      setVisibleSkills(prev => prev + 8); // Load 8 more skills on mobile
       setIsLoadingMore(false);
     }, 300); // Small delay for smooth UX
   };
@@ -91,7 +102,7 @@ export function SkillsSection() {
     ).slice().sort((a, b) => levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level));
 
   const filteredSkills = allFilteredSkills.slice(0, visibleSkills);
-  const hasMoreSkills = allFilteredSkills.length > visibleSkills;
+  const hasMoreSkills = isMobile && allFilteredSkills.length > visibleSkills; // Only show load more button on mobile
 
   const renderProficiencyDots = (level: string) => {
     const totalDots = 4;
