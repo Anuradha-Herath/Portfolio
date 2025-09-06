@@ -335,7 +335,7 @@ export function HeroSection() {
 
                       {/* Professional photo with enhanced animations */}
                       <motion.img
-                        src="/images/profile_photo.jpg"
+                        src="/images/profile_photo.png"
                         alt="Anuradha Herath"
                         className="w-full h-full object-cover"
                         initial={{ scale: 1.1, opacity: 0 }}
