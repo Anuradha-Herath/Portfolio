@@ -83,12 +83,18 @@ export function EducationSection() {
         const response = await fetch("/api/education");
         if (response.ok) {
           const data = await response.json();
-          setEducationData(data);
+          // Sort education data by start_date (oldest first)
+          const sortedData = data.sort((a: Education, b: Education) => {
+            const dateA = new Date(a.start_date);
+            const dateB = new Date(b.start_date);
+            return dateA.getTime() - dateB.getTime();
+          });
+          setEducationData(sortedData);
         }
       } catch (error) {
         console.error("Error fetching education:", error);
         // Fallback to hardcoded data if API fails
-        setEducationData([
+        const fallbackData = [
           {
             id: "1",
             institution: "University of Moratuwa",
@@ -111,7 +117,14 @@ export function EducationSection() {
               "Currently pursuing Advanced Level in Physical Science stream with excellent results in Mathematics, Physics, and Chemistry.",
             grade: "Ongoing",
           },
-        ]);
+        ];
+        // Sort fallback data by start_date (oldest first)
+        const sortedFallback = fallbackData.sort((a, b) => {
+          const dateA = new Date(a.start_date);
+          const dateB = new Date(b.start_date);
+          return dateA.getTime() - dateB.getTime();
+        });
+        setEducationData(sortedFallback);
       } finally {
         setLoading(false);
       }
