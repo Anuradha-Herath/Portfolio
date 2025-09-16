@@ -163,10 +163,27 @@ export function Navbar() {
             >
               <Link
                 href="/"
-                className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent"
+                className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent hover:from-pink-400 hover:via-purple-400 hover:to-blue-400 transition-all duration-300"
               >
-                Anuradha Herath
+                Anuradha
               </Link>
+              
+              {/* Logo accent dot */}
+              <motion.div
+                className="absolute -top-1 -right-2 w-2 h-2 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ 
+                  delay: 0.5,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20
+                }}
+                whileHover={{ 
+                  scale: 1.5,
+                  boxShadow: "0 0 10px rgba(168, 85, 247, 0.6)"
+                }}
+              />
             </motion.div>
 
             {/* Desktop Navigation */}
