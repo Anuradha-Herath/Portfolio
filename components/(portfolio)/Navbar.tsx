@@ -136,10 +136,10 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ 
           type: "spring",
-          stiffness: 100,
-          damping: 20,
-          duration: 0.8,
-          ease: "easeOut" 
+          stiffness: 80,
+          damping: 25,
+          duration: 1.2,
+          ease: [0.25, 0.46, 0.45, 0.94] 
         }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
           isScrolled
@@ -177,7 +177,11 @@ export function Navbar() {
                     <motion.button
                       key={item.name}
                       onClick={() => scrollToSection(item.href)}
-                      className="flex items-center gap-2 text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-white/10 relative group overflow-hidden"
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-500 ease-out hover:bg-white/10 relative group overflow-hidden ${
+                        activeSection === item.href.substring(1) 
+                          ? 'text-white bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 shadow-lg ring-2 ring-blue-400/60 shadow-blue-500/25' 
+                          : 'text-white/80 hover:text-white'
+                      }`}
                       whileHover={{ 
                         scale: 1.08,
                         y: -2,
@@ -191,9 +195,10 @@ export function Navbar() {
                       transition={{ 
                         delay: 0.2 + idx * 0.08,
                         type: "spring",
-                        stiffness: 200,
-                        damping: 15,
-                        duration: 0.6
+                        stiffness: 150,
+                        damping: 20,
+                        duration: 0.8,
+                        ease: [0.25, 0.46, 0.45, 0.94]
                       }}
                     >
                       <motion.div
@@ -276,8 +281,8 @@ export function Navbar() {
                 whileTap={{ scale: 0.95 }}
                 transition={{
                   delay: 0.8,
-                  scale: { type: "spring", stiffness: 200, damping: 15 },
-                  rotate: { duration: 0.6, ease: "linear" }
+                  scale: { type: "spring", stiffness: 180, damping: 20 },
+                  rotate: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }
                 }}
               >
                 <Button variant="premium" size="sm" glow asChild>
@@ -316,8 +321,8 @@ export function Navbar() {
                   }}
                   transition={{
                     type: "spring",
-                    stiffness: 400,
-                    damping: 17
+                    stiffness: 300,
+                    damping: 25
                   }}
                   style={{ minWidth: '44px', minHeight: '44px' }}
                   aria-label="Toggle menu"
@@ -431,7 +436,11 @@ export function Navbar() {
                   <motion.button
                     key={item.name}
                     onClick={() => scrollToSection(item.href)}
-                    className="flex items-center gap-3 text-white/80 hover:text-white px-4 py-4 rounded-xl text-base font-medium w-full text-left hover:bg-white/10 transition-all duration-300 relative overflow-hidden group"
+                    className={`flex items-center gap-3 px-4 py-4 rounded-xl text-base font-medium w-full text-left hover:bg-white/10 transition-all duration-500 ease-out relative overflow-hidden group ${
+                      activeSection === item.href.substring(1) 
+                        ? 'text-white bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 shadow-lg ring-2 ring-blue-400/60 shadow-blue-500/25' 
+                        : 'text-white/80 hover:text-white'
+                    }`}
                     whileHover={{ 
                       scale: 1.03,
                       x: 12,
@@ -459,9 +468,10 @@ export function Navbar() {
                     transition={{ 
                       delay: 0.1 + idx * 0.05,
                       type: "spring",
-                      stiffness: 250,
-                      damping: 20,
-                      mass: 0.8
+                      stiffness: 180,
+                      damping: 22,
+                      mass: 0.8,
+                      ease: [0.25, 0.46, 0.45, 0.94]
                     }}
                   >
                     <motion.div
