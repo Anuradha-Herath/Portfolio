@@ -6,6 +6,8 @@
  * for both development and production environments.
  */
 
+require('dotenv').config({ path: '.env.local' });
+
 const requiredVars = {
   development: [
     'NEXT_PUBLIC_SUPABASE_URL',
