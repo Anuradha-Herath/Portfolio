@@ -40,24 +40,24 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
-    "ADMIN_USERNAME": "@admin_username",
-    "ADMIN_PASSWORD": "@admin_password",
-    "JWT_SECRET": "@jwt_secret",
-    "NEXT_PUBLIC_SITE_URL": "@next_public_site_url",
-    "TEXTBEE_API_KEY": "@textbee_api_key",
-    "TEXTBEE_DEVICE_ID": "@textbee_device_id",
-    "ENABLE_SMS_NOTIFICATIONS": "@enable_sms_notifications",
-    "GMAIL_USER": "@gmail_user",
-    "GMAIL_PASS": "@gmail_pass"
+    "NEXT_PUBLIC_SUPABASE_URL": "@NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY": "@SUPABASE_SERVICE_ROLE_KEY",
+    "ADMIN_USERNAME": "@ADMIN_USERNAME",
+    "ADMIN_PASSWORD": "@ADMIN_PASSWORD",
+    "JWT_SECRET": "@JWT_SECRET",
+    "NEXT_PUBLIC_SITE_URL": "@NEXT_PUBLIC_SITE_URL",
+    "TEXTBEE_API_KEY": "@TEXTBEE_API_KEY",
+    "TEXTBEE_DEVICE_ID": "@TEXTBEE_DEVICE_ID",
+    "ENABLE_SMS_NOTIFICATIONS": "@ENABLE_SMS_NOTIFICATIONS",
+    "GMAIL_USER": "@GMAIL_USER",
+    "GMAIL_PASS": "@GMAIL_PASS"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
-      "NEXT_PUBLIC_SITE_URL": "@next_public_site_url"
+      "NEXT_PUBLIC_SUPABASE_URL": "@NEXT_PUBLIC_SUPABASE_URL",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "NEXT_PUBLIC_SITE_URL": "@NEXT_PUBLIC_SITE_URL"
     }
   },
   "functions": {
