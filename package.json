@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate-env": "node validate-env.js",
+    "prebuild": "npm run validate-env",
+    "predev": "npm run validate-env",
+    "type-check": "tsc --noEmit",
+    "ci": "npm run lint && npm run type-check && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
