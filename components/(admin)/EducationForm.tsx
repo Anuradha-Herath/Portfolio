@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Education } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -27,9 +27,29 @@ export function EducationForm({
     end_date: education?.end_date ? education.end_date.substring(0, 7) : "",
     description: education?.description || "",
     grade: education?.grade || "",
+    icon_url: education?.icon_url || "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [uploadingIcon, setUploadingIcon] = useState(false);
+
+  // Update form data when education prop changes (for editing existing records)
+  useEffect(() => {
+    if (education) {
+      console.log('EducationForm: Updating form data with education prop:', education);
+      setFormData({
+        institution: education.institution || "",
+        degree: education.degree || "",
+        field: education.field || "",
+        start_date: education.start_date ? education.start_date.substring(0, 7) : "",
+        end_date: education.end_date ? education.end_date.substring(0, 7) : "",
+        description: education.description || "",
+        grade: education.grade || "",
+        icon_url: education.icon_url || "",
+      });
+      console.log('EducationForm: Form initialized with icon_url:', education.icon_url);
+    }
+  }, [education]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -67,6 +87,8 @@ export function EducationForm({
         start_date: formData.start_date + "-01",
         end_date: formData.end_date ? formData.end_date + "-01" : null,
       };
+      console.log('EducationForm: Submitting form data:', formattedData);
+      console.log('EducationForm: Icon URL in submission:', formattedData.icon_url);
       onSubmit(formattedData);
     }
   };
@@ -76,6 +98,54 @@ export function EducationForm({
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
+  };
+
+  const handleIconUpload = async (file: File) => {
+    if (!file) return;
+
+    console.log('Uploading file:', {
+      name: file.name,
+      type: file.type,
+      size: file.size
+    });
+
+    setUploadingIcon(true);
+    try {
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      uploadFormData.append('fileName', `${formData.institution || "education"}-icon`);
+
+      const response = await fetch('/api/upload/education-icons', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to upload icon');
+      }
+
+      const data = await response.json();
+      console.log('Upload successful, received URL:', data.url);
+      console.log('Previous formData.icon_url:', formData.icon_url);
+      setFormData(prev => {
+        const updated = { ...prev, icon_url: data.url };
+        console.log('Updated formData with new icon_url:', updated.icon_url);
+        return updated;
+      });
+    } catch (error) {
+      console.error("Error uploading icon:", error);
+      setErrors(prev => ({
+        ...prev,
+        icon: error instanceof Error ? error.message : "Failed to upload icon"
+      }));
+    } finally {
+      setUploadingIcon(false);
+    }
+  };
+
+  const handleIconRemove = () => {
+    setFormData(prev => ({ ...prev, icon_url: "" }));
   };
 
   return (
@@ -112,6 +182,62 @@ export function EducationForm({
             {errors.institution && (
               <p className="text-red-500 text-sm mt-1">{errors.institution}</p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[var(--foreground)] mb-2">
+              Institution Icon
+            </label>
+            <div className="space-y-3">
+              {formData.icon_url && (
+                <div className="flex items-center space-x-3 p-3 bg-[var(--background-secondary)] rounded-lg">
+                  <img
+                    src={formData.icon_url}
+                    alt="Institution icon"
+                    className="w-12 h-12 object-contain rounded"
+                    onError={(e) => {
+                      console.error('Failed to load icon in form:', formData.icon_url);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                    onLoad={() => console.log('Icon loaded in form successfully:', formData.icon_url)}
+                  />
+                  <div className="flex-1">
+                    <p className="text-sm text-[var(--foreground)]">Current icon</p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleIconRemove}
+                    disabled={uploadingIcon}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
+              <div>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleIconUpload(file);
+                    }
+                  }}
+                  disabled={uploadingIcon}
+                  className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[var(--accent)] file:text-white hover:file:bg-[var(--accent-hover)]"
+                />
+                {uploadingIcon && (
+                  <p className="text-sm text-[var(--foreground-secondary)] mt-2">
+                    Uploading icon...
+                  </p>
+                )}
+                {errors.icon && (
+                  <p className="text-red-500 text-sm mt-1">{errors.icon}</p>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
