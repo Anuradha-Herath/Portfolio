@@ -40,13 +40,13 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
     "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
     "ADMIN_USERNAME": "@admin_username",
     "ADMIN_PASSWORD": "@admin_password",
     "JWT_SECRET": "@jwt_secret",
-    "NEXT_PUBLIC_SITE_URL": "@site_url",
+    "NEXT_PUBLIC_SITE_URL": "@next_public_site_url",
     "TEXTBEE_API_KEY": "@textbee_api_key",
     "TEXTBEE_DEVICE_ID": "@textbee_device_id",
     "ENABLE_SMS_NOTIFICATIONS": "@enable_sms_notifications",
@@ -55,9 +55,9 @@
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
-      "NEXT_PUBLIC_SITE_URL": "@site_url"
+      "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key",
+      "NEXT_PUBLIC_SITE_URL": "@next_public_site_url"
     }
   },
   "functions": {
