@@ -3,6 +3,7 @@ import { supabaseAdmin } from './db';
 const SKILL_ICONS_BUCKET = 'skill-icons';
 const CERTIFICATES_BUCKET = 'certificates';
 const PROJECT_IMAGES_BUCKET = 'project-images';
+const EDUCATION_ICONS_BUCKET = 'education-icons';
 
 export const storageOperations = {
   async uploadSkillIcon(file: File, fileName: string): Promise<string> {
@@ -251,6 +252,71 @@ export const storageOperations = {
     }
   },
 
+  async uploadEducationIcon(file: File, fileName: string): Promise<string> {
+    try {
+      // Validate file type (images and SVG)
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml'];
+      if (!validTypes.includes(file.type)) {
+        throw new Error('Only image files (JPG, PNG, WebP, SVG) are allowed');
+      }
+
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        throw new Error('File size must be less than 2MB');
+      }
+
+      // Generate unique filename
+      const timestamp = Date.now();
+      const uniqueFileName = `${timestamp}-${fileName.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+      // Upload file to Supabase storage
+      const { data, error } = await supabaseAdmin.storage
+        .from(EDUCATION_ICONS_BUCKET)
+        .upload(uniqueFileName, file, {
+          contentType: file.type,
+          upsert: false
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      // Get public URL
+      const { data: urlData } = supabaseAdmin.storage
+        .from(EDUCATION_ICONS_BUCKET)
+        .getPublicUrl(data.path);
+
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading education icon:', error);
+      throw error;
+    }
+  },
+
+  async deleteEducationIcon(iconUrl: string): Promise<void> {
+    try {
+      // Extract file path from URL
+      const url = new URL(iconUrl);
+      const pathParts = url.pathname.split('/');
+      const fileName = pathParts[pathParts.length - 1];
+
+      if (!fileName) {
+        throw new Error('Invalid icon URL');
+      }
+
+      const { error } = await supabaseAdmin.storage
+        .from(EDUCATION_ICONS_BUCKET)
+        .remove([fileName]);
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error deleting education icon:', error);
+      // Don't throw error for deletion failures to avoid blocking education deletion
+    }
+  },
+
   async ensureBucketExists(bucketName: string = SKILL_ICONS_BUCKET): Promise<void> {
     try {
       console.log(`Checking if bucket '${bucketName}' exists...`);
@@ -280,6 +346,12 @@ export const storageOperations = {
               public: true,
               allowedMimeTypes: ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
               fileSizeLimit: 10 * 1024 * 1024 // 10MB limit for certificates
+            }
+          : bucketName === EDUCATION_ICONS_BUCKET
+          ? {
+              public: true,
+              allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml'],
+              fileSizeLimit: 2 * 1024 * 1024 // 2MB limit for education icons
             }
           : {
               public: true,
@@ -311,5 +383,6 @@ export const storageOperations = {
     await this.ensureBucketExists(SKILL_ICONS_BUCKET);
     await this.ensureBucketExists(CERTIFICATES_BUCKET);
     await this.ensureBucketExists(PROJECT_IMAGES_BUCKET);
+    await this.ensureBucketExists(EDUCATION_ICONS_BUCKET);
   }
 };

@@ -231,7 +231,10 @@ export const dbOperations = {
       .select()
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('Database update error:', error);
+      throw error;
+    }
     return data as Education;
   },
 

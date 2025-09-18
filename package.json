@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate-env": "node validate-env.js",
+    "prebuild": "npm run validate-env",
+    "predev": "npm run validate-env",
+    "type-check": "tsc --noEmit",
+    "ci": "npm run lint && npm run type-check && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
@@ -30,6 +35,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^17.2.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "postcss": "^8.4.49",

@@ -43,10 +43,11 @@ export default function AdminEducationPage() {
       let response;
       if (editingEducation) {
         // Update existing education
+        const updateData = { id: editingEducation.id, ...educationData };
         response = await fetch("/api/education", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: editingEducation.id, ...educationData }),
+          body: JSON.stringify(updateData),
         });
       } else {
         // Create new education
@@ -74,6 +75,8 @@ export default function AdminEducationPage() {
   };
 
   const handleEdit = (educationItem: Education) => {
+    console.log('Admin: Starting edit for education item:', educationItem);
+    console.log('Admin: Education item icon_url:', educationItem.icon_url);
     setEditingEducation(educationItem);
     setShowForm(true);
   };
@@ -174,7 +177,19 @@ export default function AdminEducationPage() {
               onDelete={() => handleDelete(educationItem.id)}
             >
               <div className="space-y-3">
-                <div>
+                <div className="flex items-center gap-3">
+                  {educationItem.icon_url && (
+                    <img
+                      src={educationItem.icon_url}
+                      alt={`${educationItem.institution} logo`}
+                      className="w-8 h-8 object-contain rounded"
+                      onError={(e) => {
+                        console.error('Failed to load icon:', educationItem.icon_url);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                      onLoad={() => console.log('Icon loaded successfully:', educationItem.icon_url)}
+                    />
+                  )}
                   <h4 className="font-medium text-[var(--foreground)]">
                     {educationItem.institution}
                   </h4>

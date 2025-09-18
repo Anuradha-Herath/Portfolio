@@ -321,7 +321,14 @@ export function EducationSection() {
                           <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3 group-hover:text-[var(--accent)] transition-colors duration-300 leading-tight">
                             {education.degree}
                           </h3>
-                          <p className="text-lg md:text-xl font-semibold mb-3 md:mb-4 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent">
+                          <p className="text-lg md:text-xl font-semibold mb-3 md:mb-4 bg-gradient-to-r from-[var(--accent)] to-[#5856d6] bg-clip-text text-transparent flex items-center gap-3">
+                            {education.icon_url && (
+                              <img
+                                src={education.icon_url}
+                                alt={`${education.institution} logo`}
+                                className="w-8 h-8 md:w-10 md:h-10 object-contain rounded-lg bg-white/10 p-1"
+                              />
+                            )}
                             {education.institution}
                           </p>
                           <p className="text-[var(--foreground-secondary)] font-medium text-base md:text-lg mb-3 md:mb-4">

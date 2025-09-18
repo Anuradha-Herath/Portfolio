@@ -5,6 +5,12 @@ import { Education } from '@/lib/types';
 export async function GET() {
   try {
     const education = await dbOperations.getEducation();
+    console.log('Retrieved education data:', education.map(e => ({
+      id: e.id,
+      institution: e.institution,
+      hasIcon: !!e.icon_url,
+      iconUrl: e.icon_url
+    })));
     return Response.json(education);
   } catch (error) {
     console.error('Error fetching education:', error);

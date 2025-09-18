@@ -36,6 +36,7 @@ export interface Education {
   end_date: string | null;
   description: string;
   grade?: string;
+  icon_url?: string;
 }
 
 export interface Experience {
