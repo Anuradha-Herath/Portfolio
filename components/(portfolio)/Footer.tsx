@@ -74,7 +74,13 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden bg-slate-900">
+    <footer className="relative overflow-hidden" style={{ background: 'var(--background)' }}>
+      {/* Visual Separator - Prominent Gradient Border */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[var(--accent)]/60 via-[var(--accent)]/40 to-transparent"></div>
+
+      {/* Additional subtle glow effect */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-[var(--accent)]/20 to-transparent blur-sm"></div>
+
       {/* Unified Background - Optimized for Performance */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Static dot grid pattern */}

@@ -731,23 +731,6 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                           </motion.div>
                         ))}
                       </div>
-
-                      {/* Gallery Stats */}
-                      <motion.div
-                        className="mt-6 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl border border-blue-800/50"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.2 }}
-                      >
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-300">
-                            📸 {project.additional_images.length} high-quality screenshots
-                          </span>
-                          <span className="text-blue-400 font-medium">
-                            Interactive Gallery
-                          </span>
-                        </div>
-                      </motion.div>
                     </motion.div>
                   )}
 
