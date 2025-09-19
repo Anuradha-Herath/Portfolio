@@ -146,13 +146,13 @@ export function SkillsSection() {
       <div className="absolute inset-0 overflow-hidden">
         {/* Subtle animated dot grid pattern - Same as Projects */}
         <motion.div
-          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          className="absolute inset-0 opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: "40px 40px",
           }}
           animate={{
-            opacity: [0.15, 0.25, 0.15],
+            opacity: [0.08, 0.15, 0.08],
           }}
           transition={{
             duration: 8,
@@ -162,7 +162,7 @@ export function SkillsSection() {
         />
 
         {/* Soft gradient overlay for depth - Same as Projects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/50 to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -200,7 +200,7 @@ export function SkillsSection() {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="px-6 py-3 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"
+                  className="px-6 py-3 rounded-full bg-gray-700 animate-pulse"
                   style={{ width: item.width, height: '40px' }}
                 />
               ))}
@@ -211,16 +211,16 @@ export function SkillsSection() {
               {Array.from({ length: 12 }).map((_, index) => (
                 <motion.div
                   key={index}
-                  className="bg-white/10 dark:bg-slate-800/10 border border-white/20 dark:border-slate-700/20 rounded-2xl p-4 h-32 flex flex-col items-center justify-center"
+                  className="bg-slate-800/10 border border-slate-700/20 rounded-2xl p-4 h-32 flex flex-col items-center justify-center"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full mb-3 animate-pulse" />
-                  <div className="w-20 h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2 animate-pulse" />
+                  <div className="w-16 h-16 bg-gray-700 rounded-full mb-3 animate-pulse" />
+                  <div className="w-20 h-4 bg-gray-700 rounded mb-2 animate-pulse" />
                   <div className="flex gap-1">
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="w-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                      <div key={i} className="w-2 h-2 bg-gray-700 rounded-full animate-pulse" />
                     ))}
                   </div>
                 </motion.div>
@@ -303,7 +303,7 @@ export function SkillsSection() {
                   className="group"
                 >
                   <motion.div
-                    className="relative bg-white/10 dark:bg-slate-800/10 border border-white/20 dark:border-slate-700/20 rounded-2xl p-3 sm:p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)]/40 transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl min-w-0"
+                    className="relative bg-slate-800/10 border border-slate-700/20 rounded-2xl p-3 sm:p-4 h-full flex flex-col items-center justify-between text-center hover:border-[var(--accent)]/40 transition-all duration-300 cursor-default overflow-hidden shadow-lg hover:shadow-2xl min-w-0"
                     whileHover={isMobile ? {} : {
                       scale: 1.05,
                       y: -8,
@@ -324,7 +324,7 @@ export function SkillsSection() {
                       />
                       {/* White background for icon visibility */}
                       <span
-                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md z-10"
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-gray-800 shadow-md z-10"
                         aria-hidden="true"
                       />
                       {skill.icon &&

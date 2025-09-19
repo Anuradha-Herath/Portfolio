@@ -153,13 +153,13 @@ export function EducationSection() {
       <div className="absolute inset-0 overflow-hidden">
         {/* Subtle animated dot grid pattern - Same as Hero */}
         <motion.div
-          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          className="absolute inset-0 opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: isMobile ? "60px 60px" : "40px 40px",
           }}
           animate={isMobile ? {} : {
-            opacity: [0.15, 0.25, 0.15],
+            opacity: [0.08, 0.15, 0.08],
           }}
           transition={{
             duration: 8,
@@ -169,7 +169,7 @@ export function EducationSection() {
         />
 
         {/* Soft gradient overlay for depth - Same as Hero */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/50 to-purple-950/10" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

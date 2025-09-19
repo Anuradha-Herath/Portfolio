@@ -162,7 +162,7 @@ export function ProjectsSection() {
       <div className="absolute inset-0 overflow-hidden">
         {/* Subtle animated dot grid pattern - Same as Experience */}
         <motion.div
-          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          className="absolute inset-0 opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: isMobile ? "60px 60px" : "40px 40px",
@@ -178,7 +178,7 @@ export function ProjectsSection() {
         />
 
         {/* Soft gradient overlay for depth - Same as Experience */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/50 to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -197,7 +197,7 @@ export function ProjectsSection() {
             </span>
           </Heading>
           <motion.p 
-            className="text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium"
+            className="text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
@@ -220,7 +220,7 @@ export function ProjectsSection() {
         {/* No Projects State */}
         {!loading && projects.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-slate-600 dark:text-slate-300 text-lg">
+            <p className="text-slate-300 text-lg">
               No projects available at the moment.
             </p>
           </div>
@@ -245,7 +245,7 @@ export function ProjectsSection() {
               }}
               onClick={() => handleProjectClick(project)}
             >
-              <Card className="h-full flex flex-col bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden group-hover:border-blue-300/40 dark:group-hover:border-blue-600/40">
+              <Card className="h-full flex flex-col bg-slate-800/10 backdrop-blur-sm border border-slate-700/20 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl overflow-hidden group-hover:border-blue-600/40">
                 {/* Enhanced Project Image/Icon Section */}
                 <div className={`relative ${isMobile ? 'h-40' : 'h-48'} overflow-hidden ${!project.image_url || imageErrors.has(project.id) ? `bg-gradient-to-br ${getGradientColors(index)} flex items-center justify-center` : ''}`}>
                   {project.image_url && !imageErrors.has(project.id) ? (
@@ -311,10 +311,10 @@ export function ProjectsSection() {
                   <div className={`absolute inset-0 bg-black/20 opacity-0 ${isMobile ? '' : 'group-hover:opacity-100'} transition-opacity duration-300 z-10`}>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <motion.div
-                        className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        className="bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         whileHover={isMobile ? {} : { scale: 1.1 }}
                       >
-                        <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
@@ -326,7 +326,7 @@ export function ProjectsSection() {
                 <CardContent className={`flex-1 ${isMobile ? 'p-4' : 'p-6 lg:p-8'}`}>
                   {/* Project Title */}
                   <motion.h3 
-                    className={`${isMobile ? 'text-lg' : 'text-xl lg:text-2xl'} font-bold text-slate-900 dark:text-white mb-3 tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300`}
+                    className={`${isMobile ? 'text-lg' : 'text-xl lg:text-2xl'} font-bold text-white mb-3 tracking-tight group-hover:text-blue-400 transition-colors duration-300`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 + index * (isMobile ? 0.03 : 0.05), duration: isMobile ? 0.4 : 0.5 }}
@@ -336,7 +336,7 @@ export function ProjectsSection() {
 
                   {/* Project Description */}
                   <motion.p 
-                    className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-sm lg:text-base"
+                    className="text-slate-300 leading-relaxed mb-6 text-sm lg:text-base"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 + index * (isMobile ? 0.03 : 0.05), duration: isMobile ? 0.5 : 0.6 }}
@@ -357,7 +357,7 @@ export function ProjectsSection() {
                         (techs as string[]).map((tech: string, techIndex: number) => (
                           <motion.span
                             key={cat + '-' + tech + '-' + techIndex}
-                            className="inline-flex items-center px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-full border border-blue-200/50 dark:border-blue-700/50 hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-all duration-200"
+                            className="inline-flex items-center px-3 py-1.5 bg-blue-900/30 text-blue-300 text-xs font-semibold rounded-full border border-blue-700/50 hover:bg-blue-800/40 transition-all duration-200"
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ 
@@ -387,7 +387,7 @@ export function ProjectsSection() {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="w-full border-slate-300 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+                          className="w-full border-slate-600 hover:border-blue-500 hover:bg-blue-900/20 transition-all duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             window.open(project.github_url, '_blank');
@@ -453,7 +453,7 @@ export function ProjectsSection() {
               <Button
                 variant="outline"
                 size={isMobile ? "sm" : "lg"}
-                className={`px-4 py-2 md:px-8 md:py-4 text-sm md:text-lg font-semibold border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300`}
+                className={`px-4 py-2 md:px-8 md:py-4 text-sm md:text-lg font-semibold border-2 border-blue-700 hover:border-blue-500 hover:bg-blue-900/20 transition-all duration-300`}
               >
                 <span className="flex items-center gap-3">
                   View All Projects

@@ -6,7 +6,7 @@ import { Heading } from "@/components/ui/Heading";
 import { motion, useAnimation, Variants } from "framer-motion";
 import { useMediaQuery } from 'react-responsive';
 
-// Typing effect roles - moved outside component to avoid re-creation on every render
+// Typing effect roles - moved outside component to avoid re                    className={`w-11 h-11 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 transition-all duration-300 shadow-sm hover:shadow-lg ${social.hoverColor}`}creation on every render
 const roles = [
   "IT Undergraduate",
   "Full Stack Developer",
@@ -99,18 +99,19 @@ export function HeroSection() {
     <section
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-16 md:pt-20"
+      style={{ background: 'var(--background)' }}
     >
       {/* Sophisticated Background - Subtle Grid of Dots */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Subtle animated dot grid pattern */}
         <motion.div
-          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          className="absolute inset-0 opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: isMobile ? "60px 60px" : "40px 40px",
           }}
           animate={isMobile ? {} : {
-            opacity: [0.15, 0.25, 0.15],
+            opacity: [0.08, 0.15, 0.08],
           }}
           transition={{
             duration: 8,
@@ -120,7 +121,7 @@ export function HeroSection() {
         />
 
         {/* Soft gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/50 to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
@@ -135,7 +136,7 @@ export function HeroSection() {
             {/* Mobile: Content First */}
             <motion.div className="space-y-4" variants={itemVariants}>
               <motion.p
-                className="text-xs font-semibold tracking-[0.15em] uppercase text-slate-500 dark:text-slate-400"
+                className="text-xs font-semibold tracking-[0.15em] uppercase text-slate-400"
                 variants={itemVariants}
               >
                 — Hello, I&apos;m
@@ -146,7 +147,7 @@ export function HeroSection() {
                 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight"
               >
                 <motion.span
-                  className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent"
+                  className="bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent"
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   }}
@@ -167,7 +168,7 @@ export function HeroSection() {
                 className="h-10 flex justify-center items-center"
                 variants={itemVariants}
               >
-                <span className="text-lg font-medium text-slate-500 dark:text-slate-500">
+                <span className="text-lg font-medium text-slate-500">
                   {displayedText}
                   <motion.span
                     className="inline-block w-0.5 h-5 bg-blue-500 ml-1"
@@ -215,7 +216,7 @@ export function HeroSection() {
                         damping: 25,
                       }}
                     >
-                      <div className="relative w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-2 border-white/50 dark:border-slate-700/50 rounded-full overflow-hidden">
+                      <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700/50 rounded-full overflow-hidden">
                         <motion.img
                           src="/images/profile_photo.png"
                           alt="Anuradha Herath"
@@ -233,7 +234,7 @@ export function HeroSection() {
                             const parent = e.currentTarget.parentElement;
                             if (parent) {
                               parent.innerHTML = `
-                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-50 to-rose-100 dark:from-blue-900/40 dark:via-purple-900/30 dark:to-rose-900/20">
+                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-rose-900/20">
                                   <div class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                     AH
                                   </div>
@@ -251,7 +252,7 @@ export function HeroSection() {
 
             {/* Mobile: Description */}
             <motion.p
-              className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg px-4"
+              className="text-base sm:text-lg text-slate-400 leading-relaxed max-w-lg px-4"
               variants={itemVariants}
             >
               Hi, I&apos;m Anuradha Herath 👋. I&apos;m an IT undergrad who loves building web apps and exploring AI. I enjoy turning ideas into simple, useful digital solutions.
@@ -299,7 +300,7 @@ export function HeroSection() {
                   variant="outline"
                   size="lg"
                   onClick={scrollToProjects}
-                  className="w-full group px-6 py-4 text-base font-semibold border-2 border-slate-300 dark:border-slate-600 bg-transparent hover:bg-slate-900 dark:hover:bg-white hover:border-slate-900 dark:hover:border-white text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-900 transition-all duration-300"
+                  className="w-full group px-6 py-4 text-base font-semibold border-2 border-slate-600 bg-transparent hover:bg-white hover:border-white text-slate-300 hover:text-slate-900 transition-all duration-300"
                 >
                   <span className="flex items-center justify-center gap-2">
                     View My Work
@@ -348,7 +349,7 @@ export function HeroSection() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-all duration-300 shadow-sm hover:shadow-lg ${social.hoverColor}`}
+                  className={`w-11 h-11 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 transition-all duration-300 shadow-sm hover:shadow-lg ${social.hoverColor}`}
                   initial={{ opacity: 0, y: 20, scale: 0.8 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{
@@ -512,7 +513,7 @@ export function HeroSection() {
                             ease: "linear",
                           }}
                         >
-                          <div className="w-full h-full rounded-full bg-white dark:bg-slate-900" />
+                            <div className="w-full h-full rounded-full bg-white" />
                         </motion.div>
                       </motion.div>
                     )}
@@ -552,7 +553,7 @@ export function HeroSection() {
                     )}
 
                     {/* Main image container with enhanced styling */}
-                    <div className="relative w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-2 border-white/50 dark:border-slate-700/50 rounded-full overflow-hidden">
+                    <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700/50 rounded-full overflow-hidden">
                       {/* Enhanced loading shimmer with multiple passes */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
@@ -605,7 +606,7 @@ export function HeroSection() {
                           if (parent) {
                             parent.innerHTML = `
                               <motion.div
-                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-50 to-rose-100 dark:from-blue-900/40 dark:via-purple-900/30 dark:to-rose-900/20"
+                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-rose-900/20"
                                 initial={{ scale: 0.8, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
@@ -711,7 +712,7 @@ export function HeroSection() {
             {/* Elegant greeting introduction */}
             <motion.div className="space-y-6" variants={itemVariants}>
               <motion.p
-                className="text-sm font-semibold tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400"
+                className="text-sm font-semibold tracking-[0.2em] uppercase text-slate-400"
                 variants={itemVariants}
               >
                 — Hello, I&apos;m
@@ -723,7 +724,7 @@ export function HeroSection() {
                 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-tight"
               >
                 <motion.span
-                  className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent"
+                  className="bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent"
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   }}
@@ -746,7 +747,7 @@ export function HeroSection() {
               className="h-12 flex items-center"
               variants={itemVariants}
             >
-              <span className="text-xl lg:text-2xl font-medium text-slate-500 dark:text-slate-500">
+              <span className="text-xl lg:text-2xl font-medium text-slate-500">
                 {displayedText}
                 <motion.span
                   className="inline-block w-0.5 h-6 bg-blue-500 ml-1"
@@ -758,7 +759,7 @@ export function HeroSection() {
 
             {/* Enhanced description with better spacing */}
             <motion.p
-              className="text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl"
+              className="text-lg lg:text-xl text-slate-400 leading-relaxed max-w-2xl"
               variants={itemVariants}
             >
               Hi, I&apos;m Anuradha Herath 👋. I&apos;m an IT undergrad who loves building web apps and exploring AI. I enjoy turning ideas into simple, useful digital solutions.
@@ -808,7 +809,7 @@ export function HeroSection() {
                   variant="outline"
                   size="lg"
                   onClick={scrollToProjects}
-                  className="group px-8 py-4 text-base font-semibold border-2 border-slate-300 dark:border-slate-600 bg-transparent hover:bg-slate-900 dark:hover:bg-white hover:border-slate-900 dark:hover:border-white text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-900 transition-all duration-300"
+                  className="group px-8 py-4 text-base font-semibold border-2 border-slate-600 bg-transparent hover:bg-white hover:border-white text-slate-300 hover:text-slate-900 transition-all duration-300"
                 >
                   <span className="flex items-center gap-2">
                     View My Work
@@ -883,7 +884,7 @@ export function HeroSection() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`relative w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-all duration-500 shadow-sm hover:shadow-xl ${social.hoverColor} overflow-hidden`}
+                    className={`relative w-12 h-12 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 transition-all duration-500 shadow-sm hover:shadow-xl ${social.hoverColor} overflow-hidden`}
                     whileHover={{
                       scale: 1.15,
                       y: -3,
@@ -973,13 +974,13 @@ export function HeroSection() {
 
                   {/* Enhanced tooltip with smooth animation */}
                   <motion.div
-                    className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-lg"
+                    className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-slate-100 text-slate-900 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-lg"
                     initial={{ y: 10, scale: 0.8 }}
                     whileHover={{ y: 0, scale: 1 }}
                   >
                     {social.label}
                     {/* Tooltip arrow */}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-900 dark:border-t-slate-100"></div>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-100"></div>
                   </motion.div>
                 </motion.div>
               ))}
