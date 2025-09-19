@@ -99,7 +99,7 @@ const FeaturedExperience: React.FC<{
       )}
 
       <div className="relative z-10 max-w-4xl mx-auto">
-        <Card className="group relative overflow-hidden bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/60 dark:border-slate-700/60 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl sm:rounded-3xl">
+        <Card className="group relative overflow-hidden bg-slate-800/90 backdrop-blur-sm border border-slate-700/60 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl sm:rounded-3xl">
           {/* Animated gradient overlay - simplified for mobile */}
           {!isMobile && (
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-blue-500/8 to-purple-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -130,7 +130,7 @@ const FeaturedExperience: React.FC<{
               </div>
 
               <motion.h3
-                className={`${isMobile ? 'text-xl' : 'text-xl sm:text-2xl lg:text-3xl'} font-bold text-slate-900 dark:text-white ${isMobile ? 'mb-2' : 'mb-3'} tracking-tight`}
+                className={`${isMobile ? 'text-xl' : 'text-xl sm:text-2xl lg:text-3xl'} font-bold text-white ${isMobile ? 'mb-2' : 'mb-3'} tracking-tight`}
                 variants={itemVariants}
               >
                 {experience.position}
@@ -151,7 +151,7 @@ const FeaturedExperience: React.FC<{
               </motion.div>
 
               <motion.div
-                className={`flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-slate-600 dark:text-slate-400 ${isMobile ? 'mb-4' : 'mb-6'}`}
+                className={`flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-slate-400 ${isMobile ? 'mb-4' : 'mb-6'}`}
                 variants={itemVariants}
               >
                 <div className="flex items-center gap-2">
@@ -173,7 +173,7 @@ const FeaturedExperience: React.FC<{
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className={`inline-flex items-center px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-900/30 dark:to-blue-900/30 text-blue-700 dark:text-blue-300 ${isMobile ? 'text-xs' : 'text-sm'} font-semibold rounded-full border border-blue-200/50 dark:border-blue-700/50`}>
+                  <span className={`inline-flex items-center px-2 sm:px-3 py-1 bg-gradient-to-r from-blue-900/30 to-blue-900/30 text-blue-300 ${isMobile ? 'text-xs' : 'text-sm'} font-semibold rounded-full border border-blue-700/50`}>
                     {formatDate(experience.start_date)} -{" "}
                     {experience.end_date ? formatDate(experience.end_date) : "Present"}
                   </span>
@@ -190,7 +190,7 @@ const FeaturedExperience: React.FC<{
                 {!isMobile && (
                   <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full opacity-30" />
                 )}
-                <p className={`text-slate-700 dark:text-slate-300 leading-relaxed ${isMobile ? 'text-base pl-0' : 'text-base sm:text-lg pl-6'} italic`}>
+                <p className={`text-slate-300 leading-relaxed ${isMobile ? 'text-base pl-0' : 'text-base sm:text-lg pl-6'} italic`}>
                   &quot;{experience.description}&quot;
                 </p>
               </div>
@@ -198,7 +198,7 @@ const FeaturedExperience: React.FC<{
 
             {/* Technologies with enhanced animations */}
             <motion.div variants={itemVariants} className={`${isMobile ? 'mb-4' : 'mb-6'}`}>
-              <h4 className={`${isMobile ? 'text-xs' : 'text-sm'} font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider ${isMobile ? 'mb-3' : 'mb-4'} flex items-center gap-2`}>
+              <h4 className={`${isMobile ? 'text-xs' : 'text-sm'} font-semibold text-slate-400 uppercase tracking-wider ${isMobile ? 'mb-3' : 'mb-4'} flex items-center gap-2`}>
                 <svg className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
@@ -214,7 +214,7 @@ const FeaturedExperience: React.FC<{
                     key={tech}
                     custom={techIndex}
                     variants={techVariants}
-                    className={`inline-flex items-center ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-3 sm:px-4 py-2 text-sm'} bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 text-slate-700 dark:text-slate-300 font-medium rounded-full border border-slate-200 dark:border-slate-600 hover:from-blue-100 hover:to-blue-100 dark:hover:from-blue-800/50 dark:hover:to-blue-800/50 hover:border-blue-400 dark:hover:border-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-all duration-300 shadow-sm hover:shadow-md`}
+                    className={`inline-flex items-center ${isMobile ? 'px-3 py-1.5 text-xs' : 'px-3 sm:px-4 py-2 text-sm'} bg-gradient-to-r from-slate-700 to-slate-600 text-slate-300 font-medium rounded-full border border-slate-600 hover:from-blue-800/50 hover:to-blue-800/50 hover:border-blue-400 hover:text-blue-200 transition-all duration-300 shadow-sm hover:shadow-md`}
                     whileHover={!isMobile ? {
                       scale: 1.05,
                       y: -2,
@@ -232,7 +232,7 @@ const FeaturedExperience: React.FC<{
             {/* Achievement indicator */}
             <motion.div
               variants={itemVariants}
-              className="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 text-sm"
+              className="flex items-center justify-center gap-2 text-slate-400 text-sm"
             >
               <svg className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} text-green-500`} fill="currentColor" viewBox="0 0 20 20">
                 <path
@@ -300,7 +300,7 @@ export function ExperienceSection() {
       <div className="absolute inset-0 overflow-hidden">
         {/* Animated dot grid pattern - reduced opacity on mobile */}
         <motion.div
-          className="absolute inset-0 opacity-[0.04] sm:opacity-[0.08] dark:opacity-[0.03] sm:dark:opacity-[0.05]"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: "40px 40px",
@@ -347,7 +347,7 @@ export function ExperienceSection() {
         )}
 
         {/* Soft gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/10 sm:via-white/20 to-blue-50/5 sm:to-blue-50/10 dark:from-transparent dark:via-slate-900/20 sm:dark:via-slate-900/30 dark:to-purple-950/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/20 to-purple-950/5" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -373,7 +373,7 @@ export function ExperienceSection() {
             </span>
           </Heading>
           <motion.p
-            className={`${isMobile ? 'text-base' : 'text-lg lg:text-xl'} text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium`}
+            className={`${isMobile ? 'text-base' : 'text-lg lg:text-xl'} text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium`}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -397,7 +397,7 @@ export function ExperienceSection() {
         {/* No Experience State */}
         {!loading && experienceData.length === 0 && (
           <div className="text-center py-12 sm:py-20">
-            <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg">
+            <p className="text-slate-300 text-base sm:text-lg">
               No experience data available at the moment.
             </p>
           </div>
@@ -424,22 +424,22 @@ export function ExperienceSection() {
                 transition={{ delay: isMobile ? 0.3 : 0.5, duration: isMobile ? 0.5 : 0.8 }}
                 className={isMobile ? 'mt-8' : 'mt-12 sm:mt-16'}
               >
-                <h3 className={`text-lg sm:text-xl font-semibold text-center text-slate-700 dark:text-slate-300 ${isMobile ? 'mb-6' : 'mb-8'}`}>
+                <h3 className={`text-lg sm:text-xl font-semibold text-center text-slate-300 ${isMobile ? 'mb-6' : 'mb-8'}`}>
                   Additional Experience
                 </h3>
                 <div className={`grid grid-cols-1 ${isMobile ? 'gap-4' : 'sm:grid-cols-2 gap-4 sm:gap-6'}`}>
                   {experienceData.slice(1).map((experience) => (
-                    <Card key={experience.id} className={`bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm ${isMobile ? 'p-4' : 'p-4 sm:p-6'}`}>
-                      <h4 className={`font-semibold text-slate-900 dark:text-white ${isMobile ? 'mb-2' : 'mb-2'}`}>
+                    <Card key={experience.id} className={`bg-slate-800/80 backdrop-blur-sm ${isMobile ? 'p-4' : 'p-4 sm:p-6'}`}>
+                      <h4 className={`font-semibold text-white ${isMobile ? 'mb-2' : 'mb-2'}`}>
                         {experience.position}
                       </h4>
-                      <p className={`text-blue-600 dark:text-blue-400 ${isMobile ? 'mb-2' : 'mb-2'}`}>
+                      <p className={`text-blue-400 ${isMobile ? 'mb-2' : 'mb-2'}`}>
                         {experience.company}
                       </p>
-                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-slate-600 dark:text-slate-400 ${isMobile ? 'mb-2' : 'mb-3'}`}>
+                      <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-slate-400 ${isMobile ? 'mb-2' : 'mb-3'}`}>
                         {formatDate(experience.start_date)} - {experience.end_date ? formatDate(experience.end_date) : "Present"}
                       </p>
-                      <p className={`${isMobile ? 'text-sm' : 'text-sm'} text-slate-700 dark:text-slate-300`}>
+                      <p className={`${isMobile ? 'text-sm' : 'text-sm'} text-slate-300`}>
                         {experience.description}
                       </p>
                     </Card>

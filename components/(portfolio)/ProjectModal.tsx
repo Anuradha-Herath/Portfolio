@@ -372,13 +372,13 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
   const getTechBadgeColor = (category: string) => {
     const colors = {
-      languages: "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700/50",
-      frontend: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700/50",
-      backend: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700/50",
-      database: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-700/50",
-      apis_tools: "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-700/50"
+      languages: "bg-red-900/30 text-red-300 border-red-700/50",
+      frontend: "bg-blue-900/30 text-blue-300 border-blue-700/50",
+      backend: "bg-green-900/30 text-green-300 border-green-700/50",
+      database: "bg-purple-900/30 text-purple-300 border-purple-700/50",
+      apis_tools: "bg-orange-900/30 text-orange-300 border-orange-700/50"
     };
-    return colors[category as keyof typeof colors] || "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-700/50";
+    return colors[category as keyof typeof colors] || "bg-gray-900/30 text-gray-300 border-gray-700/50";
   };
 
   const getCategoryLabel = (category: string) => {
@@ -414,13 +414,13 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           {/* Modal Content */}
           <motion.div
             variants={modalVariants}
-            className="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full mx-4 sm:mx-6 md:mx-auto md:max-w-4xl max-h-[90vh] overflow-hidden border border-slate-200/50 dark:border-slate-700/50"
+            className="relative bg-slate-900 rounded-3xl shadow-2xl w-full mx-4 sm:mx-6 md:mx-auto md:max-w-4xl max-h-[90vh] overflow-hidden border border-slate-700/50"
             style={{ perspective: "1000px" }}
           >
             {/* Close Button */}
             <motion.button
               onClick={onClose}
-              className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-700 transition-all duration-200 shadow-lg"
+              className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-slate-800/90 backdrop-blur-sm border border-slate-700/50 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 transition-all duration-200 shadow-lg"
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -504,31 +504,31 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
                       {project.title}
                     </h2>
-                    <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
                       {project.description}
                     </p>
                     
                     {/* Additional Details */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-6">
                       {project.project_type_detail && (
-                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
-                          <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Project Type</h4>
-                          <p className="text-slate-600 dark:text-slate-300 text-sm">{project.project_type_detail}</p>
+                        <div className="bg-slate-800/50 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-1">Project Type</h4>
+                          <p className="text-slate-300 text-sm">{project.project_type_detail}</p>
                         </div>
                       )}
                       {project.role && (
-                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
-                          <h4 className="font-semibold text-slate-900 dark:text-white mb-1">My Role</h4>
-                          <p className="text-slate-600 dark:text-slate-300 text-sm">{project.role}</p>
+                        <div className="bg-slate-800/50 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-1">My Role</h4>
+                          <p className="text-slate-300 text-sm">{project.role}</p>
                         </div>
                       )}
                       {project.duration && (
-                        <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
-                          <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Duration</h4>
-                          <p className="text-slate-600 dark:text-slate-300 text-sm">{project.duration}</p>
+                        <div className="bg-slate-800/50 rounded-lg p-4">
+                          <h4 className="font-semibold text-white mb-1">Duration</h4>
+                          <p className="text-slate-300 text-sm">{project.duration}</p>
                         </div>
                       )}
                     </div>
@@ -542,7 +542,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
                     >
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                      <h3 className="text-xl font-bold text-white mb-4">
                         Technologies Used
                       </h3>
                       <div className="flex flex-wrap gap-2">
@@ -573,20 +573,20 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 }}
                     >
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                      <h3 className="text-xl font-bold text-white mb-4">
                         Key Features
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {project.key_features.map((feature, index) => (
                           <motion.div
                             key={`feature-${index}`}
-                            className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg"
+                            className="flex items-start gap-3 p-3 bg-slate-800/50 rounded-lg"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 + index * 0.1 }}
                           >
                             <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                            <p className="text-slate-700 dark:text-slate-300 text-sm">{feature}</p>
+                            <p className="text-slate-300 text-sm">{feature}</p>
                           </motion.div>
                         ))}
                       </div>
@@ -601,20 +601,20 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 }}
                     >
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                      <h3 className="text-xl font-bold text-white mb-4">
                         My Contributions
                       </h3>
                       <div className="space-y-3">
                         {project.my_contributions.map((contribution, index) => (
                           <motion.div
                             key={`contribution-${index}`}
-                            className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800/50"
+                            className="flex items-start gap-3 p-3 bg-blue-900/20 rounded-lg border border-blue-800/50"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.7 + index * 0.1 }}
                           >
                             <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                            <p className="text-slate-700 dark:text-slate-300 text-sm">{contribution}</p>
+                            <p className="text-slate-300 text-sm">{contribution}</p>
                           </motion.div>
                         ))}
                       </div>
@@ -630,11 +630,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       transition={{ delay: 0.7 }}
                     >
                       <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                        <h3 className="text-xl font-bold text-white">
                           Project Gallery
                         </h3>
                         <motion.span
-                          className="text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"
+                          className="text-sm text-slate-400 bg-slate-800 px-3 py-1 rounded-full"
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.8 }}
@@ -652,7 +652,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                               imageRefs.current[index] = el;
                             }}
                             data-image-index={index}
-                            className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 shadow-md hover:shadow-xl transition-all duration-300"
+                            className="break-inside-avoid relative group cursor-pointer overflow-hidden rounded-xl bg-slate-800 shadow-md hover:shadow-xl transition-all duration-300"
                             initial={{ opacity: 0, y: 20, scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{
@@ -666,9 +666,9 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                           >
                             {/* Loading Skeleton */}
                             {imageLoadingStates[index] !== false && (
-                              <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse rounded-xl">
+                              <div className="absolute inset-0 bg-slate-700 animate-pulse rounded-xl">
                                 <div className="w-full h-48 flex items-center justify-center">
-                                  <div className="w-8 h-8 border-2 border-slate-400 dark:border-slate-500 border-t-transparent rounded-full animate-spin"></div>
+                                  <div className="w-8 h-8 border-2 border-slate-500 border-t-transparent rounded-full animate-spin"></div>
                                 </div>
                               </div>
                             )}
@@ -688,8 +688,8 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
                                 {/* Error State */}
                                 {imageErrors.has(index) && (
-                                  <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 flex items-center justify-center rounded-xl">
-                                    <div className="text-center text-slate-500 dark:text-slate-400">
+                                  <div className="absolute inset-0 bg-slate-700 flex items-center justify-center rounded-xl">
+                                    <div className="text-center text-slate-400">
                                       <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                       </svg>
@@ -701,12 +701,12 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                 {/* Hover Overlay */}
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                   <motion.div
-                                    className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg"
+                                    className="bg-slate-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg"
                                     initial={{ scale: 0.8, opacity: 0 }}
                                     whileHover={{ scale: 1.1, opacity: 1 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                                   >
-                                    <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                                     </svg>
                                   </motion.div>
@@ -720,11 +720,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                             )}
 
                             {/* Image Caption */}
-                            <div className="p-3 bg-white dark:bg-slate-800">
-                              <p className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+                            <div className="p-3 bg-slate-800">
+                              <p className="text-sm text-slate-300 font-medium">
                                 Screenshot {index + 1}
                               </p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                              <p className="text-xs text-slate-400 mt-1">
                                 Click to view full size
                               </p>
                             </div>
@@ -734,16 +734,16 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
                       {/* Gallery Stats */}
                       <motion.div
-                        className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-100 dark:border-blue-800/50"
+                        className="mt-6 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl border border-blue-800/50"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.2 }}
                       >
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-600 dark:text-slate-300">
+                          <span className="text-slate-300">
                             📸 {project.additional_images.length} high-quality screenshots
                           </span>
-                          <span className="text-blue-600 dark:text-blue-400 font-medium">
+                          <span className="text-blue-400 font-medium">
                             Interactive Gallery
                           </span>
                         </div>
@@ -753,7 +753,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
                   {/* Action Buttons */}
                   <motion.div
-                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-slate-200 dark:border-slate-700"
+                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-slate-700"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 }}
@@ -767,7 +767,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                         <Button
                           variant="outline"
                           size="lg"
-                          className="w-full border-slate-300 dark:border-slate-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                          className="w-full border-slate-600 hover:border-blue-500 hover:bg-blue-900/20"
                         >
                           <a
                             href={project.github_url}

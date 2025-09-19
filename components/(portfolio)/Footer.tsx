@@ -79,7 +79,7 @@ export function Footer() {
       <div className="absolute inset-0 overflow-hidden">
         {/* Static dot grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.08] dark:opacity-[0.05]"
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: "50px 50px",
@@ -87,7 +87,7 @@ export function Footer() {
         />
 
         {/* Soft gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-[var(--accent)]/10 dark:from-transparent dark:via-slate-900/30 dark:to-purple-950/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/30 to-purple-950/5" />
       </div>
 
       <div className="relative z-10 py-12 sm:py-16 lg:py-20">

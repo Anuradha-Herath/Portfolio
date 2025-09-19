@@ -12,7 +12,7 @@ A modern, full-stack portfolio website built with **Next.js 14**, featuring a co
 
 ### 🎨 **Modern Portfolio Website**
 - **Responsive Design**: Mobile-first approach with seamless desktop experience
-- **Dark/Light Theme**: Automatic theme switching with user preference persistence
+- **Consistent Dark Theme**: Fixed dark theme design for consistent visual experience
 - **Smooth Animations**: Powered by Framer Motion for delightful user interactions
 - **Performance Optimized**: Fast loading with Next.js 14 App Router architecture
 

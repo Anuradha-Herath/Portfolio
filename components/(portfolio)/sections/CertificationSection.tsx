@@ -327,7 +327,7 @@ export function CertificationSection() {
         <div className="absolute inset-0 overflow-hidden">
           {/* Subtle animated dot grid pattern - Same as Projects */}
           <motion.div
-            className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+            className="absolute inset-0 opacity-[0.08]"
             style={{
               backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
               backgroundSize: "40px 40px",
@@ -343,7 +343,7 @@ export function CertificationSection() {
           />
 
           {/* Soft gradient overlay for depth - Same as Projects */}
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/50 to-purple-950/10" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -380,7 +380,7 @@ export function CertificationSection() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-green-500/10 rounded-2xl blur-2xl opacity-50" />
 
               {/* Main container */}
-              <div className="relative flex bg-white/5 dark:bg-slate-900/20 backdrop-blur-md p-1 sm:p-2 rounded-2xl border border-white/10 dark:border-slate-700/30 shadow-2xl">
+              <div className="relative flex bg-slate-900/20 backdrop-blur-md p-1 sm:p-2 rounded-2xl border border-slate-700/30 shadow-2xl">
                 {/* Course Certifications Button */}
                 <motion.button
                   onClick={() => setActiveTab("course")}
@@ -588,7 +588,7 @@ export function CertificationSection() {
                         } opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl`}
                       />
 
-                      <Card className="h-full relative bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border-white/20 dark:border-slate-700/20 hover:border-[var(--accent)]/40 transition-all duration-300 overflow-hidden">
+                      <Card className="h-full relative bg-slate-800/10 backdrop-blur-sm border-slate-700/20 hover:border-[var(--accent)]/40 transition-all duration-300 overflow-hidden">
                         <CardContent className="p-4 sm:p-6 h-full flex flex-col">
                           {/* Certificate Image or Icon */}
                           {cert.image_url ? (

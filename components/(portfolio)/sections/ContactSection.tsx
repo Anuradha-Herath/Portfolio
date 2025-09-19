@@ -316,7 +316,7 @@ export const ContactSection = React.memo(() => {
       <div className="absolute inset-0 overflow-hidden">
         {/* Subtle animated dot grid pattern - Same as other sections */}
         <motion.div
-          className="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]"
+          className="absolute inset-0 opacity-[0.08]"
           style={{
             backgroundImage: `radial-gradient(circle, rgb(99 102 241) 1px, transparent 1px)`,
             backgroundSize: "40px 40px",
@@ -332,7 +332,7 @@ export const ContactSection = React.memo(() => {
         />
 
         {/* Soft gradient overlay for depth - Same as other sections */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-blue-50/20 dark:from-transparent dark:via-slate-900/50 dark:to-purple-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-slate-900/50 to-purple-950/10" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -352,7 +352,7 @@ export const ContactSection = React.memo(() => {
             </Heading>
           </motion.div>
           <motion.p
-            className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium"
+            className="text-base sm:text-lg lg:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium"
             variants={itemVariants}
           >
             I&apos;m always open to discussing new opportunities, interesting
@@ -370,10 +370,10 @@ export const ContactSection = React.memo(() => {
           {/* Contact Information */}
           <motion.div variants={itemVariants} className="space-y-8">
             <div>
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-6 tracking-tight">
                 Let&apos;s Connect
               </h3>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-base sm:text-lg">
+              <p className="text-slate-300 leading-relaxed mb-8 text-base sm:text-lg">
                 Whether you have a project in mind, want to collaborate, or just
                 want to say hello, I&apos;d love to hear from you. Feel free to
                 reach out through any of the channels below.
@@ -392,7 +392,7 @@ export const ContactSection = React.memo(() => {
                   }}
                   className="group"
                 >
-                  <Card className="bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+                  <Card className="bg-slate-800/10 backdrop-blur-sm border border-slate-700/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-4">
                         <motion.div
@@ -403,18 +403,18 @@ export const ContactSection = React.memo(() => {
                           {info.icon}
                         </motion.div>
                         <div className="flex-1">
-                          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">
+                          <p className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-1">
                             {info.label}
                           </p>
                           {info.href !== "#" ? (
                             <a
                               href={info.href}
-                              className="text-base sm:text-lg lg:text-xl font-semibold text-slate-900 dark:text-white hover:text-[var(--accent)] dark:hover:text-[#5856d6] transition-colors duration-300 group-hover:translate-x-1 transform"
+                              className="text-base sm:text-lg lg:text-xl font-semibold text-white hover:text-[#5856d6] transition-colors duration-300 group-hover:translate-x-1 transform"
                             >
                               {info.value}
                             </a>
                           ) : (
-                            <p className="text-base sm:text-lg lg:text-xl font-semibold text-slate-900 dark:text-white">
+                            <p className="text-base sm:text-lg lg:text-xl font-semibold text-white">
                               {info.value}
                             </p>
                           )}
@@ -428,7 +428,7 @@ export const ContactSection = React.memo(() => {
 
             {/* Social Links */}
             <motion.div variants={itemVariants} className="pt-8">
-              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-6">
+              <p className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-6">
                 Follow me on
               </p>
               <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
@@ -444,7 +444,7 @@ export const ContactSection = React.memo(() => {
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                       </svg>
                     ),
-                    hoverColor: "hover:bg-slate-900 dark:hover:bg-slate-700",
+                    hoverColor: "hover:bg-slate-700",
                   },
                   {
                     href: "https://www.linkedin.com/in/herath-anuradha",
@@ -491,7 +491,7 @@ export const ContactSection = React.memo(() => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-12 h-12 rounded-xl bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 dark:border-slate-700/20 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-all duration-300 shadow-lg hover:shadow-xl ${social.hoverColor} hover:text-white hover:scale-110`}
+                    className={`w-12 h-12 rounded-xl bg-slate-800/10 backdrop-blur-sm border border-slate-700/20 flex items-center justify-center text-slate-400 transition-all duration-300 shadow-lg hover:shadow-xl ${social.hoverColor} hover:text-white hover:scale-110`}
                     whileHover={shouldReduceMotion ? {} : {
                       scale: 1.1,
                       y: -2,
@@ -515,13 +515,13 @@ export const ContactSection = React.memo(() => {
 
           {/* Contact Form */}
           <motion.div variants={itemVariants}>
-            <Card className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-2 border-white/30 dark:border-slate-700/30 shadow-2xl hover:shadow-3xl transition-all duration-500 rounded-3xl overflow-hidden">
+            <Card className="relative bg-slate-900/95 backdrop-blur-md border-2 border-slate-700/30 shadow-2xl hover:shadow-3xl transition-all duration-500 rounded-3xl overflow-hidden">
               {/* Decorative Header */}
               <div className="relative bg-gradient-to-r from-[var(--accent)] via-[#5856d6] to-purple-600 p-1">
-                <div className="bg-white/10 dark:bg-slate-900/10 rounded-t-2xl p-6">
+                <div className="bg-slate-900/10 rounded-t-2xl p-6">
                   <div className="flex items-center space-x-4">
                     <motion.div
-                      className="flex-shrink-0 w-16 h-16 bg-white/20 dark:bg-slate-800/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
+                      className="flex-shrink-0 w-16 h-16 bg-slate-800/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg"
                       whileHover={shouldReduceMotion ? {} : { rotate: 360, scale: 1.05 }}
                       transition={shouldReduceMotion ? {} : { duration: 0.6, ease: "easeInOut" }}
                     >
@@ -558,7 +558,7 @@ export const ContactSection = React.memo(() => {
                 </div>
               </div>
 
-              <CardContent className="p-8 lg:p-10 bg-white/50 dark:bg-slate-900/50">
+              <CardContent className="p-8 lg:p-10 bg-slate-900/50">
                 <form 
                   onSubmit={handleSubmit} 
                   className="space-y-8"
@@ -600,10 +600,10 @@ export const ContactSection = React.memo(() => {
                             </svg>
                           </motion.div>
                           <div className="flex-1">
-                            <h4 className="text-xl font-bold text-green-700 dark:text-green-400 mb-2">
+                            <h4 className="text-xl font-bold text-green-400 mb-2">
                               Message Sent Successfully!
                             </h4>
-                            <p className="text-green-600 dark:text-green-300 text-base leading-relaxed">
+                            <p className="text-green-300 text-base leading-relaxed">
                               Thank you for your message! I&apos;ll get back to
                               you within 24 hours.
                             </p>
@@ -646,10 +646,10 @@ export const ContactSection = React.memo(() => {
                             </svg>
                           </motion.div>
                           <div className="flex-1">
-                            <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">
+                            <h4 className="text-xl font-bold text-red-400 mb-2">
                               {retryAfter ? 'Rate Limit Exceeded' : submitStatus === 'error' && errorMessage.includes('troll') ? 'Troll Detected! 🎭' : 'Failed to Send Message'}
                             </h4>
-                            <p className="text-red-600 dark:text-red-300 text-base leading-relaxed">
+                            <p className="text-red-300 text-base leading-relaxed">
                               {errorMessage}
                               {retryAfter && (
                                 <span className="block mt-2 text-sm">
@@ -683,7 +683,7 @@ export const ContactSection = React.memo(() => {
                             />
                           </svg>
                         </div>
-                        <h4 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white">
+                        <h4 className="text-base sm:text-lg font-semibold text-white">
                           Personal Information
                         </h4>
                       </div>
@@ -701,7 +701,7 @@ export const ContactSection = React.memo(() => {
                             onChange={handleChange}
                             required
                             placeholder="Your full name"
-                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                            className="bg-slate-800/80 border-2 border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
                           />
                         </motion.div>
                         <motion.div
@@ -717,7 +717,7 @@ export const ContactSection = React.memo(() => {
                             onChange={handleChange}
                             required
                             placeholder="your.email@example.com"
-                            className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                            className="bg-slate-800/80 border-2 border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
                           />
                         </motion.div>
                       </div>
@@ -729,7 +729,7 @@ export const ContactSection = React.memo(() => {
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="text-red-600 dark:text-red-400 text-sm font-medium mt-2"
+                            className="text-red-400 text-sm font-medium mt-2"
                           >
                             {emailError}
                           </motion.div>
@@ -755,7 +755,7 @@ export const ContactSection = React.memo(() => {
                             />
                           </svg>
                         </div>
-                        <h4 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white">
+                        <h4 className="text-base sm:text-lg font-semibold text-white">
                           Your Message
                         </h4>
                       </div>
@@ -772,7 +772,7 @@ export const ContactSection = React.memo(() => {
                           onChange={handleChange}
                           required
                           placeholder="What's this about?"
-                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
+                          className="bg-slate-800/80 border-2 border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300"
                         />
                       </motion.div>
 
@@ -789,7 +789,7 @@ export const ContactSection = React.memo(() => {
                           required
                           rows={6}
                           placeholder="Tell me about your project or just say hello!"
-                          className="bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300 resize-none"
+                          className="bg-slate-800/80 border-2 border-slate-600 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/20 text-[var(--foreground)] placeholder-[var(--foreground-tertiary)] rounded-xl py-4 px-4 text-base font-medium shadow-sm hover:shadow-md transition-all duration-300 resize-none"
                         />
                       </motion.div>
                     </div>
