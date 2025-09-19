@@ -124,8 +124,256 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        {/* Mobile-First Layout */}
+        <div className="lg:hidden">
+          <motion.div
+            className="flex flex-col items-center text-center space-y-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate={controls}
+          >
+            {/* Mobile: Content First */}
+            <motion.div className="space-y-4" variants={itemVariants}>
+              <motion.p
+                className="text-xs font-semibold tracking-[0.15em] uppercase text-slate-500 dark:text-slate-400"
+                variants={itemVariants}
+              >
+                — Hello, I&apos;m
+              </motion.p>
+
+              <Heading
+                level={1}
+                className="text-4xl sm:text-5xl font-black tracking-tight leading-tight"
+              >
+                <motion.span
+                  className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-white dark:via-blue-200 dark:to-white bg-clip-text text-transparent"
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  style={{
+                    backgroundSize: "200% 100%",
+                  }}
+                >
+                  Anuradha Herath
+                </motion.span>
+              </Heading>
+
+              <motion.div
+                className="h-10 flex justify-center items-center"
+                variants={itemVariants}
+              >
+                <span className="text-lg font-medium text-slate-500 dark:text-slate-500">
+                  {displayedText}
+                  <motion.span
+                    className="inline-block w-0.5 h-5 bg-blue-500 ml-1"
+                    animate={{ opacity: [1, 0, 1] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                  />
+                </span>
+              </motion.div>
+            </motion.div>
+
+            {/* Mobile: Smaller Profile Image */}
+            <motion.div
+              className="flex justify-center my-6"
+              variants={itemVariants}
+            >
+              <div className="relative">
+                <motion.div
+                  className="relative w-48 h-48 sm:w-56 sm:h-56"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.8,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
+                >
+                  <motion.div
+                    className="relative w-full h-full"
+                    animate={{
+                      y: [0, -8, 0],
+                    }}
+                    transition={{
+                      duration: 6,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 1,
+                    }}
+                  >
+                    <motion.div
+                      className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
+                      whileTap={{ scale: 0.95 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25,
+                      }}
+                    >
+                      <div className="relative w-full h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border-2 border-white/50 dark:border-slate-700/50 rounded-full overflow-hidden">
+                        <motion.img
+                          src="/images/profile_photo.png"
+                          alt="Anuradha Herath"
+                          className="w-full h-full object-cover"
+                          initial={{ scale: 1.1, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{
+                            delay: 0.5,
+                            duration: 0.6,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                            const parent = e.currentTarget.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `
+                                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-50 to-rose-100 dark:from-blue-900/40 dark:via-purple-900/30 dark:to-rose-900/20">
+                                  <div class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                    AH
+                                  </div>
+                                </div>
+                              `;
+                            }
+                          }}
+                        />
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Mobile: Description */}
+            <motion.p
+              className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg px-4"
+              variants={itemVariants}
+            >
+              Hi, I&apos;m Anuradha Herath 👋. I&apos;m an IT undergrad who loves building web apps and exploring AI. I enjoy turning ideas into simple, useful digital solutions.
+            </motion.p>
+
+            {/* Mobile: CTA Buttons - Stack vertically with better spacing */}
+            <motion.div
+              className="flex flex-col gap-3 w-full max-w-xs px-4"
+              variants={itemVariants}
+            >
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  variant="premium"
+                  size="lg"
+                  onClick={scrollToContact}
+                  className="w-full px-6 py-4 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    Let&apos;s Connect
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </span>
+                </Button>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={scrollToProjects}
+                  className="w-full group px-6 py-4 text-base font-semibold border-2 border-slate-300 dark:border-slate-600 bg-transparent hover:bg-slate-900 dark:hover:bg-white hover:border-slate-900 dark:hover:border-white text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-900 transition-all duration-300"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    View My Work
+                    <svg
+                      className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012 2v2M7 7h10"
+                      />
+                    </svg>
+                  </span>
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            {/* Mobile: Social Links - Centered with better spacing */}
+            <motion.div className="flex justify-center gap-4 pt-4" variants={itemVariants}>
+              {[
+                {
+                  href: "https://github.com/Anuradha-Herath",
+                  label: "GitHub",
+                  icon: "M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z",
+                  hoverColor: "hover:bg-gray-900 hover:text-white",
+                },
+                {
+                  href: "https://www.linkedin.com/in/herath-anuradha",
+                  label: "LinkedIn",
+                  icon: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z",
+                  hoverColor: "hover:bg-blue-600 hover:text-white",
+                },
+                {
+                  href: "mailto:anuradhaherath2001@gmail.com",
+                  label: "Email",
+                  icon: "M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zm0 12H4V8.99l8 6.99 8-6.99V18z",
+                  hoverColor: "hover:bg-red-500 hover:text-white",
+                },
+              ].map((social, index) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 transition-all duration-300 shadow-sm hover:shadow-lg ${social.hoverColor}`}
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    delay: 0.8 + index * 0.1,
+                    duration: 0.4,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d={social.icon} />
+                  </svg>
+                </motion.a>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Desktop Layout */}
         <motion.div
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+          className="hidden lg:grid grid-cols-2 gap-16 items-center"
           variants={containerVariants}
           initial="hidden"
           animate={controls}
