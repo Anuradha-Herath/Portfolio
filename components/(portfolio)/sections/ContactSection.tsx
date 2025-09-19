@@ -431,7 +431,7 @@ export const ContactSection = React.memo(() => {
               <p className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-6">
                 Follow me on
               </p>
-              <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+              <div className="flex flex-wrap justify-start gap-3 sm:gap-4">
                 {[
                   {
                     href: "https://github.com/Anuradha-Herath",
