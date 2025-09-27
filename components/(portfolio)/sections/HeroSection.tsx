@@ -230,7 +230,7 @@ export function HeroSection() {
                     >
                       <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700/50 rounded-full overflow-hidden">
                         <motion.img
-                          src="/images/profile_photo.png"
+                          src={heroData?.profile_image_url}
                           alt="Anuradha Herath"
                           className="w-full h-full object-cover"
                           initial={{ scale: 1.1, opacity: 0 }}
@@ -595,7 +595,7 @@ export function HeroSection() {
 
                       {/* Professional photo with enhanced animations */}
                       <motion.img
-                        src={heroData?.profile_image_url || "/images/profile_photo.png"}
+                        src={heroData?.profile_image_url}
                         alt={heroData?.name || "Anuradha Herath"}
                         className="w-full h-full object-cover"
                         initial={{ scale: 1.1, opacity: 0 }}
