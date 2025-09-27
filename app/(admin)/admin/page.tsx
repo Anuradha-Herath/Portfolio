@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
-import { FolderIcon, CogIcon, BriefcaseIcon, GraduationCap, StarIcon, UserIcon, FileTextIcon } from 'lucide-react';
+import { FolderIcon, CogIcon, BriefcaseIcon, GraduationCap, StarIcon, UserIcon, FileTextIcon, ImageIcon, FileText } from 'lucide-react';
 
 interface DashboardStats {
   projects: number;
@@ -12,6 +12,8 @@ interface DashboardStats {
   certifications: number;
   testimonials: number;
   blogs: number;
+  hero: boolean;
+  cvFiles: number;
 }
 
 export default function AdminPage() {
@@ -23,6 +25,8 @@ export default function AdminPage() {
     certifications: 0,
     testimonials: 0,
     blogs: 0,
+    hero: false,
+    cvFiles: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,6 +42,8 @@ export default function AdminPage() {
           '/api/certifications',
           '/api/testimonials',
           '/api/blogs',
+          '/api/hero',
+          '/api/cv',
         ];
 
         const responses = await Promise.all(
@@ -56,6 +62,8 @@ export default function AdminPage() {
           certifications: data[4]?.length || 0,
           testimonials: data[5]?.length || 0,
           blogs: data[6]?.length || 0,
+          hero: !!data[7]?.id, // Check if hero data exists
+          cvFiles: data[8]?.length || 0,
         });
       } catch (error) {
         console.error('Error fetching stats:', error);
@@ -68,6 +76,8 @@ export default function AdminPage() {
   }, []);
 
   const statCards = [
+    { title: 'Hero Section', value: stats.hero ? 'Configured' : 'Not Set', icon: ImageIcon, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { title: 'CV Files', value: stats.cvFiles, icon: FileText, color: 'text-orange-600', bg: 'bg-orange-50' },
     { title: 'Projects', value: stats.projects, icon: FolderIcon, color: 'text-blue-600', bg: 'bg-blue-50' },
     { title: 'Skills', value: stats.skills, icon: CogIcon, color: 'text-green-600', bg: 'bg-green-50' },
     { title: 'Experiences', value: stats.experiences, icon: BriefcaseIcon, color: 'text-purple-600', bg: 'bg-purple-50' },
@@ -80,7 +90,7 @@ export default function AdminPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--accent)' }}></div>
       </div>
     );
   }
@@ -88,10 +98,10 @@ export default function AdminPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>
           Admin Dashboard
         </h1>
-        <p className="text-slate-600 dark:text-slate-400">
+        <p style={{ color: 'var(--foreground-secondary)' }}>
           Manage your portfolio content from here
         </p>
       </div>
@@ -100,19 +110,19 @@ export default function AdminPage() {
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className="hover:shadow-md transition-shadow">
+            <Card key={stat.title} className="hover:shadow-md transition-shadow card-premium">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    <p className="text-sm font-medium" style={{ color: 'var(--foreground-secondary)' }}>
                       {stat.title}
                     </p>
-                    <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                    <p className="text-3xl font-bold" style={{ color: 'var(--foreground)' }}>
                       {stat.value}
                     </p>
                   </div>
-                  <div className={`p-3 rounded-full ${stat.bg} dark:bg-slate-700`}>
-                    <Icon className={`h-6 w-6 ${stat.color} dark:text-slate-300`} />
+                  <div className="p-3 rounded-full" style={{ backgroundColor: 'var(--surface-hover)' }}>
+                    <Icon className="h-6 w-6" style={{ color: 'var(--accent)' }} />
                   </div>
                 </div>
               </CardContent>
@@ -122,33 +132,63 @@ export default function AdminPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="card-premium">
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--foreground)' }}>
               Quick Actions
             </h3>
             <div className="space-y-3">
               <a
+                href="/admin/hero"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                🖼️ Manage Hero Section
+              </a>
+              <a
+                href="/admin/cv"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                📄 Manage CV/Resume
+              </a>
+              <a
                 href="/admin/projects"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 📁 Manage Projects
               </a>
               <a
                 href="/admin/skills"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 🛠️ Manage Skills
               </a>
               <a
                 href="/admin/experiences"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 💼 Manage Experience
               </a>
               <a
                 href="/admin/blogs"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 📝 Manage Blog Posts
               </a>
@@ -156,12 +196,12 @@ export default function AdminPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-premium">
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--foreground)' }}>
               Recent Activity
             </h3>
-            <div className="text-sm text-slate-600 dark:text-slate-400">
+            <div className="text-sm" style={{ color: 'var(--foreground-secondary)' }}>
               <p>No recent activity to display.</p>
               <p className="mt-2">Start by adding some content to your portfolio!</p>
             </div>

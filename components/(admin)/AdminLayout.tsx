@@ -62,10 +62,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   if (isAuthenticated === null) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400">Checking authentication...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--accent)' }}></div>
+          <p style={{ color: 'var(--foreground-secondary)' }}>Checking authentication...</p>
         </div>
       </div>
     );
@@ -76,7 +76,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen" style={{ background: 'var(--background)' }}>
       <AdminNav onLogout={handleLogout} />
       <main className="pl-64 min-h-screen">
         <div className="p-8">

@@ -198,7 +198,7 @@ export default function AdminProjectsPage() {
               onDelete={() => handleDelete(project)}
             >
               <div className="space-y-3">
-                <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3">
+                <p className="text-sm line-clamp-3" style={{ color: 'var(--foreground-secondary)' }}>
                   {project.description}
                 </p>
 
@@ -207,7 +207,8 @@ export default function AdminProjectsPage() {
                   <img
                     src={project.image_url}
                     alt={project.title}
-                    className="w-full max-h-64 object-contain rounded-lg bg-slate-100 dark:bg-slate-800"
+                    className="w-full max-h-64 object-contain rounded-lg"
+                    style={{ backgroundColor: 'var(--surface-hover)' }}
                   />
                 )}
 
@@ -219,7 +220,8 @@ export default function AdminProjectsPage() {
                         key={img + idx}
                         src={img}
                         alt={`Additional ${idx + 1}`}
-                        className="w-20 h-20 object-cover rounded border bg-slate-100 dark:bg-slate-800"
+                        className="w-20 h-20 object-cover rounded border"
+                        style={{ backgroundColor: 'var(--surface-hover)', borderColor: 'var(--border)' }}
                       />
                     ))}
                   </div>
@@ -227,25 +229,25 @@ export default function AdminProjectsPage() {
 
                 {/* Project meta info */}
                 <div className="flex flex-wrap gap-2 mt-2 text-xs">
-                  <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
-                    Status: <span className="font-semibold">{project.status}</span>
+                  <span className="px-2 py-1 rounded-full" style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--foreground-secondary)' }}>
+                    Status: <span className="font-semibold" style={{ color: 'var(--foreground)' }}>{project.status}</span>
                   </span>
-                  <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
-                    Type: <span className="font-semibold">{project.type}</span>
+                  <span className="px-2 py-1 rounded-full" style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--foreground-secondary)' }}>
+                    Type: <span className="font-semibold" style={{ color: 'var(--foreground)' }}>{project.type}</span>
                   </span>
                   {project.role && (
-                    <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
-                      Role: <span className="font-semibold">{project.role}</span>
+                    <span className="px-2 py-1 rounded-full" style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--foreground-secondary)' }}>
+                      Role: <span className="font-semibold" style={{ color: 'var(--foreground)' }}>{project.role}</span>
                     </span>
                   )}
                   {project.duration && (
-                    <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
-                      Duration: <span className="font-semibold">{project.duration}</span>
+                    <span className="px-2 py-1 rounded-full" style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--foreground-secondary)' }}>
+                      Duration: <span className="font-semibold" style={{ color: 'var(--foreground)' }}>{project.duration}</span>
                     </span>
                   )}
                   {project.project_type_detail && (
-                    <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400">
-                      Detail: <span className="font-semibold">{project.project_type_detail}</span>
+                    <span className="px-2 py-1 rounded-full" style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--foreground-secondary)' }}>
+                      Detail: <span className="font-semibold" style={{ color: 'var(--foreground)' }}>{project.project_type_detail}</span>
                     </span>
                   )}
                 </div>
@@ -256,11 +258,12 @@ export default function AdminProjectsPage() {
                     {Object.entries(project.technologies_used).map(([cat, arr]) => (
                       arr && arr.length > 0 && (
                         <div key={cat} className="flex flex-wrap gap-1">
-                          <span className="font-semibold capitalize text-xs text-slate-700 dark:text-slate-300 mr-1">{cat}:</span>
+                          <span className="font-semibold capitalize text-xs mr-1" style={{ color: 'var(--foreground)' }}>{cat}:</span>
                           {arr.map((tech) => (
                             <span
                               key={tech}
-                              className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full"
+                              className="inline-block px-2 py-1 text-xs rounded-full"
+                              style={{ backgroundColor: 'var(--accent)', color: 'white' }}
                             >
                               {tech}
                             </span>
@@ -277,9 +280,12 @@ export default function AdminProjectsPage() {
                 <div className="flex justify-between items-center text-sm mt-2">
                   <span className={`px-2 py-1 rounded-full text-xs ${
                     project.featured
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                      : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'
-                  }`}>
+                      ? 'bg-green-100 text-green-800'
+                      : ''
+                  }`} style={{
+                    backgroundColor: project.featured ? '#dcfce7' : 'var(--surface-hover)',
+                    color: project.featured ? '#166534' : 'var(--foreground-secondary)'
+                  }}>
                     {project.featured ? 'Featured' : 'Regular'}
                   </span>
                   <div className="flex gap-2">
@@ -288,7 +294,8 @@ export default function AdminProjectsPage() {
                         href={project.github_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                        className="hover:text-slate-700"
+                        style={{ color: 'var(--foreground-secondary)' }}
                         title="GitHub Repository"
                       >
                         <GithubIcon className="h-5 w-5" />
@@ -299,7 +306,8 @@ export default function AdminProjectsPage() {
                         href={project.live_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                        className="hover:text-slate-700"
+                        style={{ color: 'var(--foreground-secondary)' }}
                         title="Live Demo"
                       >
                         <ExternalLinkIcon className="h-5 w-5" />

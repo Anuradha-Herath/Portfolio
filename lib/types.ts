@@ -1,4 +1,28 @@
- export interface Project {
+export interface Hero {
+  id: string;
+  name: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  profile_image_url?: string;
+  roles: string[];
+  github_url?: string;
+  linkedin_url?: string;
+  email?: string;
+}
+
+export interface CVFile {
+  id: string;
+  name: string;
+  file_url: string;
+  file_size: number;
+  uploaded_at: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Project {
   id: string;
   title: string;
   description: string;

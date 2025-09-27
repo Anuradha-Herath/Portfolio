@@ -13,7 +13,9 @@ import {
   LogOutIcon,
   FolderIcon,
   MailIcon,
-  ShieldIcon
+  ShieldIcon,
+  ImageIcon,
+  FileText
 } from 'lucide-react';
 
 interface AdminNavProps {
@@ -22,6 +24,8 @@ interface AdminNavProps {
 
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: HomeIcon },
+  { name: 'Hero Section', href: '/admin/hero', icon: ImageIcon },
+  { name: 'CV/Resume', href: '/admin/cv', icon: FileText },
   { name: 'Projects', href: '/admin/projects', icon: FolderIcon },
   { name: 'Skills', href: '/admin/skills', icon: CogIcon },
   { name: 'Experience', href: '/admin/experiences', icon: BriefcaseIcon },
@@ -37,11 +41,11 @@ export function AdminNav({ onLogout }: AdminNavProps) {
   const pathname = usePathname();
 
   return (
-    <div className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-slate-800 shadow-lg border-r border-slate-200 dark:border-slate-700">
+    <div className="fixed inset-y-0 left-0 w-64 shadow-lg border-r" style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="p-6 border-b border-slate-200 dark:border-slate-700">
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white">
+        <div className="p-6 border-b" style={{ borderColor: 'var(--border)' }}>
+          <h1 className="text-xl font-bold" style={{ color: 'var(--foreground)' }}>
             Admin Panel
           </h1>
         </div>
@@ -56,11 +60,22 @@ export function AdminNav({ onLogout }: AdminNavProps) {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
-                    : 'text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700'
-                }`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors`}
+                style={{
+                  backgroundColor: isActive ? 'var(--accent)' : 'transparent',
+                  color: isActive ? 'white' : 'var(--foreground-secondary)',
+                  border: isActive ? 'none' : '1px solid transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'var(--surface-hover)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }
+                }}
               >
                 <Icon className="w-5 h-5 mr-3" />
                 {item.name}
@@ -70,10 +85,20 @@ export function AdminNav({ onLogout }: AdminNavProps) {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+        <div className="p-4 border-t" style={{ borderColor: 'var(--border)' }}>
           <button
             onClick={onLogout}
-            className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/50 rounded-lg transition-colors"
+            className="flex items-center w-full px-4 py-3 text-sm font-medium rounded-lg transition-colors"
+            style={{
+              color: '#ef4444', // red color for logout
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
           >
             <LogOutIcon className="w-5 h-5 mr-3" />
             Logout
