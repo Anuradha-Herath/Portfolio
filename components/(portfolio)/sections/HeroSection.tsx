@@ -12,6 +12,7 @@ import { Hero } from "@/lib/types";
 export function HeroSection() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [heroData, setHeroData] = useState<Hero | null>(null);
+  const [imageLoading, setImageLoading] = useState(true);
   const controls = useAnimation();
 
   // Detect mobile devices
@@ -229,8 +230,27 @@ export function HeroSection() {
                       }}
                     >
                       <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700/50 rounded-full overflow-hidden">
+                        {/* Loading skeleton */}
+                        {imageLoading && (
+                          <motion.div
+                            className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-700 to-slate-800"
+                            initial={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <motion.div
+                              className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full"
+                              animate={{ rotate: 360 }}
+                              transition={{
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: "linear"
+                              }}
+                            />
+                          </motion.div>
+                        )}
                         <motion.img
-                          src="/images/profile_photo.png"
+                          src={heroData?.profile_image_url}
                           alt="Anuradha Herath"
                           className="w-full h-full object-cover"
                           initial={{ scale: 1.1, opacity: 0 }}
@@ -240,7 +260,8 @@ export function HeroSection() {
                             duration: 0.6,
                             ease: [0.25, 0.46, 0.45, 0.94],
                           }}
-                          loading="lazy"
+                          loading="eager"
+                          onLoad={() => setImageLoading(false)}
                           onError={(e) => {
                             e.currentTarget.style.display = "none";
                             const parent = e.currentTarget.parentElement;
@@ -565,6 +586,26 @@ export function HeroSection() {
 
                     {/* Main image container with enhanced styling */}
                     <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700/50 rounded-full overflow-hidden">
+                      {/* Loading skeleton */}
+                      {imageLoading && (
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-700 to-slate-800 z-10"
+                          initial={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <motion.div
+                            className="w-20 h-20 border-4 border-blue-500/30 border-t-blue-500 rounded-full"
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              ease: "linear"
+                            }}
+                          />
+                        </motion.div>
+                      )}
+
                       {/* Enhanced loading shimmer with multiple passes */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
@@ -595,7 +636,7 @@ export function HeroSection() {
 
                       {/* Professional photo with enhanced animations */}
                       <motion.img
-                        src={heroData?.profile_image_url || "/images/profile_photo.png"}
+                        src={heroData?.profile_image_url}
                         alt={heroData?.name || "Anuradha Herath"}
                         className="w-full h-full object-cover"
                         initial={{ scale: 1.1, opacity: 0 }}
@@ -609,7 +650,8 @@ export function HeroSection() {
                           scale: 1.05,
                           filter: "brightness(1.1) contrast(1.05)",
                         } : {}}
-                        loading="lazy"
+                        loading="eager"
+                        onLoad={() => setImageLoading(false)}
                         onError={(e) => {
                           // Enhanced fallback with sophisticated animation
                           e.currentTarget.style.display = "none";

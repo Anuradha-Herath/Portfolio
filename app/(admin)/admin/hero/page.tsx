@@ -13,6 +13,7 @@ export default function AdminHeroPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [rolesInputValue, setRolesInputValue] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function AdminHeroPage() {
       if (response.ok) {
         const data = await response.json();
         setHero(data);
+        setRolesInputValue(data.roles.join(', '));
       }
     } catch (error) {
       console.error('Error fetching hero data:', error);
@@ -95,7 +97,13 @@ export default function AdminHeroPage() {
 
       if (response.ok) {
         const { imageUrl } = await response.json();
-        setHero(prev => prev ? { ...prev, profile_image_url: imageUrl } : null);
+        setHero(prev => {
+          const updated = prev ? { ...prev, profile_image_url: imageUrl } : null;
+          if (updated) {
+            setRolesInputValue(updated.roles.join(', '));
+          }
+          return updated;
+        });
         alert('Profile image uploaded successfully!');
       } else {
         const error = await response.json();
@@ -110,12 +118,13 @@ export default function AdminHeroPage() {
   };
 
   const handleInputChange = (field: keyof Hero, value: string | string[]) => {
-    setHero(prev => prev ? { ...prev, [field]: value } : null);
-  };
-
-  const handleRolesChange = (rolesString: string) => {
-    const roles = rolesString.split(',').map(role => role.trim()).filter(role => role.length > 0);
-    handleInputChange('roles', roles);
+    setHero(prev => {
+      const updated = prev ? { ...prev, [field]: value } : null;
+      if (updated && field === 'roles') {
+        setRolesInputValue((value as string[]).join(', '));
+      }
+      return updated;
+    });
   };
 
   if (isLoading) {
@@ -267,8 +276,13 @@ export default function AdminHeroPage() {
               </label>
               <Input
                 type="text"
-                value={hero.roles.join(', ')}
-                onChange={(e) => handleRolesChange(e.target.value)}
+                value={rolesInputValue}
+                onChange={(e) => setRolesInputValue(e.target.value)}
+                onBlur={() => {
+                  const roles = rolesInputValue.split(',').map(role => role.trim()).filter(role => role.length > 0);
+                  handleInputChange('roles', roles);
+                  setRolesInputValue(roles.join(', '));
+                }}
                 placeholder="e.g., IT Undergraduate, Full Stack Developer, Problem Solver"
               />
             </div>

@@ -22,7 +22,12 @@ export const GET = async () => {
       );
     }
 
-    return NextResponse.json(data);
+    // Add caching headers for better performance
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600', // Cache for 5 minutes, serve stale for 10 minutes
+      },
+    });
   } catch (error) {
     console.error('Error in hero GET route:', error);
     return NextResponse.json(
