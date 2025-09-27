@@ -1,4 +1,17 @@
- export interface Project {
+export interface Hero {
+  id: string;
+  name: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  profile_image_url?: string;
+  roles: string[];
+  github_url?: string;
+  linkedin_url?: string;
+  email?: string;
+}
+
+export interface Project {
   id: string;
   title: string;
   description: string;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
-import { FolderIcon, CogIcon, BriefcaseIcon, GraduationCap, StarIcon, UserIcon, FileTextIcon } from 'lucide-react';
+import { FolderIcon, CogIcon, BriefcaseIcon, GraduationCap, StarIcon, UserIcon, FileTextIcon, ImageIcon } from 'lucide-react';
 
 interface DashboardStats {
   projects: number;
@@ -12,6 +12,7 @@ interface DashboardStats {
   certifications: number;
   testimonials: number;
   blogs: number;
+  hero: boolean;
 }
 
 export default function AdminPage() {
@@ -23,6 +24,7 @@ export default function AdminPage() {
     certifications: 0,
     testimonials: 0,
     blogs: 0,
+    hero: false,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,6 +40,7 @@ export default function AdminPage() {
           '/api/certifications',
           '/api/testimonials',
           '/api/blogs',
+          '/api/hero',
         ];
 
         const responses = await Promise.all(
@@ -56,6 +59,7 @@ export default function AdminPage() {
           certifications: data[4]?.length || 0,
           testimonials: data[5]?.length || 0,
           blogs: data[6]?.length || 0,
+          hero: !!data[7]?.id, // Check if hero data exists
         });
       } catch (error) {
         console.error('Error fetching stats:', error);
@@ -68,6 +72,7 @@ export default function AdminPage() {
   }, []);
 
   const statCards = [
+    { title: 'Hero Section', value: stats.hero ? 'Configured' : 'Not Set', icon: ImageIcon, color: 'text-indigo-600', bg: 'bg-indigo-50' },
     { title: 'Projects', value: stats.projects, icon: FolderIcon, color: 'text-blue-600', bg: 'bg-blue-50' },
     { title: 'Skills', value: stats.skills, icon: CogIcon, color: 'text-green-600', bg: 'bg-green-50' },
     { title: 'Experiences', value: stats.experiences, icon: BriefcaseIcon, color: 'text-purple-600', bg: 'bg-purple-50' },
@@ -128,6 +133,15 @@ export default function AdminPage() {
               Quick Actions
             </h3>
             <div className="space-y-3">
+              <a
+                href="/admin/hero"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                🖼️ Manage Hero Section
+              </a>
               <a
                 href="/admin/projects"
                 className="block p-3 text-sm rounded-lg transition-colors"
