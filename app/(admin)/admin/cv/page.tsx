@@ -325,7 +325,7 @@ export default function AdminCVPage() {
             <strong>Upload:</strong> Add new CV/resume files with descriptive names. Files are stored securely in Supabase Storage.
           </p>
           <p>
-            <strong>Set Active:</strong> Mark one CV as "Active" - this will be the file downloaded when visitors click "Download Resume" on your portfolio.
+            <strong>Set Active:</strong> Mark one CV as &ldquo;Active&rdquo; - this will be the file downloaded when visitors click &ldquo;Download Resume&rdquo; on your portfolio.
           </p>
           <p>
             <strong>Manage:</strong> View, download, or delete old CV versions. Only one file can be active at a time.

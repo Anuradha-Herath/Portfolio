@@ -4,16 +4,17 @@ import { supabaseAdmin } from '@/lib/db';
 import { storageOperations } from '@/lib/storage';
 
 // GET /api/cv/[id] - Get a specific CV file
-export const GET = async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   if (!isAuthenticated(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
+    const { id } = await params;
     const { data, error } = await supabaseAdmin
       .from('cv_files')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error) {
@@ -37,12 +38,13 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
 };
 
 // PUT /api/cv/[id] - Update a CV file (set as active/inactive)
-export const PUT = async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const PUT = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   if (!isAuthenticated(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const { name, is_active } = body;
 
@@ -55,13 +57,13 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
       await supabaseAdmin
         .from('cv_files')
         .update({ is_active: false })
-        .neq('id', params.id);
+        .neq('id', id);
     }
 
     const { data, error } = await supabaseAdmin
       .from('cv_files')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -86,17 +88,18 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
 };
 
 // DELETE /api/cv/[id] - Delete a CV file
-export const DELETE = async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const DELETE = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
   if (!isAuthenticated(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
+    const { id } = await params;
     // First get the file URL to delete from storage
     const { data: cvFile, error: fetchError } = await supabaseAdmin
       .from('cv_files')
       .select('file_url')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (fetchError) {
@@ -118,7 +121,7 @@ export const DELETE = async (request: NextRequest, { params }: { params: { id: s
     const { error: deleteError } = await supabaseAdmin
       .from('cv_files')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (deleteError) {
       throw deleteError;
