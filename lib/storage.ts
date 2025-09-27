@@ -5,6 +5,7 @@ const CERTIFICATES_BUCKET = 'certificates';
 const PROJECT_IMAGES_BUCKET = 'project-images';
 const EDUCATION_ICONS_BUCKET = 'education-icons';
 const PROFILE_IMAGES_BUCKET = 'profile-images';
+const CV_FILES_BUCKET = 'cv-files';
 
 export const storageOperations = {
   async uploadSkillIcon(file: File, fileName: string): Promise<string> {
@@ -383,6 +384,71 @@ export const storageOperations = {
     }
   },
 
+  async uploadCVFile(file: File, fileName: string): Promise<string> {
+    try {
+      // Validate file type (PDF or common document types)
+      const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!validTypes.includes(file.type)) {
+        throw new Error('Only PDF and Word documents are allowed');
+      }
+
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        throw new Error('File size must be less than 10MB');
+      }
+
+      // Generate unique filename
+      const timestamp = Date.now();
+      const uniqueFileName = `${timestamp}-${fileName.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+
+      // Upload file to Supabase storage
+      const { data, error } = await supabaseAdmin.storage
+        .from(CV_FILES_BUCKET)
+        .upload(uniqueFileName, file, {
+          contentType: file.type,
+          upsert: false
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      // Get public URL
+      const { data: urlData } = supabaseAdmin.storage
+        .from(CV_FILES_BUCKET)
+        .getPublicUrl(data.path);
+
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading CV file:', error);
+      throw error;
+    }
+  },
+
+  async deleteCVFile(fileUrl: string): Promise<void> {
+    try {
+      // Extract file path from URL
+      const url = new URL(fileUrl);
+      const pathParts = url.pathname.split('/');
+      const fileName = pathParts[pathParts.length - 1];
+
+      if (!fileName) {
+        throw new Error('Invalid file URL');
+      }
+
+      const { error } = await supabaseAdmin.storage
+        .from(CV_FILES_BUCKET)
+        .remove([fileName]);
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Error deleting CV file:', error);
+      // Don't throw error for deletion failures to avoid blocking CV management
+    }
+  },
+
   async ensureBucketExists(bucketName: string = SKILL_ICONS_BUCKET): Promise<void> {
     try {
       console.log(`Checking if bucket '${bucketName}' exists...`);
@@ -425,6 +491,12 @@ export const storageOperations = {
               allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
               fileSizeLimit: 5 * 1024 * 1024 // 5MB limit for profile images
             }
+          : bucketName === CV_FILES_BUCKET
+          ? {
+              public: true,
+              allowedMimeTypes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+              fileSizeLimit: 10 * 1024 * 1024 // 10MB limit for CV files
+            }
           : {
               public: true,
               allowedMimeTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'],
@@ -454,5 +526,6 @@ export const storageOperations = {
     await this.ensureBucketExists(PROJECT_IMAGES_BUCKET);
     await this.ensureBucketExists(EDUCATION_ICONS_BUCKET);
     await this.ensureBucketExists(PROFILE_IMAGES_BUCKET);
+    await this.ensureBucketExists(CV_FILES_BUCKET);
   }
 };

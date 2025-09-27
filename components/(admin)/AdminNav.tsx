@@ -14,7 +14,8 @@ import {
   FolderIcon,
   MailIcon,
   ShieldIcon,
-  ImageIcon
+  ImageIcon,
+  FileText
 } from 'lucide-react';
 
 interface AdminNavProps {
@@ -24,6 +25,7 @@ interface AdminNavProps {
 const navItems = [
   { name: 'Dashboard', href: '/admin', icon: HomeIcon },
   { name: 'Hero Section', href: '/admin/hero', icon: ImageIcon },
+  { name: 'CV/Resume', href: '/admin/cv', icon: FileText },
   { name: 'Projects', href: '/admin/projects', icon: FolderIcon },
   { name: 'Skills', href: '/admin/skills', icon: CogIcon },
   { name: 'Experience', href: '/admin/experiences', icon: BriefcaseIcon },

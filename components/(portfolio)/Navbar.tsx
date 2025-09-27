@@ -38,6 +38,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [activeCVUrl, setActiveCVUrl] = useState("/resume.pdf");
   
   // Detect mobile devices - only after hydration
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -46,6 +47,29 @@ export function Navbar() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Fetch active CV file
+  useEffect(() => {
+    const fetchActiveCV = async () => {
+      try {
+        const response = await fetch('/api/cv');
+        if (response.ok) {
+          const cvFiles = await response.json();
+          const activeCV = cvFiles.find((cv: any) => cv.is_active);
+          if (activeCV) {
+            setActiveCVUrl(activeCV.file_url);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching active CV:', error);
+        // Keep default URL if fetch fails
+      }
+    };
+
+    if (mounted) {
+      fetchActiveCV();
+    }
+  }, [mounted]);
   
   const { scrollYProgress } = useScroll();
   
@@ -304,7 +328,7 @@ export function Navbar() {
               >
                 <Button variant="premium" size="sm" glow asChild>
                   <a
-                    href="/resume.pdf"
+                    href={activeCVUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center space-x-2"
@@ -555,7 +579,7 @@ export function Navbar() {
                   >
                     <Button variant="premium" size="sm" className="w-full" asChild>
                       <a
-                        href="/resume.pdf"
+                        href={activeCVUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center space-x-2"
