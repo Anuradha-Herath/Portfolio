@@ -80,7 +80,7 @@ export default function AdminPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--accent)' }}></div>
       </div>
     );
   }
@@ -88,10 +88,10 @@ export default function AdminPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>
           Admin Dashboard
         </h1>
-        <p className="text-slate-600 dark:text-slate-400">
+        <p style={{ color: 'var(--foreground-secondary)' }}>
           Manage your portfolio content from here
         </p>
       </div>
@@ -100,19 +100,19 @@ export default function AdminPage() {
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className="hover:shadow-md transition-shadow">
+            <Card key={stat.title} className="hover:shadow-md transition-shadow card-premium">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    <p className="text-sm font-medium" style={{ color: 'var(--foreground-secondary)' }}>
                       {stat.title}
                     </p>
-                    <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                    <p className="text-3xl font-bold" style={{ color: 'var(--foreground)' }}>
                       {stat.value}
                     </p>
                   </div>
-                  <div className={`p-3 rounded-full ${stat.bg} dark:bg-slate-700`}>
-                    <Icon className={`h-6 w-6 ${stat.color} dark:text-slate-300`} />
+                  <div className="p-3 rounded-full" style={{ backgroundColor: 'var(--surface-hover)' }}>
+                    <Icon className="h-6 w-6" style={{ color: 'var(--accent)' }} />
                   </div>
                 </div>
               </CardContent>
@@ -122,33 +122,45 @@ export default function AdminPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card className="card-premium">
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--foreground)' }}>
               Quick Actions
             </h3>
             <div className="space-y-3">
               <a
                 href="/admin/projects"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 📁 Manage Projects
               </a>
               <a
                 href="/admin/skills"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 🛠️ Manage Skills
               </a>
               <a
                 href="/admin/experiences"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 💼 Manage Experience
               </a>
               <a
                 href="/admin/blogs"
-                className="block p-3 text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                className="block p-3 text-sm rounded-lg transition-colors"
+                style={{ color: 'var(--foreground-secondary)', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 📝 Manage Blog Posts
               </a>
@@ -156,12 +168,12 @@ export default function AdminPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-premium">
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--foreground)' }}>
               Recent Activity
             </h3>
-            <div className="text-sm text-slate-600 dark:text-slate-400">
+            <div className="text-sm" style={{ color: 'var(--foreground-secondary)' }}>
               <p>No recent activity to display.</p>
               <p className="mt-2">Start by adding some content to your portfolio!</p>
             </div>

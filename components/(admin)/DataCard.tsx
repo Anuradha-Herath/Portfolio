@@ -18,7 +18,7 @@ export function DataCard({ title, children, onEdit, onDelete, className = '' }: 
     <Card className={`relative group hover:shadow-md transition-shadow ${className}`}>
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--foreground)' }}>
             {title}
           </h3>
           <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
