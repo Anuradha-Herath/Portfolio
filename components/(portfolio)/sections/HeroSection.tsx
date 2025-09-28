@@ -312,7 +312,7 @@ export function HeroSection() {
                               initial={{ filter: "blur(8px)" }}
                               animate={{ filter: imageLoading ? "blur(8px)" : "blur(0px)" }}
                               transition={{ duration: 0.6, delay: imageLoading ? 0 : 0.4 }}
-                              className="w-full h-full"
+                              className="w-full h-full relative"
                             >
                               <Image
                                 src={heroData?.profile_image_url || "/images/fallback-avatar.png"}
@@ -769,7 +769,7 @@ export function HeroSection() {
                               delay: imageLoading ? 0 : 0.5,
                               ease: "easeOut"
                             }}
-                            className="w-full h-full"
+                            className="w-full h-full relative"
                           >
                             {/* Brightness and contrast transition */}
                             <motion.div
@@ -780,7 +780,7 @@ export function HeroSection() {
                                 delay: imageLoading ? 0 : 0.6,
                                 ease: "easeOut"
                               }}
-                              className="w-full h-full"
+                              className="w-full h-full relative"
                             >
                               <Image
                                 src={heroData?.profile_image_url || "/images/fallback-avatar.png"}
@@ -788,7 +788,7 @@ export function HeroSection() {
                                 fill
                                 priority={true}
                                 placeholder="blur"
-                                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+                                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKGhMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                                 className="object-cover rounded-full transition-all duration-700 ease-out"
                                 sizes="(max-width: 1024px) 288px, 320px"
                                 onLoad={() => {
