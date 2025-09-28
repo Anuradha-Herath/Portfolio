@@ -1,0 +1,7 @@
+This is a placeholder file. The actual resume/CV should be uploaded through the admin panel.
+
+If you're seeing this file, it means:
+1. No CV has been uploaded and set as active in the admin panel yet
+2. There was an error fetching the active CV from the database
+
+Please upload a CV file through the admin panel at /admin/cv

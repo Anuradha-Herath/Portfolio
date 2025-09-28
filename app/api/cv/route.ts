@@ -3,8 +3,8 @@ import { requireAuth } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/db';
 import { storageOperations } from '@/lib/storage';
 
-// GET /api/cv - Get all CV files
-export const GET = requireAuth(async (request: NextRequest) => {
+// GET /api/cv - Get all CV files (public access)
+export const GET = async (request: NextRequest) => {
   try {
     const { data, error } = await supabaseAdmin
       .from('cv_files')
@@ -23,7 +23,7 @@ export const GET = requireAuth(async (request: NextRequest) => {
       { status: 500 }
     );
   }
-});
+};
 
 // POST /api/cv - Upload a new CV file
 export const POST = requireAuth(async (request: NextRequest) => {

@@ -56,7 +56,14 @@ const nextConfig = {
   
   // Optimize images for faster loading
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'phgbjctpwfoemzodwhyn.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
   

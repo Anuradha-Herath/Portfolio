@@ -38,7 +38,7 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mounted, setMounted] = useState(false);
-  const [activeCVUrl, setActiveCVUrl] = useState("/resume.pdf");
+  const [activeCVUrl, setActiveCVUrl] = useState<string | null>("#");
   
   // Detect mobile devices - only after hydration
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -52,17 +52,20 @@ export function Navbar() {
   useEffect(() => {
     const fetchActiveCV = async () => {
       try {
-        const response = await fetch('/api/cv');
+        const response = await fetch('/api/cv/active');
         if (response.ok) {
-          const cvFiles = await response.json();
-          const activeCV = cvFiles.find((cv: any) => cv.is_active);
-          if (activeCV) {
+          const activeCV = await response.json();
+          if (activeCV && activeCV.file_url) {
             setActiveCVUrl(activeCV.file_url);
+          } else {
+            // No active CV available
+            setActiveCVUrl(null);
           }
         }
       } catch (error) {
         console.error('Error fetching active CV:', error);
-        // Keep default URL if fetch fails
+        // Set to null if fetch fails
+        setActiveCVUrl(null);
       }
     };
 
@@ -326,16 +329,22 @@ export function Navbar() {
                   rotate: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }
                 }}
               >
-                <Button variant="premium" size="sm" glow asChild>
-                  <a
-                    href={activeCVUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2"
-                  >
-                    <span>Download Resume</span>
-                  </a>
-                </Button>
+                {activeCVUrl ? (
+                  <Button variant="premium" size="sm" glow asChild>
+                    <a
+                      href={activeCVUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2"
+                    >
+                      <span>Download Resume</span>
+                    </a>
+                  </Button>
+                ) : (
+                  <Button variant="premium" size="sm" glow disabled>
+                    <span>No Resume Available</span>
+                  </Button>
+                )}
               </motion.div>
             )}
 
@@ -577,16 +586,22 @@ export function Navbar() {
                       damping: 25
                     }}
                   >
-                    <Button variant="premium" size="sm" className="w-full" asChild>
-                      <a
-                        href={activeCVUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center space-x-2"
-                      >
-                        <span>Download Resume</span>
-                      </a>
-                    </Button>
+                    {activeCVUrl ? (
+                      <Button variant="premium" size="sm" className="w-full" asChild>
+                        <a
+                          href={activeCVUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center space-x-2"
+                        >
+                          <span>Download Resume</span>
+                        </a>
+                      </Button>
+                    ) : (
+                      <Button variant="premium" size="sm" className="w-full" disabled>
+                        <span>No Resume Available</span>
+                      </Button>
+                    )}
                   </motion.div>
                 </motion.div>
               </motion.div>
