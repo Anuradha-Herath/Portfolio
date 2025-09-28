@@ -239,9 +239,9 @@ export function HeroSection() {
                     >
                       <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700/50 rounded-full overflow-hidden">
                         {/* Loading skeleton */}
-                        {/* Loading skeleton with smooth fade out */}
+                        {/* Elegant skeleton loading effect */}
                         <motion.div
-                          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-700 to-slate-800 z-10"
+                          className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800 z-10 overflow-hidden"
                           initial={{ opacity: 1 }}
                           animate={{ opacity: (imageLoading || !dataLoaded) ? 1 : 0 }}
                           transition={{ 
@@ -251,13 +251,44 @@ export function HeroSection() {
                           }}
                           style={{ pointerEvents: (imageLoading || !dataLoaded) ? 'auto' : 'none' }}
                         >
+                          {/* Primary shimmer wave */}
                           <motion.div
-                            className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full"
-                            animate={{ rotate: 360 }}
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -skew-x-12"
+                            animate={{
+                              x: ["-200%", "200%"]
+                            }}
                             transition={{
-                              duration: 1,
+                              duration: 2,
                               repeat: Infinity,
-                              ease: "linear"
+                              ease: "easeInOut",
+                              repeatDelay: 0.8
+                            }}
+                          />
+                          
+                          {/* Subtle breathing gradient */}
+                          <motion.div
+                            className="absolute inset-2 bg-gradient-to-br from-slate-600/40 to-slate-800/60 rounded-full"
+                            animate={{
+                              opacity: [0.6, 0.9, 0.6],
+                              scale: [0.98, 1.01, 0.98]
+                            }}
+                            transition={{
+                              duration: 2.5,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                          />
+                          
+                          {/* Inner glow effect */}
+                          <motion.div
+                            className="absolute inset-8 bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-full blur-sm"
+                            animate={{
+                              opacity: [0.3, 0.6, 0.3]
+                            }}
+                            transition={{
+                              duration: 3,
+                              repeat: Infinity,
+                              ease: "easeInOut"
                             }}
                           />
                         </motion.div>
@@ -623,9 +654,9 @@ export function HeroSection() {
 
                     {/* Main image container with enhanced styling */}
                     <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-700/50 rounded-full overflow-hidden">
-                      {/* Enhanced loading skeleton with smooth fade out */}
+                      {/* Sophisticated skeleton loading effect */}
                       <motion.div
-                        className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-700 to-slate-800 z-20 rounded-full"
+                        className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-800 z-20 rounded-full overflow-hidden"
                         initial={{ opacity: 1 }}
                         animate={{ opacity: (imageLoading || !dataLoaded) ? 1 : 0 }}
                         transition={{ 
@@ -635,34 +666,80 @@ export function HeroSection() {
                         }}
                         style={{ pointerEvents: (imageLoading || !dataLoaded) ? 'auto' : 'none' }}
                       >
+                        {/* Primary shimmer wave */}
                         <motion.div
-                          className="w-20 h-20 border-4 border-blue-500/30 border-t-blue-500 rounded-full"
-                          animate={{ rotate: 360 }}
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                          animate={{
+                            x: ["-200%", "200%"]
+                          }}
                           transition={{
-                            duration: 1,
+                            duration: 2.5,
                             repeat: Infinity,
-                            ease: "linear"
+                            ease: "easeInOut",
+                            repeatDelay: 0.8
+                          }}
+                        />
+                        
+                        {/* Secondary shimmer wave */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/15 to-transparent -skew-x-12"
+                          animate={{
+                            x: ["-200%", "200%"]
+                          }}
+                          transition={{
+                            duration: 3.2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            repeatDelay: 1,
+                            delay: 0.7
+                          }}
+                        />
+                        
+                        {/* Breathing base layer */}
+                        <motion.div
+                          className="absolute inset-3 bg-gradient-to-br from-slate-600/50 to-slate-800/70 rounded-full"
+                          animate={{
+                            opacity: [0.7, 1, 0.7],
+                            scale: [0.97, 1.02, 0.97]
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        />
+                        
+                        {/* Inner glow layers */}
+                        <motion.div
+                          className="absolute inset-12 bg-gradient-to-br from-blue-900/25 to-purple-900/25 rounded-full blur-md"
+                          animate={{
+                            opacity: [0.4, 0.7, 0.4],
+                            scale: [0.95, 1.05, 0.95]
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: 0.5
+                          }}
+                        />
+                        
+                        {/* Subtle accent glow */}
+                        <motion.div
+                          className="absolute inset-16 bg-gradient-to-br from-rose-900/20 to-teal-900/20 rounded-full blur-lg"
+                          animate={{
+                            opacity: [0.2, 0.5, 0.2]
+                          }}
+                          transition={{
+                            duration: 5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: 1
                           }}
                         />
                       </motion.div>
 
-                      {/* Enhanced loading shimmer - only show when loading */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full"
-                        initial={{ opacity: 0 }}
-                        animate={{ 
-                          opacity: (imageLoading || !dataLoaded) ? 0.6 : 0,
-                          x: (imageLoading || !dataLoaded) ? ["-150%", "150%"] : "0%"
-                        }}
-                        transition={{
-                          opacity: { duration: 0.3 },
-                          x: {
-                            duration: 2,
-                            repeat: (imageLoading || !dataLoaded) ? Infinity : 0,
-                            ease: "easeInOut"
-                          }
-                        }}
-                      />
+
 
                       {/* Professional photo with enhanced reveal animations - only render when data is loaded */}
                       {dataLoaded && (

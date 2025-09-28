@@ -51,7 +51,7 @@ export function AdminNav({ onLogout }: AdminNavProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
